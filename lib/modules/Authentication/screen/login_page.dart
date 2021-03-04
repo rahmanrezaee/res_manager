@@ -1,6 +1,7 @@
+import 'package:admin/constants/assest_path.dart';
+import 'package:admin/modules/Authentication/screen/forgotPassword.dart';
+import 'package:admin/modules/drawer/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:admin/modules/forgotPassword/forgotPassword.dart';
-import './constants/assest_path.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -155,7 +156,10 @@ class LoginPage extends StatelessWidget {
                             "Login",
                             style: Theme.of(context).textTheme.button,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(LayoutExample.routeName);
+                          },
                         ),
                       ),
                     ),

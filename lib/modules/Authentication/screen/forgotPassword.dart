@@ -7,26 +7,26 @@ class ForgotPassword extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title:
-            Text("Forgot Password", style: Theme.of(context).textTheme.button),
-        centerTitle: true,
-        leading: SizedBox(
-          width: 200,
-          child: InkWell(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(width: 10),
-                Icon(Icons.arrow_back_ios, color: Colors.white),
-                Text("back",
-                    style: TextStyle(color: Colors.white, fontSize: 20))
-              ],
+        title: Row(
+          children: <Widget>[
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Row(
+                children: [
+                  SizedBox(width: 10),
+                  Icon(Icons.arrow_back_ios, color: Colors.white),
+                  Text("back",
+                      style: TextStyle(color: Colors.white, fontSize: 20))
+                ],
+              ),
             ),
-          ),
+            Expanded(
+                child: Text("Forgot Password",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.button)),
+          ],
         ),
       ),
       body: LayoutBuilder(
@@ -132,7 +132,10 @@ class ForgotPassword extends StatelessWidget {
                                                   .button,
                                             ),
                                             onPressed: () {
+                                              
                                               Navigator.of(context).pop();
+                                              // Navigator.pushNamed(context, )
+                                            
                                             },
                                           ),
                                         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:admin/modules/drawer/drawer.dart';
-import 'package:admin/modules/login/login_page.dart';
+import 'package:admin/modules/Authentication/screen/login_page.dart';
 import './themes/style.dart';
 import './routes.dart';
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: restaurantTheme,
-      home: LayoutExample(),
+      home: LoginPage(),
       routes: routes,
     );
   }

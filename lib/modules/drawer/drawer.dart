@@ -1,3 +1,4 @@
+import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_scaffold/responsive_scaffold.dart';
 import 'package:admin/constants/assest_path.dart';
@@ -6,9 +7,9 @@ import 'package:admin/modules/report/report.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:admin/themes/style.dart';
 //pages
-import '../dashboard/dashboard_page.dart';
+import '../dashboard/Screen/dashboard_page.dart';
 import '../orders/orders_page.dart';
-import '../myProfile/myProfile_page.dart';
+import '../UserManage/myProfile_page.dart';
 import '../categories/catetories_page.dart';
 import '../dishes/dishes_page.dart';
 import '../notifications/notifications_page.dart';
@@ -21,6 +22,8 @@ class PageModel {
 }
 
 class LayoutExample extends StatefulWidget {
+  static var routeName = "/home";
+
   @override
   _LayoutExampleState createState() => _LayoutExampleState();
 }
@@ -35,6 +38,16 @@ class _LayoutExampleState extends State<LayoutExample> {
         child: Image.asset(AssestPath.dashboardIcon, fit: BoxFit.cover),
       ),
       page: DashboardPage(),
+    ),
+    PageModel(
+      title: "Resturants",
+      icon: SizedBox(
+        width: 25,
+        height: 25,
+        child:
+            Image.asset("assets/images/resturantIcons.png", fit: BoxFit.cover),
+      ),
+      page: ResturantScreen(),
     ),
     PageModel(
       title: "Orders",

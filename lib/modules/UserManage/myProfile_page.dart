@@ -80,10 +80,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 ),
               ],
             ),
-            // Align(
-            //   alignment: Alignment.center,
-            //   child:
-            // ),
+         
           ],
         ),
       ),
