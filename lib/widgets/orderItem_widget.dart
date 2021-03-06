@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:admin/themes/colors.dart';
+import '../themes/colors.dart';
 
 class OrderItem extends StatefulWidget {
   @override

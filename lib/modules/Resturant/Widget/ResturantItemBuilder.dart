@@ -1,3 +1,4 @@
+import 'package:admin/modules/dishes/dishes_page.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,10 @@ class ResturantItem extends StatelessWidget {
               children: [
                 IconButton(
                   icon: Icon(Icons.room_service, color: AppColors.green),
-                  onPressed: () {},
+                  onPressed: () {
+                    print("AliAzad");
+                    Navigator.of(context).pushNamed(DishPage.routeName);
+                  },
                 ),
                 SizedBox(width: 5),
                 IconButton(

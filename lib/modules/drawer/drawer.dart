@@ -1,4 +1,6 @@
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
+import 'package:admin/modules/coupons/coupons_page.dart';
+import 'package:admin/modules/customers/Customers_page.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_scaffold/responsive_scaffold.dart';
 import 'package:admin/constants/assest_path.dart';
@@ -40,12 +42,20 @@ class _LayoutExampleState extends State<LayoutExample> {
       page: DashboardPage(),
     ),
     PageModel(
+      title: "customers",
+      icon: SizedBox(
+        width: 25,
+        height: 25,
+        child: Image.asset(AssestPath.customerIcon, fit: BoxFit.cover),
+      ),
+      page: CustomersPage(),
+    ),
+    PageModel(
       title: "Resturants",
       icon: SizedBox(
         width: 25,
         height: 25,
-        child:
-            Image.asset("assets/images/resturantIcons.png", fit: BoxFit.cover),
+        child: Image.asset(AssestPath.restaurantIcon, fit: BoxFit.cover),
       ),
       page: ResturantScreen(),
     ),
@@ -69,13 +79,13 @@ class _LayoutExampleState extends State<LayoutExample> {
       page: CatetoriesPage(),
     ),
     PageModel(
-      title: "Dishes",
+      title: "Coupons",
       icon: SizedBox(
         width: 25,
         height: 25,
-        child: Image.asset(AssestPath.dishesIcon, fit: BoxFit.cover),
+        child: Image.asset(AssestPath.couponIcon, fit: BoxFit.cover),
       ),
-      page: DishPage(),
+      page: CouponsPage(),
     ),
     PageModel(
       title: "Notifications",

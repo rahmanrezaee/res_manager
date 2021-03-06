@@ -9,6 +9,7 @@ import 'package:admin/providers/navigator_provider.dart';
 import '../../themes/style.dart';
 
 class DishPage extends StatelessWidget {
+  static String routeName = "DishPage";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(routes: {
