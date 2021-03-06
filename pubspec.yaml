@@ -68,9 +68,8 @@ flutter:
     - assets/images/categoriesIcon.png
     - assets/images/dishesIcon.png
     - assets/images/resturantIcons.png
-
-
-  #   - images/a_dot_ham.jpeg
+    - assets/images/customerIcon.png
+    - assets/images/couponIcon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
