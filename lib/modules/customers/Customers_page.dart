@@ -1,114 +1,33 @@
-import 'package:admin/widgets/DropDownFormField.dart';
-import 'package:flutter/material.dart';
-import 'package:admin/constants/assest_path.dart';
 import 'package:admin/themes/colors.dart';
-import 'package:responsive_grid/responsive_grid.dart';
+import 'package:flutter/material.dart';
 
-class CatetoriesPage extends StatelessWidget {
+class CustomersPage extends StatelessWidget {
+  static String routeName = "CustomersPage";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          elevation: .2,
-          automaticallyImplyLeading: false,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: ResponsiveGridRow(
-            children: [
-              ResponsiveGridCol(
-                lg: 8,
-                md: 8,
-                sm: 6,
-                xl: 6,
-                xs: 6,
-                child: Text("Manage Categories"),
-              ),
-              ResponsiveGridCol(
-                lg: 4,
-                md: 4,
-                sm: 6,
-                xl: 6,
-                xs: 6,
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: DropDownFormField(
-                    hintText: "Interested Industry",
-                    value: "Resturant 1",
-                    validator: (value) {
-                      if (value == null) {
-                        return "Please select an industry";
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {},
-                    onChanged: (value) {},
-                    dataSource: [
-                      {"display": "Resturant 1", "value": "Resturant 1"},
-                      {"display": "Resturant 3", "value": "Resturant 3"},
-                      {"display": "Resturant 2", "value": "Resturant 2"},
-                    ],
-                    textField: 'display',
-                    valueField: 'value',
-                  ),
-                ),
-              ),
-            ],
-          )),
-      // appBar: AppBar(
-      //   elevation: .2,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.circular(10),
-      //   ),
-      //   title: Text("Manage Categories"),
-      // ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 15),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Categories",
-                        style: Theme.of(context).textTheme.headline4),
-                    SizedBox(
-                      width: 35,
-                      height: 35,
-                      child: RaisedButton(
-                        padding: EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                        onPressed: () {},
-                        color: Theme.of(context).primaryColor,
-                        child: Icon(Icons.add, color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            _categoryItemBuilder(context),
-            _categoryItemBuilder(context),
-            _categoryItemBuilder(context),
-          ],
+        elevation: .2,
+        automaticallyImplyLeading: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
+        title: Text("Manage Customers"),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+          Text("Customers", style: Theme.of(context).textTheme.headline4),
+          SizedBox(height: 14),
+          _customerItemBuilder(context),
+        ],
       ),
     );
   }
 }
 
-_categoryItemBuilder(context) {
+_customerItemBuilder(context) {
   return Card(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     child: Padding(
@@ -116,8 +35,11 @@ _categoryItemBuilder(context) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Category 1", style: Theme.of(context).textTheme.headline4),
-          Text("15 Dishes", style: TextStyle(color: Colors.grey)),
+          Text(
+            "Username",
+            style: Theme.of(context).textTheme.headline4,
+          ),
+          Text("15 Active Orders", style: TextStyle(color: Colors.grey)),
           Row(
             children: [
               IconButton(
