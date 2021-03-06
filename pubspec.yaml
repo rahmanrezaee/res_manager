@@ -26,6 +26,10 @@ dependencies:
   responsive_grid: ^1.2.1+1
   smooth_star_rating: ^1.1.1
   carousel_slider: ^3.0.0
+  provider: ^4.3.2
+  dio: ^3.0.10
+  
+
   responsive_scaffold:
     git:
       url: https://github.com/AzadCoder/responsive_scaffold
