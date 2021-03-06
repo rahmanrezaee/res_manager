@@ -28,7 +28,7 @@ class _ResturantFormState extends State<ResturantForm> {
             ),
             Row(children: [
               Container(
-                height: 150,
+                height: 130,
                 child: ClipRRect(
                   child: Image.network('https://i.pravatar.cc/300'),
                   borderRadius: BorderRadius.circular(10.0),
@@ -157,7 +157,7 @@ class _ResturantFormState extends State<ResturantForm> {
   Widget _dataBody() {
     return DataTable(
       dataTextStyle: TextStyle(
-        
+        color: Colors.black
       ),
       columns: [
       DataColumn(

@@ -1,7 +1,7 @@
-import 'package:admin/constants/assest_path.dart';
-import 'package:admin/modules/Authentication/screen/forgotPassword.dart';
-import 'package:admin/modules/drawer/drawer.dart';
 import 'package:flutter/material.dart';
+import '../../../constants/assest_path.dart';
+import '../../drawer/drawer.dart';
+import 'forgotPassword.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -136,33 +136,41 @@ class LoginPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 100,
-                      left: 0,
-                      right: 0,
-                      child: FractionallySizedBox(
-                        widthFactor: percentage,
-                        child: RaisedButton(
+                          RaisedButton(
                           padding: EdgeInsets.symmetric(vertical: 15),
+                          
                           color: Theme.of(context).primaryColor,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text(
-                            "Login",
-                            style: Theme.of(context).textTheme.button,
+                          child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+
+                                "Login",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.button,
+                              ),
+                            ],
                           ),
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(LayoutExample.routeName);
+                            Navigator.pushReplacementNamed(context, LayoutExample.routeName);
                           },
                         ),
+                        ],
                       ),
                     ),
+                    // Positioned(
+                    //   bottom: 100,
+                    //   left: 0,
+                    //   right: 0,
+                    //   child: FractionallySizedBox(
+                    //     widthFactor: percentage,
+                    //     // child: 
+                    //   ),
+                    // ),
                   ],
                 ),
               );
