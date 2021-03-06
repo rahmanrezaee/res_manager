@@ -1,7 +1,9 @@
 import 'package:admin/modules/Resturant/Screen/formResturant.dart';
 import 'package:admin/modules/Resturant/Widget/ResturantItemBuilder.dart';
+import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 class ListResturantScreen extends StatefulWidget {
@@ -16,56 +18,13 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          elevation: .2,
-          automaticallyImplyLeading: false,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: ResponsiveGridRow(
-            children: [
-              ResponsiveGridCol(
-                lg: 8,
-                md: 8,
-                sm: 6,
-                xl: 6,
-                xs: 6,
-                child: Text("Manage Resturant"),
-              ),
-              ResponsiveGridCol(
-                lg: 4,
-                md: 4,
-                sm: 6,
-                xl: 6,
-                xs: 6,
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: DropDownFormField(
-                    hintText: "Interested Industry",
-                    value: "Resturant 1",
-                    validator: (value) {
-                      if (value == null) {
-                        return "Please select an industry";
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {},
-                    onChanged: (value) {},
-                    dataSource: [
-                      {"display": "Resturant 1", "value": "Resturant 1"},
-                      {"display": "Resturant 3", "value": "Resturant 3"},
-                      {"display": "Resturant 2", "value": "Resturant 2"},
-                    ],
-                    textField: 'display',
-                    valueField: 'value',
-                  ),
-                ),
-              ),
-            ],
-          )),
+        elevation: .2,
+        automaticallyImplyLeading: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Text("Manage Resturant"),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -99,6 +58,17 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                   ],
                 ),
               ),
+            ),
+            Consumer<ResturantProvider>(
+              builder: (BuildContext context, value, Widget child) {
+                
+                // return value.listResturant != null ?
+                //     value.listResturant.isEmpty ? 
+                //     Text("No Resturants"): ListView.builder(itemBuilder: null)
+
+
+
+              },
             ),
             ResturantItem(),
             ResturantItem(),
