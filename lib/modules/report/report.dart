@@ -1,3 +1,4 @@
+import 'package:admin/widgets/DropDownFormField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/modules/report/widget/TextfieldResturant.dart';
@@ -46,9 +47,31 @@ class _ReportPageState extends State<ReportPage>
                       Container(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "Ordered",
+                          "Orders",
                           style: TextStyle(fontSize: 20),
                         ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      DropDownFormField(
+                        hintText: "Interested Industry",
+                        value: "Resturant 1",
+                        validator: (value) {
+                          if (value == null) {
+                            return "Please select an industry";
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {},
+                        onChanged: (value) {},
+                        dataSource: [
+                          {"display": "Resturant 1", "value": "Resturant 1"},
+                          {"display": "Resturant 3", "value": "Resturant 3"},
+                          {"display": "Resturant 2", "value": "Resturant 2"},
+                        ],
+                        textField: 'display',
+                        valueField: 'value',
                       ),
                       SizedBox(
                         height: 5,
@@ -157,12 +180,37 @@ class _ReportPageState extends State<ReportPage>
                       Container(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "Earning",
+                          "Earnings",
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
                       SizedBox(
                         height: 10,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      DropDownFormField(
+                        hintText: "Interested Industry",
+                        value: "Resturant 1",
+                        validator: (value) {
+                          if (value == null) {
+                            return "Please select an industry";
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {},
+                        onChanged: (value) {},
+                        dataSource: [
+                          {"display": "Resturant 1", "value": "Resturant 1"},
+                          {"display": "Resturant 3", "value": "Resturant 3"},
+                          {"display": "Resturant 2", "value": "Resturant 2"},
+                        ],
+                        textField: 'display',
+                        valueField: 'value',
+                      ),
+                      SizedBox(
+                        height: 5,
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.max,
