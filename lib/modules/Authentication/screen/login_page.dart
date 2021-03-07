@@ -1,11 +1,30 @@
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
+import 'package:admin/modules/Authentication/validators/formFieldsValidators.dart';
+import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
+import 'package:admin/themes/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../constants/assest_path.dart';
 import '../../drawer/drawer.dart';
-import 'forgotPassword.dart';
+import './forgotPassword.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController _emailController = new TextEditingController();
+
+  TextEditingController _passwordController = new TextEditingController();
+
+  AuthProvider authProvider;
+
   @override
   Widget build(BuildContext context) {
+    authProvider = Provider.of<AuthProvider>(context);
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -36,14 +55,10 @@ class LoginPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 50),
-                          // Text(
-                          //   "Login",
-                          //   style: Theme.of(context).textTheme.headline3,
-                          // ),
-                          // SizedBox(height: 20),
                           Image.asset("${AssestPath.logo}", width: 150),
                           SizedBox(height: 50),
                           Form(
+                            key: _formKey,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -51,27 +66,21 @@ class LoginPage extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline4),
                                 SizedBox(height: 15),
-                                _loginFieldBuilder("Email Address"),
+                                _loginFieldBuilder(
+                                  "Email Address",
+                                  emailValidator,
+                                  _emailController,
+                                ),
                                 SizedBox(height: 15),
-                                _loginFieldBuilder("Password"),
+                                _loginFieldBuilder(
+                                  "Password",
+                                  passwordValidator,
+                                  _passwordController,
+                                ),
                                 SizedBox(height: 15),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    // Row(children: [
-                                    //   Text("New User? "),
-                                    //   InkWell(
-                                    //     onTap: () {
-                                    //       // Navigator.of(context)
-                                    //       //     .pushNamed(SignUpPage.routeName);
-                                    //       print("Goind to singup page");
-                                    //     },
-                                    //     child: Text(
-                                    //       "Sing Up Here",
-                                    //       style: Theme.of(context).textTheme.subtitle2,
-                                    //     ),
-                                    //   ),
-                                    // ]),
                                     InkWell(
                                       onTap: () {
                                         print("going to forgot password");
@@ -87,90 +96,46 @@ class LoginPage extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-
                                 SizedBox(height: 20),
-                                // Row(children: [
-                                //   Expanded(
-                                //     child: OutlineButton(
-                                //       shape: RoundedRectangleBorder(
-                                //         borderRadius: BorderRadius.circular(8),
-                                //       ),
-                                //       padding: EdgeInsets.symmetric(vertical: 15),
-                                //       onPressed: () {},
-                                //       child: Row(
-                                //         mainAxisAlignment: MainAxisAlignment.center,
-                                //         children: [
-                                //           Image.asset(AssestPath.gmailLogo, width: 20),
-                                //           SizedBox(width: 10),
-                                //           Text(
-                                //             "Google",
-                                //             style: Theme.of(context).textTheme.subtitle1,
-                                //           ),
-                                //         ],
-                                //       ),
-                                //     ),
-                                //   ),
-                                //   SizedBox(width: 15),
-                                //   Expanded(
-                                //     child: OutlineButton(
-                                //       shape: RoundedRectangleBorder(
-                                //         borderRadius: BorderRadius.circular(8),
-                                //       ),
-                                //       padding: EdgeInsets.symmetric(vertical: 15),
-                                //       onPressed: () {},
-                                //       child: Row(
-                                //         mainAxisAlignment: MainAxisAlignment.center,
-                                //         children: [
-                                //           Image.asset(AssestPath.facebookLogo, width: 20),
-                                //           SizedBox(width: 10),
-                                //           Text(
-                                //             "Facebook",
-                                //             style: Theme.of(context).textTheme.subtitle1,
-                                //           ),
-                                //         ],
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ])
                               ],
                             ),
                           ),
                           SizedBox(height: 20),
+                          error == null
+                              ? Container()
+                              : Text(error,
+                                  style: TextStyle(color: AppColors.redText)),
+                          SizedBox(height: 10),
                           RaisedButton(
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          
-                          color: Theme.of(context).primaryColor,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            color: Theme.of(context).primaryColor,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                loading == true
+                                    ? CircularProgressIndicator()
+                                    : Text(
+                                        "Login",
+                                        textAlign: TextAlign.center,
+                                        style:
+                                            Theme.of(context).textTheme.button,
+                                      ),
+                              ],
+                            ),
+                            onPressed: () {
+                              login();
+                              // Navigator.pushReplacementNamed(
+                              //     context, LayoutExample.routeName);
+                            },
                           ),
-                          child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-
-                                "Login",
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.button,
-                              ),
-                            ],
-                          ),
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, LayoutExample.routeName);
-                          },
-                        ),
                         ],
                       ),
                     ),
-                    // Positioned(
-                    //   bottom: 100,
-                    //   left: 0,
-                    //   right: 0,
-                    //   child: FractionallySizedBox(
-                    //     widthFactor: percentage,
-                    //     // child: 
-                    //   ),
-                    // ),
                   ],
                 ),
               );
@@ -180,15 +145,63 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+
+  bool loading = false;
+  String error;
+  login() {
+    if (_formKey.currentState.validate()) {
+      setState(() {
+        loading = true;
+      });
+      String email = _emailController.text;
+      String password = _passwordController.text;
+      authProvider.login(email, password).then((v) {
+        setState(() {
+          loading = false;
+        });
+        if (v == true) {
+          setState(() {
+            error = null;
+          });
+          Navigator.pushReplacementNamed(context, LayoutExample.routeName);
+        } else {
+          setState(() {
+            error = "Error massage that coms from backend";
+          });
+        }
+      });
+    }
+  }
 }
 
-_loginFieldBuilder(String hintText) {
-  return TextField(
+_loginFieldBuilder(
+    String hintText, Function validator, TextEditingController controller) {
+  return TextFormField(
+    controller: controller,
+    validator: (v) {
+      return validator(v);
+    },
     decoration: InputDecoration(
       hintText: hintText,
       hintStyle: TextStyle(color: Colors.grey),
       contentPadding: EdgeInsets.only(left: 10),
       enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(color: AppColors.redText),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
         borderSide: BorderSide(color: Colors.grey),
       ),

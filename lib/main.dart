@@ -1,3 +1,4 @@
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/modules/drawer/drawer.dart';
@@ -16,10 +17,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ResturantProvider>(create: (_) => ResturantProvider()),
+        ChangeNotifierProvider<ResturantProvider>(
+            create: (_) => ResturantProvider()),
+        ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
-        
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: restaurantTheme,

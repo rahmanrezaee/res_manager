@@ -1,9 +1,27 @@
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
+import 'package:admin/themes/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ForgotPassword extends StatelessWidget {
+class ForgotPassword extends StatefulWidget {
   static String routeName = "ForgotPassword";
+
+  @override
+  _ForgotPasswordState createState() => _ForgotPasswordState();
+}
+
+class _ForgotPasswordState extends State<ForgotPassword> {
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController _emailController = new TextEditingController();
+
+  TextEditingController _passwordController = new TextEditingController();
+
+  AuthProvider authProvider;
+
   @override
   Widget build(BuildContext context) {
+    authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -72,10 +90,21 @@ class ForgotPassword extends StatelessWidget {
                           Text("Login with your account",
                               style: Theme.of(context).textTheme.headline4),
                           SizedBox(height: 15),
-                          _loginFieldBuilder("Forgot Password"),
+                          Form(
+                            key: _formKey,
+                            child: _loginFieldBuilder(
+                                "Forgot Password", _emailController),
+                          ),
                         ],
                       ),
                     ),
+                    error != null
+                        ? Text(
+                            error,
+                            style: TextStyle(color: AppColors.redText),
+                          )
+                        : Container(),
+                    SizedBox(height: 15),
                     SizedBox(
                       width: contentSize - 100,
                       child: RaisedButton(
@@ -85,65 +114,14 @@ class ForgotPassword extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text(
-                          "Submit",
-                          style: Theme.of(context).textTheme.button,
-                        ),
+                        child: loading == true
+                            ? CircularProgressIndicator()
+                            : Text(
+                                "Submit",
+                                style: Theme.of(context).textTheme.button,
+                              ),
                         onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return LayoutBuilder(
-                                    builder: (context, constraints) {
-                                  return FractionallySizedBox(
-                                    widthFactor: percentage,
-                                    child: SimpleDialog(
-                                      elevation: 5,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      contentPadding: EdgeInsets.all(15),
-                                      children: [
-                                        Text(
-                                          "A link will be shared to your registered email address please click it to reset your password",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        SizedBox(height: 25),
-                                        SizedBox(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: RaisedButton(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Text(
-                                              "OK",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .button,
-                                            ),
-                                            onPressed: () {
-                                              
-                                              Navigator.of(context).pop();
-                                              // Navigator.pushNamed(context, )
-                                            
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                });
-                              });
+                          forgotPassword();
                         },
                       ),
                     ),
@@ -157,10 +135,79 @@ class ForgotPassword extends StatelessWidget {
       ),
     );
   }
+
+  bool loading = false;
+  String error;
+  forgotPassword() {
+    if (_formKey.currentState.validate()) {
+      setState(() {
+        loading = true;
+      });
+      String email = _emailController.text;
+      authProvider.forgotPassword(email).then((v) {
+        setState(() {
+          loading = false;
+        });
+        if (v == true) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return LayoutBuilder(builder: (context, constraints) {
+                  return SizedBox(
+                    width: 400,
+                    child: SimpleDialog(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: EdgeInsets.all(15),
+                      children: [
+                        Text(
+                          "A link will be shared to your registered email address please click it to reset your password",
+                          style: Theme.of(context).textTheme.bodyText1,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 25),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: RaisedButton(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            color: Theme.of(context).primaryColor,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              "OK",
+                              style: Theme.of(context).textTheme.button,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              // Navigator.pushNamed(context, )
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              });
+          setState(() {
+            error = null;
+          });
+        } else {
+          setState(() {
+            error = "Error massage that coms from backend";
+          });
+        }
+      });
+    }
+  }
 }
 
-_loginFieldBuilder(String hintText) {
+_loginFieldBuilder(String hintText, TextEditingController controller) {
   return TextField(
+    controller: controller,
     decoration: InputDecoration(
       hintText: hintText,
       hintStyle: TextStyle(color: Colors.grey),
