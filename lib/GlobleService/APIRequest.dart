@@ -16,14 +16,18 @@ class APIRequest {
             options: new Options(headers: {'token': '$token'}));
       }
     } on DioError catch (e) {
+      print("error In Response");
       print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
     }
   }
 
   Future post({
     @required String myUrl,
     @required myBody,
-    @required Map<dynamic, dynamic> myHeaders,
+    @required Map<String, dynamic> myHeaders,
   }) {
     dio.options.headers = myHeaders;
     return dio.post(myUrl, data: myBody);
@@ -32,7 +36,7 @@ class APIRequest {
   Future put({
     @required String myUrl,
     @required dynamic myBody,
-    @required Map<dynamic, dynamic> myHeaders,
+    @required Map<String, dynamic> myHeaders,
   }) {
     dio.options.headers = myHeaders;
     return dio.put(myUrl, data: myBody);

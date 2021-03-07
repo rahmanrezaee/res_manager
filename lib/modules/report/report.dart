@@ -144,7 +144,9 @@ class _ReportPageState extends State<ReportPage>
                           Expanded(
                             child: ButtonRaiseResturant(
                               color: Theme.of(context).primaryColor,
-                              label: "Email Report",
+                              label: Text(
+                                "Email Report",
+                              ),
                               onPress: () {},
                             ),
                           ),
@@ -154,7 +156,9 @@ class _ReportPageState extends State<ReportPage>
                           Expanded(
                             child: ButtonRaiseResturant(
                               color: Theme.of(context).primaryColor,
-                              label: "View Report",
+                              label: Text(
+                                "Email Report",
+                              ),
                               onPress: () {},
                             ),
                           ),
@@ -167,7 +171,7 @@ class _ReportPageState extends State<ReportPage>
             ),
             ResponsiveGridCol(
               lg: 6,
-              md:12,
+              md: 12,
               sm: 12,
               xl: 12,
               xs: 12,
@@ -274,7 +278,9 @@ class _ReportPageState extends State<ReportPage>
                           Expanded(
                             child: ButtonRaiseResturant(
                               color: Theme.of(context).primaryColor,
-                              label: "Email Report",
+                              label: Text(
+                                "Email Report",
+                              ),
                               onPress: () {},
                             ),
                           ),
@@ -284,7 +290,9 @@ class _ReportPageState extends State<ReportPage>
                           Expanded(
                             child: ButtonRaiseResturant(
                               color: Theme.of(context).primaryColor,
-                              label: "View Report",
+                              label: Text(
+                                "Email Report",
+                              ),
                               onPress: () {},
                             ),
                           ),

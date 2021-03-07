@@ -16,9 +16,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<ResturantProvider>(create: (_) => ResturantProvider()),
+        ChangeNotifierProvider<ResturantProvider>(create: (_) => ResturantProvider()),
       ],
       child: MaterialApp(
+        
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: restaurantTheme,
