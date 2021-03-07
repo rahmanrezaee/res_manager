@@ -197,7 +197,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           });
         } else {
           setState(() {
-            error = "Error massage that coms from backend";
+            error = "User Not Exist";
           });
         }
       });
