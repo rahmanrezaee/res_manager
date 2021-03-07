@@ -23,58 +23,66 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        title: Text("Manage Resturant"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(height: 15),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Resturants",
-                        style: Theme.of(context).textTheme.headline4),
-                    SizedBox(
-                      width: 35,
-                      height: 35,
-                      child: RaisedButton(
-                        padding: EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                        onPressed: () {
-                          Navigator.pushNamed(context, ResturantForm.routeName);
-                        },
-                        color: Theme.of(context).primaryColor,
-                        child: Icon(Icons.add, color: Colors.white),
-                      ),
-                    ),
-                  ],
+            Text("Manage Resturants",
+                style: Theme.of(context).textTheme.headline4),
+            SizedBox(
+              width: 35,
+              height: 35,
+              child: RaisedButton(
+                padding: EdgeInsets.all(0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
+                elevation: 0,
+                onPressed: () {
+                  Navigator.pushNamed(context, ResturantForm.routeName);
+                },
+                color: Colors.white,
+                child: Icon(Icons.add, color: Theme.of(context).primaryColor),
               ),
             ),
-            Consumer<ResturantProvider>(
-              builder: (BuildContext context, value, Widget child) {
-                
-                // return value.listResturant != null ?
-                //     value.listResturant.isEmpty ? 
-                //     Text("No Resturants"): ListView.builder(itemBuilder: null)
-
-
-
-              },
-            ),
-            ResturantItem(),
-            ResturantItem(),
-            ResturantItem(),
           ],
         ),
+      ),
+      body: Consumer<ResturantProvider>(
+        builder: (BuildContext context, value, Widget child) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              await Provider.of<ResturantProvider>(context, listen: false)
+                  .getResturantList();
+              return true;
+            },
+            child: value.listResturant != null
+                ? value.listResturant.isEmpty
+                    ? Text("No Resturants")
+                    : ListView.builder(
+                        itemCount: value.listResturant.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ResturantItem(value.listResturant[index]);
+                        },
+                      )
+                : FutureBuilder(
+                    future: value.getResturantList(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<dynamic> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        if (snapshot.hasData) {
+                          return Center(
+                            child: Text("Error In Fetch Data"),
+                          );
+                        }
+                      }
+                    },
+                  ),
+          );
+        },
       ),
     );
   }

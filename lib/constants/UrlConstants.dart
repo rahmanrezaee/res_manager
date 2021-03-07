@@ -1,1 +1,2 @@
 final baseUrl = "https://restaurant.webfumeprojects.online/api";
+final token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjAzYzdhYTA4ZWIwNjdiZGZjOGFkZTc1IiwiZW1haWwiOiJyLm1vaGFtbWFkaUB3ZWJmdW1lLmNvbSJ9LCJpYXQiOjE2MTUwMjIwNDEsImV4cCI6MTYxNTEwODQ0MX0.GGa9GsWxX4qas6SySZQSDTd6Fe7kyFfTa8XFCfu9hBs";
