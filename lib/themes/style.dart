@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 //Use this prebuild theme
 
 final ThemeData restaurantTheme = ThemeData(
-  pageTransitionsTheme: PageTransitionsTheme(
-      builders: {
-        TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
-        TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-      }
-    ),
+  pageTransitionsTheme: PageTransitionsTheme(builders: {
+    TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+    TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+  }),
   primarySwatch: Colors.blue,
   brightness: Brightness.light,
   fontFamily: 'SFU',
@@ -428,14 +426,14 @@ final ThemeData restaurantTheme = ThemeData(
     brightness: Brightness.light,
     deleteIconColor: Color(0xde000000),
     disabledColor: Color(0x0c000000),
-    labelPadding: EdgeInsets.only(top: 0, bottom: 0, left: 8, right: 8),
+    labelPadding: EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 0),
     labelStyle: TextStyle(
       color: Color(0xde000000),
       fontSize: null,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    padding: EdgeInsets.only(top: 4, bottom: 4, left: 4, right: 4),
+    padding: EdgeInsets.all(0),
     secondaryLabelStyle: TextStyle(
       color: Color(0x3d000000),
       fontSize: null,

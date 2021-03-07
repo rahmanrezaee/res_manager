@@ -21,16 +21,13 @@ class MyApp extends StatelessWidget {
             create: (_) => ResturantProvider()),
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
       ],
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: restaurantTheme,
-          home: LoginPage(),
-          routes: routes,
-        );
-      },
-      child: null,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: restaurantTheme,
+        home: LoginPage(),
+        routes: routes,
+      ),
     );
   }
 }

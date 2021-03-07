@@ -105,10 +105,7 @@ class _LayoutExampleState extends State<LayoutExample> {
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
       kDesktopBreakpoint: 768,
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: pages[pageIndex].page,
-      ),
+      body: pages[pageIndex].page,
       drawer: SizedBox(
         width: 281,
         child: Padding(
