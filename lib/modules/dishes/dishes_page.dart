@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 //packages
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:admin/modules/addNewDish/addNewDish_page.dart';
-import 'package:admin/providers/navigator_provider.dart';
 
 import '../../themes/style.dart';
 

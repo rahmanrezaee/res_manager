@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -23,7 +25,7 @@ class APIRequest {
   Future post({
     @required String myUrl,
     @required myBody,
-    @required Map<dynamic, dynamic> myHeaders,
+    Map<String, dynamic> myHeaders,
   }) {
     dio.options.headers = myHeaders;
     return dio.post(myUrl, data: myBody);

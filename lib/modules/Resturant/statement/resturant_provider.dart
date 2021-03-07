@@ -8,32 +8,27 @@ class ResturantProvider with ChangeNotifier {
 
   Future<bool> getResturantList() async {
     try {
-      String url = "$baseUrl/admin/restaurant";
+      // String url = "$baseUrl/admin/restaurant";
+      // final result = await APIRequest().get(myUrl: url, token: "");
 
-      
-     
+      // final extractedData = result.data["data"];
 
-      final result = await APIRequest().get(myUrl: url, token: "");
+      // if (extractedData == null) {
+      //   listResturant = [];
+      //   return false;
+      // }
 
-      final extractedData = result.data["data"];
+      // final List<ResturantModel> loadedProducts = [];
 
-    
-        if (extractedData == null) {
-          listResturant = [];
-          return false;
-        }
+      // extractedData.forEach((tableData) {
+      //   loadedProducts.add(ResturantModel.toJson(tableData));
+      // });
 
-        final List<ResturantModel> loadedProducts = [];
+      // listResturant = loadedProducts;
 
-        extractedData.forEach((tableData) {
-          loadedProducts.add(ResturantModel.toJson(tableData));
-        });
+      // notifyListeners();
 
-        listResturant = loadedProducts;
-
-        notifyListeners();
-    
-      return true;
+      // return true;
     } catch (e) {
       print("Mahdi: getFranchies: Error $e");
     }
