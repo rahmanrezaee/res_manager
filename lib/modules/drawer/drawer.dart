@@ -63,11 +63,11 @@ class _LayoutExampleState extends State<LayoutExample> {
       icon: Icon(Icons.room_service, color: AppColors.green),
       page: OrderPage(),
     ),
-    PageModel(
-      title: "My Profile",
-      icon: Icon(Icons.account_circle_outlined, color: Colors.yellow),
-      page: MyProfilePage(),
-    ),
+    // PageModel(
+    //   title: "My Profile",
+    //   icon: Icon(Icons.account_circle_outlined, color: Colors.yellow),
+    //   page: MyProfilePage(),
+    // ),
     PageModel(
       title: "Categories",
       icon: SizedBox(

@@ -8,7 +8,7 @@ part of 'customer_model.dart';
 
 Customer _$CustomerFromJson(Map<String, dynamic> json) {
   return Customer(
-    id: json['id'] as int,
+    id: json['id'] as String,
     username: json['username'] as String,
     activeOrders: json['activeOrders'] as int,
   );

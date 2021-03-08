@@ -33,7 +33,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
                       CircleAvatar(
                         radius: 40.0,
                         child: ClipRRect(
-                          child: Image.network('https://i.pravatar.cc/300'),
+                          child: Image.network(
+                              customerProvider.getCustomer.avatar['uriPath']),
                           borderRadius: BorderRadius.circular(50.0),
                         ),
                       ),
@@ -41,12 +42,12 @@ class _CustomerProfileState extends State<CustomerProfile> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Rahman Rezaiee",
+                          Text(customerProvider.getCustomer.username,
                               style: Theme.of(context).textTheme.headline4),
                           SizedBox(height: 5),
-                          Text("johndoe2021@gmail.com",
+                          Text(customerProvider.getCustomer.email,
                               style: TextStyle(color: Colors.black45)),
-                          Text("Total Order Placed",
+                          Text("${customerProvider.getCustomer.totalOrder}",
                               style: TextStyle(color: Colors.black45)),
                         ],
                       ),
@@ -72,23 +73,28 @@ class _CustomerProfileState extends State<CustomerProfile> {
                 ),
               ),
               SizedBox(height: 15),
-              ResponsiveGridRow(
-                children: [
-                  ...List.generate(2, (i) {
-                    return ResponsiveGridCol(
-                      xs: 12,
-                      sm: 12,
-                      md: 12,
-                      lg: 12,
-                      xl: 6,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: OrderItem(),
-                      ),
-                    );
-                  }),
-                ],
-              ),
+              customerProvider.getOrders == null
+                  ? CircularProgressIndicator()
+                  : ResponsiveGridRow(
+                      children: [
+                        ...List.generate(customerProvider.getOrders.length,
+                            (i) {
+                          return ResponsiveGridCol(
+                            xs: 12,
+                            sm: 12,
+                            md: 12,
+                            lg: 12,
+                            xl: 6,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: OrderCardItem(
+                                  customerProvider.getOrders[i],
+                                  'customeProfile'),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
               Text(
                 "Reviews Shared",
                 style: Theme.of(context)
@@ -96,23 +102,26 @@ class _CustomerProfileState extends State<CustomerProfile> {
                     .headline4
                     .copyWith(fontSize: 20),
               ),
-              ResponsiveGridRow(
-                children: [
-                  ...List.generate(2, (i) {
-                    return ResponsiveGridCol(
-                      xs: 12,
-                      sm: 12,
-                      md: 12,
-                      lg: 6,
-                      xl: 6,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CommentItem(),
-                      ),
-                    );
-                  }),
-                ],
-              ),
+              customerProvider.getReview == null
+                  ? Center(child: CircularProgressIndicator())
+                  : ResponsiveGridRow(
+                      children: [
+                        ...List.generate(customerProvider.getReview.length,
+                            (i) {
+                          return ResponsiveGridCol(
+                            xs: 12,
+                            sm: 12,
+                            md: 12,
+                            lg: 6,
+                            xl: 6,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CommentItem(customerProvider.getReview[i]),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
             ],
           ),
         );

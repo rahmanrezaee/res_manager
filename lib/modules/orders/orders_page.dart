@@ -1,3 +1,4 @@
+import 'package:admin/modules/customers/models/order_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../themes/colors.dart';
@@ -99,7 +100,7 @@ class _OrderPageState extends State<OrderPage>
                         xl: 6,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: OrderItem(),
+                          // child: OrderCardItem(new OrderModel()),
                         ),
                       );
                     }),
@@ -122,7 +123,7 @@ class _OrderPageState extends State<OrderPage>
                         xl: 6,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: OrderItem(),
+                          // child: OrderCardItem(new OrderModel()),
                         ),
                       );
                     }),

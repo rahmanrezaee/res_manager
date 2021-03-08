@@ -15,7 +15,7 @@ class CustomersProvider with ChangeNotifier {
 
   ///
   Customer _customer;
-  get getCustomer => _customer;
+  Customer get getCustomer => _customer;
 
   ///
   List<OrderModel> _orders;
@@ -23,7 +23,7 @@ class CustomersProvider with ChangeNotifier {
 
   ///
   List<ReviewModel> _reviews;
-  get getReview => _reviews;
+  List<ReviewModel> get getReview => _reviews;
 
   ///
   fetchCustomers() async {
@@ -45,12 +45,30 @@ class CustomersProvider with ChangeNotifier {
   }
 
   fetchCustomer(String customerId) async {
-    print("customerId: $customerId");
+    //getting token
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = json.decode(prefs.getString("user"))['token'];
+    //getting data
     String url = "$baseUrl/admin/user/customer/$customerId";
     var res = await APIRequest().get(myUrl: url, token: token);
-    print(res.data);
+    //getting user data
+    var userJson = res.data['data']['userData'];
+    userJson['totalOrder'] = (res.data['data']['orders'] as List).length;
+    this._customer = new Customer.fromJson(userJson);
+    //getting user orders
+    print(res.data['data']['orders']);
+    this._orders = [];
+    (res.data['data']['orders'] as List).forEach((order) {
+      order['customerName'] = res.data['data']['userData']['username'];
+      this._orders.add(new OrderModel.fromJson(order));
+    });
+    //getting user review
+    this._reviews = [];
+    (res.data['data']['review'] as List).forEach((review) {
+      // order['customerName'] = res.data['data']['userData']['username'];
+      this._reviews.add(new ReviewModel.fromJson(review));
+    });
+
     notifyListeners();
   }
 }

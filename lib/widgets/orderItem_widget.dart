@@ -1,12 +1,17 @@
+import 'package:admin/modules/customers/models/orderItem_model.dart';
+import 'package:admin/modules/customers/models/order_model.dart';
 import 'package:flutter/material.dart';
 import '../themes/colors.dart';
 
-class OrderItem extends StatefulWidget {
+class OrderCardItem extends StatefulWidget {
+  final String page;
+  final OrderModel order;
+  OrderCardItem(this.order, this.page);
   @override
-  _OrderItemState createState() => _OrderItemState();
+  _OrderCardItemState createState() => _OrderCardItemState();
 }
 
-class _OrderItemState extends State<OrderItem> {
+class _OrderCardItemState extends State<OrderCardItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,20 +24,22 @@ class _OrderItemState extends State<OrderItem> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Customer Name: ABC",
-            style: TextStyle(color: AppColors.redText),
-          ),
+          widget.page == 'customeProfile'
+              ? Container()
+              : Text(
+                  "Customer Name: ${widget.order.customerName}",
+                  style: TextStyle(color: AppColors.redText),
+                ),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Order ID: XXXXXX",
+                "Order ID: ${widget.order.id}",
                 style: TextStyle(color: AppColors.redText),
               ),
               Text(
-                "Time and Date",
+                widget.order.createdAt,
                 style: TextStyle(color: AppColors.redText),
               ),
             ],
@@ -42,12 +49,12 @@ class _OrderItemState extends State<OrderItem> {
           SizedBox(height: 30),
           Text("Items:", style: TextStyle(fontWeight: FontWeight.w600)),
           SizedBox(height: 10),
-          DishItem(),
-          DishItem(),
-          DishItem(),
+          ...List.generate(widget.order.items.length, (index) {
+            return DishItem(widget.order.items[index]);
+          }),
           SizedBox(height: 20),
           Text(
-            "Paid By: Card Name",
+            "Paid By: ${widget.order.cardName}",
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.normal,
@@ -60,7 +67,7 @@ class _OrderItemState extends State<OrderItem> {
             children: [
               Row(children: [
                 Text(
-                  "Pick Up at: HH:MM",
+                  "Pick Up at: ${widget.order.pickUpTime}",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
@@ -200,9 +207,8 @@ class _OrderItemState extends State<OrderItem> {
 }
 
 class DishItem extends StatelessWidget {
-  const DishItem({
-    Key key,
-  }) : super(key: key);
+  final OrderItem dishItem;
+  const DishItem(this.dishItem);
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +222,7 @@ class DishItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text("Dish Name"),
+          Text(dishItem.foodName),
           Expanded(
             child: FlatButton.icon(
               textColor: AppColors.green,
@@ -254,10 +260,12 @@ class DishItem extends StatelessWidget {
                               ),
                               titlePadding: EdgeInsets.only(top: 15),
                               children: [
-                                Text("Extra Cheese: 1x",
-                                    textAlign: TextAlign.center),
-                                Text("Extra Cheese: 1x",
-                                    textAlign: TextAlign.center),
+                                ...List.generate(dishItem.addOn.length,
+                                    (index) {
+                                  return Text(
+                                      "${dishItem.addOn[index].name}: ${dishItem.addOn[index].quantity}",
+                                      textAlign: TextAlign.center);
+                                }),
                               ],
                             ),
                           ),
@@ -305,8 +313,7 @@ class DishItem extends StatelessWidget {
                               contentPadding: EdgeInsets.all(15),
                               children: [
                                 Divider(),
-                                Text(
-                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna, porttitor",
+                                Text(dishItem.orderNote,
                                     textAlign: TextAlign.center),
                               ],
                             ),
@@ -317,11 +324,11 @@ class DishItem extends StatelessWidget {
               },
             ),
           ),
-          Text("Qty"),
+          Text("${dishItem.quantity}"),
           SizedBox(
             width: 20,
           ),
-          Text("Price"),
+          Text("${dishItem.price}"),
         ],
       ),
     );

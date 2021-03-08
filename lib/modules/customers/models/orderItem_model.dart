@@ -1,9 +1,18 @@
 class OrderItem {
   String foodId;
-  int foodName;
+  String foodName;
   int quantity;
   List<AddOn> addOn;
-  OrderItem({this.foodId, this.foodName, this.quantity, this.addOn});
+  double price;
+  String orderNote;
+  OrderItem({
+    this.foodId,
+    this.foodName,
+    this.quantity,
+    this.addOn,
+    this.price,
+    this.orderNote,
+  });
   factory OrderItem.fromJson(Map json) {
     List<AddOn> addOns = [];
     (json['addOn'] as List).forEach((element) {
@@ -14,6 +23,8 @@ class OrderItem {
       foodName: json['foodName'],
       quantity: json['quantity'],
       addOn: addOns,
+      price: double.parse(json['price'].toString()),
+      orderNote: json['orderNote'],
     );
   }
 }
@@ -31,7 +42,7 @@ class AddOn {
     return AddOn(
       name: json['name'],
       quantity: json['quantity'],
-      price: json['price'],
+      price: double.parse(json['price'].toString()),
     );
   }
 }
