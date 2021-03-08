@@ -7,6 +7,7 @@ class TextFormFieldResturant extends StatelessWidget {
   Function onTap;
   Function onSave;
   Function valide;
+  String initValue;
   bool enable;
   IconData icon;
   TextInputType typetext;
@@ -15,6 +16,7 @@ class TextFormFieldResturant extends StatelessWidget {
       this.controller,
       this.onChange,
       this.onSave,
+      this.initValue,
       this.onTap,
       this.typetext = TextInputType.text,
       this.enable = false,
@@ -28,6 +30,7 @@ class TextFormFieldResturant extends StatelessWidget {
       controller: controller,
       onChanged: this.onChange,
       onSaved: this.onSave,
+      initialValue: this.initValue,
       readOnly: enable,
       onTap: onTap,
       validator: this.valide,

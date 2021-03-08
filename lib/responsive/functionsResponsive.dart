@@ -16,11 +16,18 @@ double getHelfIpadAndFullMobWidth(BuildContext context) {
   return width;
 }
 
-
 double getQurIpadAndFullMobWidth(BuildContext context) {
   double width = MediaQuery.of(context).size.width;
   if (width > 700) {
     return width / 3;
   }
   return width;
+}
+
+bool showAppBarNodepad(BuildContext context) {
+  double width = MediaQuery.of(context).size.width;
+  if (width > 700) {
+    return false;
+  }
+  return true;
 }
