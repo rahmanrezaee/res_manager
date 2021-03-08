@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:admin/modules/Resturant/Models/TimeModel.dart';
 import 'package:admin/modules/Resturant/Models/location.dart';
 
@@ -26,7 +28,7 @@ class ResturantModel {
   }
 
   Map sendMap() {
-    return {
+    Map data = {
       "username": this.resturantName,
       "avatar": this.avatar,
       "location": {
@@ -55,7 +57,27 @@ class ResturantModel {
         "time": [this.saturday.startTime, this.saturday.endTime]
       },
       "email": this.email,
-      "password": this.password
     };
+    print("paswwo ${this.password}");
+    if (this.password != null && this.password != "") {
+      data["password"] = this.password;
+    }
+
+    return data;
+  }
+
+  ResturantModel.toComplateJson(tableData) {
+    this.location = LocationModel.toJson(tableData['location']);
+    this.sunday = TimeModel.toJson(tableData['Sunday']);
+    this.monday = TimeModel.toJson(tableData['Monday']);
+    this.tuesday = TimeModel.toJson(tableData['Tuesday']);
+    this.wednesday = TimeModel.toJson(tableData['Wednesday']);
+    this.thursday = TimeModel.toJson(tableData['Thursday']);
+    this.friday = TimeModel.toJson(tableData['Friday']);
+    this.saturday = TimeModel.toJson(tableData['Saturday']);
+    this.resturantName = tableData['username'];
+    this.id = tableData['_id'];
+    this.email = tableData['email'];
+    this.avatar = tableData['avatar'];
   }
 }

@@ -13,13 +13,13 @@ class AuthProvider with ChangeNotifier {
       // print({"email": username, "password": password});
       String url = "$baseUrl/admin/user/login";
       // print(url);
-      // var res = await APIRequest().post(
-      //   myUrl: url,
-      //   myBody: {"email": username, "password": password},
-      //   myHeaders: null,
-      // );
-      // print(res);
-      await Future.delayed(Duration(seconds: 4));
+      var res = await APIRequest().post(
+        myUrl: url,
+        myBody: {"email": username, "password": password},
+        myHeaders: null,
+      );
+      print(res);
+      // await Future.delayed(Duration(seconds: 4));
       return false;
     } catch (e, s) {
       print("Stacktrace $s");

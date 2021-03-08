@@ -33,7 +33,7 @@ class ResturantItem extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.edit, color: AppColors.green),
                   onPressed: () {
-                    Navigator.pushNamed(context, ResturantForm.routeName);
+                    Navigator.pushNamed(context, ResturantForm.routeName,arguments: resturantModel.id);
                     // showDialog(
                     //   context: context,
                     //   builder: (context) {

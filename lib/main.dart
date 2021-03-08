@@ -7,6 +7,8 @@ import './themes/style.dart';
 import './routes.dart';
 import 'package:provider/provider.dart';
 
+import 'modules/coupons/statement/couponProvider.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
@@ -20,12 +22,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ResturantProvider>(
             create: (_) => ResturantProvider()),
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
+        ChangeNotifierProvider<CoupenProvider>(create: (_) => CoupenProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: restaurantTheme,
-        home: LoginPage(),
+        home: LayoutExample(),
         routes: routes,
       ),
     );

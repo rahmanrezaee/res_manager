@@ -20,7 +20,9 @@ class _ResturantScreenState extends State<ResturantScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(routes: {
       DishPage.routeName: (context) => DishPage(),
-      ResturantForm.routeName: (context) => ResturantForm(),
+      ResturantForm.routeName: (context) => ResturantForm(
+            resId: ModalRoute.of(context).settings.arguments,
+          ),
     }, theme: restaurantTheme, home: ListResturantScreen());
   }
 }
