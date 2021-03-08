@@ -1,4 +1,5 @@
 //Core
+import 'package:admin/modules/customers/models/review_model.dart';
 import 'package:flutter/material.dart';
 //packages
 import 'package:carousel_slider/carousel_slider.dart';
@@ -299,7 +300,7 @@ class _AddNewDishState extends State<AddNewDish> {
                       xl: 6,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CommentItem(),
+                        child: CommentItem(new ReviewModel()),
                       ),
                     );
                   }),

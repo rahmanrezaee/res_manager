@@ -29,9 +29,11 @@ class APIRequest {
   Future post({
     @required String myUrl,
     @required myBody,
-    @required Map<String, dynamic> myHeaders,
+    Map<String, dynamic> myHeaders,
   }) {
-    dio.options.headers = myHeaders;
+    if (myHeaders != null) {
+      dio.options.headers = myHeaders;
+    }
     return dio.post(myUrl, data: myBody);
   }
 

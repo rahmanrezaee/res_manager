@@ -2,6 +2,7 @@ import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../validators/formFieldsValidators.dart';
 
 class ForgotPassword extends StatefulWidget {
   static String routeName = "ForgotPassword";
@@ -93,7 +94,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           Form(
                             key: _formKey,
                             child: _loginFieldBuilder(
-                                "Forgot Password", _emailController),
+                                "Forgot Password", _emailController, () {}),
                           ),
                         ],
                       ),
@@ -144,11 +145,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         loading = true;
       });
       String email = _emailController.text;
-      authProvider.forgotPassword(email).then((v) {
+      authProvider.forgotPassword(email).then((res) {
         setState(() {
           loading = false;
         });
-        if (v == true) {
+        if (res['status'] == true) {
           showDialog(
               context: context,
               builder: (context) {
@@ -197,7 +198,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           });
         } else {
           setState(() {
-            error = "Error massage that coms from backend";
+            print(res['message']);
+            error = res['message'];
           });
         }
       });
@@ -205,14 +207,34 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 }
 
-_loginFieldBuilder(String hintText, TextEditingController controller) {
-  return TextField(
+_loginFieldBuilder(
+    String hintText, TextEditingController controller, Function validator) {
+  return TextFormField(
     controller: controller,
+    // validator: (e) {
+    // return validator(e);
+    // },
     decoration: InputDecoration(
       hintText: hintText,
       hintStyle: TextStyle(color: Colors.grey),
       contentPadding: EdgeInsets.only(left: 10),
       enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(color: AppColors.redText),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
         borderSide: BorderSide(color: Colors.grey),
       ),
