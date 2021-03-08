@@ -12,6 +12,30 @@ import 'package:flutter/foundation.dart';
 class CoupenProvider with ChangeNotifier {
   List<CouponModel> list;
 
+  Future<CouponModel> getSingleCoupen(id) async {
+    try {
+      String url = "$baseUrl/admin/coupon/$id";
+
+      final result = await APIRequest().get(myUrl: url, token: token);
+
+      print("result $result");
+
+      final extractedData = result.data["data"];
+
+      if (extractedData == null) {
+        return null;
+      }
+
+      return Future.value(CouponModel.toComplateJson(extractedData));
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
+    }
+  }
+
   Future<bool> getCoupenList() async {
     try {
       String url = "$baseUrl/admin/coupon";
@@ -81,8 +105,7 @@ class CoupenProvider with ChangeNotifier {
   Future<bool> editCoupen(data, id) async {
     print("da $data");
     try {
-      final StringBuffer url =
-          new StringBuffer("$baseUrl/admin/restaurant/profile/$id");
+      final StringBuffer url = new StringBuffer("$baseUrl/admin/coupon/$id");
       print(url.toString());
 
       final response = await APIRequest().put(

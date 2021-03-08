@@ -68,6 +68,37 @@ class ResturantProvider with ChangeNotifier {
     }
   }
 
+  Future<List<Map<String, String>>> getResturantListWithoutPro() async {
+    try {
+      String url = "$baseUrl/admin/restaurant";
+
+      final result = await APIRequest().get(myUrl: url, token: token);
+
+      print("result $result");
+
+      final extractedData = result.data["data"];
+
+      List<Map<String, String>> loadedProducts = [];
+
+      extractedData.forEach((tableData) {
+        loadedProducts.add(
+          {
+            "display": tableData['restaurant']['username'],
+            "value": tableData['restaurant']['_id']
+          },
+        );
+      });
+
+      return loadedProducts;
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
+    }
+  }
+
   Future<bool> addResturant(data) async {
     print("da $data");
     try {
