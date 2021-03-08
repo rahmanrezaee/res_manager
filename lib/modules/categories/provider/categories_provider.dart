@@ -19,6 +19,7 @@ class CategoryProvider with ChangeNotifier {
     var res = await APIRequest().get(myUrl: url, token: token);
     this._categories = [];
     (res.data['data'] as List).forEach((category) {
+      print("thsi is the single cat: $category");
       this._categories.add(new CategoryModel.fromJson(category));
     });
     notifyListeners();

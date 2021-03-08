@@ -1,6 +1,7 @@
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/modules/categories/provider/categories_provider.dart';
+import 'package:admin/modules/contactUs/providers/contact_provider.dart';
 import 'package:admin/modules/customers/provider/customers_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/modules/drawer/drawer.dart';
@@ -32,12 +33,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CategoryProvider>(
             create: (_) => CategoryProvider()),
         ChangeNotifierProvider<CoupenProvider>(create: (_) => CoupenProvider()),
+        ChangeNotifierProvider<ContactProvider>(
+            create: (_) => ContactProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: restaurantTheme,
-        home: LayoutExample(),
+        home: LoginPage(),
         routes: routes,
       ),
     );

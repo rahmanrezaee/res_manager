@@ -1,4 +1,5 @@
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
+import 'package:admin/modules/contactUs/contactUs_page.dart';
 import 'package:admin/modules/coupons/coupons_page.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
@@ -64,11 +65,11 @@ class _LayoutExampleState extends State<LayoutExample> {
       icon: Icon(Icons.room_service, color: AppColors.green),
       page: OrderPage(),
     ),
-    // PageModel(
-    //   title: "My Profile",
-    //   icon: Icon(Icons.account_circle_outlined, color: Colors.yellow),
-    //   page: MyProfilePage(),
-    // ),
+    PageModel(
+      title: "Contact Us Requests",
+      icon: Icon(Icons.account_circle_outlined, color: Colors.yellow),
+      page: ContactUsPage(),
+    ),
     PageModel(
       title: "Categories",
       icon: SizedBox(
@@ -170,7 +171,7 @@ drawerListItemBuilder({
           children: [
             icon,
             SizedBox(width: 10),
-            Text(title),
+            Expanded(child: Text(title)),
           ],
         ),
       ),
