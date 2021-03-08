@@ -46,11 +46,11 @@ class DropDownFormField extends FormField<dynamic> {
                         vertical: 0,
                         horizontal: 10,
                       ),
-                disabledBorder: InputBorder.none,
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
+                // disabledBorder: InputBorder.none,
+                // border: ,
+                // focusedBorder: InputBorder.none,
+                // enabledBorder: InputBorder.none,
+                // errorBorder: InputBorder.none,
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<dynamic>(

@@ -1,230 +1,321 @@
-import 'package:admin/modules/customers/models/orderItem_model.dart';
-import 'package:admin/modules/customers/models/order_model.dart';
+import 'package:admin/modules/dishes/Models/AddonModel.dart';
+import 'package:admin/modules/dishes/Models/dishModels.dart';
+import 'package:admin/modules/orders/Models/OrderModels.dart';
+import 'package:admin/modules/orders/Services/OrderSerives.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
+import 'package:responsive_grid/responsive_grid.dart';
 import '../themes/colors.dart';
 
-class OrderCardItem extends StatefulWidget {
-  final String page;
-  final OrderModel order;
-  OrderCardItem(this.order, this.page);
+class OrderItem extends StatefulWidget {
+  String status;
+  String resturantId;
+  var scaffoldKey;
+  OrderItem({@required this.status, this.resturantId, this.scaffoldKey});
   @override
-  _OrderCardItemState createState() => _OrderCardItemState();
+  _OrderItemState createState() => _OrderItemState();
 }
 
-class _OrderCardItemState extends State<OrderCardItem> {
+class _OrderItemState extends State<OrderItem> {
+  Future getOrder;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getOrderData();
+  }
+
+  void getOrderData() {
+    if (widget.resturantId != null) {
+      getOrder = OrderServices().getSingleOrder(
+          state: widget.status, resturantId: widget.resturantId);
+    } else {
+      getOrder = OrderServices().getAllOrder(
+        state: widget.status,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(15),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.accentLighter,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          widget.page == 'customeProfile'
-              ? Container()
-              : Text(
-                  "Customer Name: ${widget.order.customerName}",
+    return FutureBuilder(
+      future: getOrder,
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("error in Fetch orders"),
+            );
+          } else {
+            List<OrderModels> orderList = snapshot.data;
+
+            return orderList.isEmpty
+                ? Center(
+                    child: Text("No Order"),
+                  )
+                : ListView.builder(
+                    itemCount: orderList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return getItem(orderList[index]);
+                    },
+                  );
+          }
+        } else {
+          return Center(
+            child: Text("error in Fetch orders"),
+          );
+        }
+      },
+    );
+  }
+
+  Widget getItem(OrderModels item) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: EdgeInsets.all(15),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.accentLighter,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Customer Name: ${item.user['username']}",
+              style: TextStyle(color: AppColors.redText),
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Order ID: ${item.cardName} ",
                   style: TextStyle(color: AppColors.redText),
                 ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Order ID: ${widget.order.id}",
-                style: TextStyle(color: AppColors.redText),
-              ),
-              Text(
-                widget.order.createdAt,
-                style: TextStyle(color: AppColors.redText),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Divider(),
-          SizedBox(height: 30),
-          Text("Items:", style: TextStyle(fontWeight: FontWeight.w600)),
-          SizedBox(height: 10),
-          ...List.generate(widget.order.items.length, (index) {
-            return DishItem(widget.order.items[index]);
-          }),
-          SizedBox(height: 20),
-          Text(
-            "Paid By: ${widget.order.cardName}",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-              color: AppColors.green,
-            ),
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(children: [
                 Text(
-                  "Pick Up at: ${widget.order.pickUpTime}",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    color: AppColors.green,
-                  ),
+                  "${Jiffy(item.date).yMMMMd}",
+                  style: TextStyle(color: AppColors.redText),
                 ),
-                SizedBox(width: 15),
-                SizedBox(
-                  width: 35,
-                  height: 35,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+              ],
+            ),
+            SizedBox(height: 10),
+            Divider(),
+            SizedBox(height: 30),
+            Text("Items:", style: TextStyle(fontWeight: FontWeight.w600)),
+            SizedBox(height: 10),
+            SingleChildScrollView(
+              physics: ScrollPhysics(),
+              child: Column(
+                children: <Widget>[
+                  ListView.builder(
+                      itemCount: item.items.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return DishItem(
+                          model: item.items[index],
+                        );
+                      }),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Paid By: ${item.cardName}",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                color: AppColors.green,
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(children: [
+                    Text(
+                      "Pick Up at: HH:MM",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                        color: AppColors.green,
+                      ),
                     ),
-                    elevation: 0,
-                    color: AppColors.green,
-                    child: Icon(Icons.edit, color: Colors.white),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return SimpleDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            title: Text("Edit Pickup Time",
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 35, vertical: 25),
-                            children: [
-                              Divider(),
-                              TextField(
-                                // minLines: 6,
-                                // maxLines: 6,
-                                decoration: InputDecoration(
-                                  hintText: "Enter here",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  contentPadding:
-                                      EdgeInsets.only(left: 10, top: 15),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10.0)),
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10.0)),
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
+                    SizedBox(width: 15),
+                    SizedBox(
+                      width: 35,
+                      height: 35,
+                      child: RaisedButton(
+                        padding: EdgeInsets.all(0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 0,
+                        color: AppColors.green,
+                        child: Icon(Icons.edit, color: Colors.white),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return SimpleDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ),
-                              SizedBox(height: 10),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: RaisedButton(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  color: Theme.of(context).primaryColor,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                                title: Text("Edit Pickup Time",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 35, vertical: 25),
+                                children: [
+                                  Divider(),
+                                  TextField(
+                                    // minLines: 6,
+                                    // maxLines: 6,
+                                    decoration: InputDecoration(
+                                      hintText: "Enter here",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      contentPadding:
+                                          EdgeInsets.only(left: 10, top: 15),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.grey),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.grey),
+                                      ),
+                                    ),
                                   ),
-                                  child: Text(
-                                    "Save",
-                                    style: Theme.of(context).textTheme.button,
+                                  SizedBox(height: 10),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: RaisedButton(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      color: Theme.of(context).primaryColor,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        "Save",
+                                        style:
+                                            Theme.of(context).textTheme.button,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ),
-                            ],
+                                ],
+                              );
+                            },
                           );
                         },
-                      );
-                    },
+                      ),
+                    ),
+                  ]),
+                  // Row(children: [
+                  //   SizedBox(
+                  //     width: 35,
+                  //     height: 35,
+                  //     child: RaisedButton(
+                  //       padding: EdgeInsets.all(0),
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //       ),
+                  //       elevation: 0,
+                  //       color: AppColors.green,
+                  //       child: Icon(Icons.check, color: Colors.white),
+                  //       onPressed: () {},
+                  //     ),
+                  //   ),
+                  //   SizedBox(width: 20),
+                  //   SizedBox(
+                  //     width: 35,
+                  //     height: 35,
+                  //     child: RaisedButton(
+                  //       padding: EdgeInsets.all(0),
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //       ),
+                  //       elevation: 0,
+                  //       onPressed: () {},
+                  //       color: AppColors.redText,
+                  //       child: Icon(Icons.close, color: Colors.white),
+                  //     ),
+                  //   ),
+                  // ]),
+                  Visibility(
+                    visible: item.status != "completed",
+                    child: RaisedButton(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      elevation: 0,
+                      color: Colors.white,
+                      textColor: Theme.of(context).primaryColor,
+                      child: Text("Mark Picked Up",
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal, fontSize: 14)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: BorderSide(
+                            width: 1, color: Theme.of(context).primaryColor),
+                      ),
+                      onPressed: () {
+                        OrderServices()
+                            .pickup(item.id, "completed")
+                            .then((value) {
+                          getOrderData();
+                          widget.scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text("Succecfully Done"),
+                            duration: Duration(seconds: 4),
+                          ));
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ]),
-              // Row(children: [
-              //   SizedBox(
-              //     width: 35,
-              //     height: 35,
-              //     child: RaisedButton(
-              //       padding: EdgeInsets.all(0),
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(10),
-              //       ),
-              //       elevation: 0,
-              //       color: AppColors.green,
-              //       child: Icon(Icons.check, color: Colors.white),
-              //       onPressed: () {},
-              //     ),
-              //   ),
-              //   SizedBox(width: 20),
-              //   SizedBox(
-              //     width: 35,
-              //     height: 35,
-              //     child: RaisedButton(
-              //       padding: EdgeInsets.all(0),
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(10),
-              //       ),
-              //       elevation: 0,
-              //       onPressed: () {},
-              //       color: AppColors.redText,
-              //       child: Icon(Icons.close, color: Colors.white),
-              //     ),
-              //   ),
-              // ]),
-              RaisedButton(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 10,
-                ),
-                elevation: 0,
-                color: Colors.white,
-                textColor: Theme.of(context).primaryColor,
-                child: Text("Mark Picked Up",
-                    style:
-                        TextStyle(fontWeight: FontWeight.normal, fontSize: 14)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: BorderSide(
-                      width: 1, color: Theme.of(context).primaryColor),
-                ),
-                onPressed: () {},
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class DishItem extends StatelessWidget {
-  final OrderItem dishItem;
-  const DishItem(this.dishItem);
+  DishModel model;
+
+  DishItem({Key key, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(width: 1.5, color: Color.fromRGBO(0, 0, 0, 0.1)),
-        ),
-      ),
-      child: Row(
-        children: [
-          Text(dishItem.foodName),
-          Expanded(
-            child: FlatButton.icon(
+      height: 40,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            Text("${model.foodName}"),
+            FlatButton.icon(
               textColor: AppColors.green,
               label: Text(
                 "View Add On",
@@ -250,36 +341,26 @@ class DishItem extends StatelessWidget {
                             data: Theme.of(context).copyWith(
                                 toggleableActiveColor: AppColors.green),
                             child: SimpleDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              title: Text(
-                                "Select Restaurant",
-                                style: Theme.of(context).textTheme.headline3,
-                                textAlign: TextAlign.center,
-                              ),
-                              titlePadding: EdgeInsets.only(top: 15),
-                              children: [
-                                ...List.generate(dishItem.addOn.length,
-                                    (index) {
-                                  return Text(
-                                      "${dishItem.addOn[index].name}: ${dishItem.addOn[index].quantity}",
-                                      textAlign: TextAlign.center);
-                                }),
-                              ],
-                            ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                title: Text(
+                                  "Add On List",
+                                  style: Theme.of(context).textTheme.headline3,
+                                  textAlign: TextAlign.center,
+                                ),
+                                titlePadding: EdgeInsets.only(top: 15),
+                                children: getAddonList(model.addOn)),
                           ),
                         );
                       });
                     });
               },
             ),
-          ),
-          Expanded(
-            child: FlatButton.icon(
+            FlatButton.icon(
               textColor: AppColors.green,
               label: Text(
-                "View Order Note",
+                "View Note",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
@@ -313,8 +394,7 @@ class DishItem extends StatelessWidget {
                               contentPadding: EdgeInsets.all(15),
                               children: [
                                 Divider(),
-                                Text(dishItem.orderNote,
-                                    textAlign: TextAlign.center),
+                                Text("Heloo w", textAlign: TextAlign.center),
                               ],
                             ),
                           ),
@@ -323,14 +403,25 @@ class DishItem extends StatelessWidget {
                     });
               },
             ),
-          ),
-          Text("${dishItem.quantity}"),
-          SizedBox(
-            width: 20,
-          ),
-          Text("${dishItem.price}"),
-        ],
+            Text("Qty : ${model.quantity}"),
+            SizedBox(
+              width: 20,
+            ),
+            Text("Price : ${model.quantity}"),
+          ],
+        ),
       ),
     );
+  }
+
+  List<Widget> getAddonList(List<AddonModel> addOn) {
+    List<Widget> addonItem = [];
+
+    for (AddonModel item in model.addOn) {
+      addonItem.add(
+          Text("${item.name} : ${item.quantity}", textAlign: TextAlign.center));
+    }
+
+    return addonItem;
   }
 }

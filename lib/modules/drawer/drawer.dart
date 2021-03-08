@@ -1,6 +1,7 @@
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/coupons/coupons_page.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_scaffold/responsive_scaffold.dart';
 import 'package:admin/constants/assest_path.dart';
@@ -132,6 +133,9 @@ class _LayoutExampleState extends State<LayoutExample> {
                     setState(() {
                       pageIndex = index;
                     });
+                    if (showAppBarNodepad(context)) {
+                      Navigator.pop(context);
+                    }
                   },
                 );
               }).toList(),

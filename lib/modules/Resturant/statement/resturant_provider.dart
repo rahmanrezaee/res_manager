@@ -7,6 +7,30 @@ import 'package:flutter/cupertino.dart';
 class ResturantProvider with ChangeNotifier {
   List<ResturantModel> listResturant;
 
+  Future<ResturantModel> getSingleResturant(id) async {
+    try {
+      String url = "$baseUrl/admin/restaurant/profile/$id";
+
+      final result = await APIRequest().get(myUrl: url, token: token);
+
+      print("result $result");
+
+      final extractedData = result.data["data"];
+
+      if (extractedData == null) {
+        return null;
+      }
+
+      return Future.value(ResturantModel.toComplateJson(extractedData));
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
+    }
+  }
+
   Future<bool> getResturantList() async {
     try {
       String url = "$baseUrl/admin/restaurant";
@@ -44,6 +68,37 @@ class ResturantProvider with ChangeNotifier {
     }
   }
 
+  Future<List<Map<String, String>>> getResturantListWithoutPro() async {
+    try {
+      String url = "$baseUrl/admin/restaurant";
+
+      final result = await APIRequest().get(myUrl: url, token: token);
+
+      print("result $result");
+
+      final extractedData = result.data["data"];
+
+      List<Map<String, String>> loadedProducts = [];
+
+      extractedData.forEach((tableData) {
+        loadedProducts.add(
+          {
+            "display": tableData['restaurant']['username'],
+            "value": tableData['restaurant']['_id']
+          },
+        );
+      });
+
+      return loadedProducts;
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
+    }
+  }
+
   Future<bool> addResturant(data) async {
     print("da $data");
     try {
@@ -63,6 +118,37 @@ class ResturantProvider with ChangeNotifier {
 
       listResturant = null;
       // listResturant.add(ResturantModel.toJson(extractedData));
+
+      notifyListeners();
+      return true;
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
+    }
+  }
+
+  Future<bool> editResturant(data, id) async {
+    print("da $data");
+    try {
+      final StringBuffer url =
+          new StringBuffer("$baseUrl/admin/restaurant/profile/$id");
+      print(url.toString());
+
+      final response = await APIRequest().put(
+        myBody: data,
+        myHeaders: {
+          "token": token,
+        },
+        myUrl: url.toString(),
+      );
+
+      final extractedData = response.data["data"];
+      print("franch data 1 $extractedData ");
+
+      listResturant = null;
 
       notifyListeners();
       return true;
