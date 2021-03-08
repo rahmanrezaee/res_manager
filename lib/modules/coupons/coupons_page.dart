@@ -94,8 +94,8 @@ class CouponsPage extends StatelessWidget {
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: value.list.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return _couponsItemBuilder(
-                                    context, value.list[index]);
+                                return _couponsItemBuilder(context,
+                                    value.list[index], _formKey, _scaffoldKey);
                                 ;
                               },
                             )
@@ -145,7 +145,7 @@ _textFieldBuilder(String hintText) {
   );
 }
 
-_couponsItemBuilder(context, CouponModel coupen) {
+_couponsItemBuilder(context, CouponModel coupen, _formKey, _scaffoldKey) {
   return Card(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     child: Padding(
@@ -160,62 +160,18 @@ _couponsItemBuilder(context, CouponModel coupen) {
               IconButton(
                 icon: Icon(Icons.edit, color: AppColors.green),
                 onPressed: () {
-                  print("Ali Azad");
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return SimpleDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: FormCoupen(
+                          formKey: _formKey,
+                          scoffeldKey: _scaffoldKey,
+                          coupenId: coupen.id,
                         ),
-                        title: Text("Add/Edit Category",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 35, vertical: 25),
-                        children: [
-                          Divider(),
-                          TextField(
-                            // minLines: 6,
-                            // maxLines: 6,
-                            decoration: InputDecoration(
-                              hintText: "Enter here",
-                              hintStyle: TextStyle(color: Colors.grey),
-                              contentPadding:
-                                  EdgeInsets.only(left: 10, top: 15),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: RaisedButton(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              color: Theme.of(context).primaryColor,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                "Save",
-                                style: Theme.of(context).textTheme.button,
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ),
-                        ],
                       );
                     },
                   );
