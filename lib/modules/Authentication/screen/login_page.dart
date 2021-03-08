@@ -1,6 +1,5 @@
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Authentication/validators/formFieldsValidators.dart';
-import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -155,18 +154,18 @@ class _LoginPageState extends State<LoginPage> {
       });
       String email = _emailController.text;
       String password = _passwordController.text;
-      authProvider.login(email, password).then((v) {
+      authProvider.login(email, password).then((res) {
         setState(() {
           loading = false;
         });
-        if (v == true) {
+        if (res['status'] == true) {
           setState(() {
             error = null;
           });
           Navigator.pushReplacementNamed(context, LayoutExample.routeName);
         } else {
           setState(() {
-            error = "Error massage that coms from backend";
+            error = res['message'];
           });
         }
       });
