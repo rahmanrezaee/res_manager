@@ -16,7 +16,7 @@ class CoupenProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/coupon/$id";
 
-      final result = await APIRequest().get(myUrl: url, token: token);
+      final result = await APIRequest().get(myUrl: url, token: await gettoken());
 
       print("result $result");
 
@@ -40,7 +40,7 @@ class CoupenProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/coupon";
 
-      final result = await APIRequest().get(myUrl: url, token: token);
+      final result = await APIRequest().get(myUrl: url, token: await gettoken());
 
       print("result $result");
 
@@ -80,7 +80,7 @@ class CoupenProvider with ChangeNotifier {
       final response = await APIRequest().post(
         myBody: data,
         myHeaders: {
-          "token": token,
+          "token": await gettoken(),
         },
         myUrl: url.toString(),
       );
@@ -111,7 +111,7 @@ class CoupenProvider with ChangeNotifier {
       final response = await APIRequest().put(
         myBody: data,
         myHeaders: {
-          "token": token,
+          "token": await gettoken(),
         },
         myUrl: url.toString(),
       );

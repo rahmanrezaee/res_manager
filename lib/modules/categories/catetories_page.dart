@@ -1,4 +1,8 @@
+import 'package:admin/modules/Resturant/Screen/list_resturant_screen.dart';
+import 'package:admin/modules/dishes/Screen/addNewDish_page.dart';
 import 'package:admin/modules/categories/provider/categories_provider.dart';
+import 'package:admin/modules/dishes/Screen/dishes_page.dart';
+import 'package:admin/themes/style.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/constants/assest_path.dart';
@@ -14,6 +18,27 @@ class CatetoriesPage extends StatefulWidget {
 }
 
 class _CatetoriesPageState extends State<CatetoriesPage> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(routes: {
+      CatetoriesListPage.routeName: (context) => CatetoriesListPage(),
+      DishPage.routeName: (context) => DishPage(
+            ModalRoute.of(context).settings.arguments,
+          ),
+      AddNewDish.routeName: (context) => AddNewDish(
+            ModalRoute.of(context).settings.arguments,
+          ),
+    }, theme: restaurantTheme, home: CatetoriesListPage());
+  }
+}
+
+class CatetoriesListPage extends StatefulWidget {
+  static final routeName = "categoryList";
+  @override
+  _CatetoriesListPageState createState() => _CatetoriesListPageState();
+}
+
+class _CatetoriesListPageState extends State<CatetoriesListPage> {
   TextEditingController newCategoryController = new TextEditingController();
 
   String error;
@@ -21,6 +46,8 @@ class _CatetoriesPageState extends State<CatetoriesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
           elevation: .2,
           automaticallyImplyLeading: false,
@@ -193,14 +220,14 @@ class _CatetoriesPageState extends State<CatetoriesPage> {
                                               if (value['satus'] == true) {
                                                 Navigator.of(context).pop();
                                               } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                  content: const Text(
-                                                      'Something went wrong!'),
-                                                  duration: const Duration(
-                                                    seconds: 3,
-                                                  ),
-                                                ));
+                                                // ScaffoldMessenger.of(context)
+                                                //     .showSnackBar(SnackBar(
+                                                //   content: const Text(
+                                                //       'Something went wrong!'),
+                                                //   duration: const Duration(
+                                                //     seconds: 3,
+                                                //   ),
+                                                // ));
                                               }
                                             });
                                           }
@@ -259,7 +286,16 @@ _categoryItemBuilder(context, CategoryModel category) {
             children: [
               IconButton(
                 icon: Icon(Icons.room_service, color: AppColors.green),
-                onPressed: () {},
+                onPressed: () {
+                  Map pa = {
+                    "catId": category.id,
+                    "resturantId": "603f313fd0c6141040de8c89"
+                  };
+
+                  print("pa $pa");
+                  Navigator.pushNamed(context, DishPage.routeName,
+                      arguments: pa);
+                },
               ),
               SizedBox(width: 5),
               IconButton(

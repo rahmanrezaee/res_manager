@@ -32,8 +32,10 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Manage Resturants",
-                        style: Theme.of(context).textTheme.headline4),
+                    Text(
+                      "Manage Resturants",
+                      
+                    ),
                     SizedBox(
                       width: 35,
                       height: 35,

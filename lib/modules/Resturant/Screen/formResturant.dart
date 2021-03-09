@@ -48,7 +48,7 @@ class _ResturantFormState extends State<ResturantForm> {
         initialTime: selectedTime,
         builder: (BuildContext context, Widget child) {
           return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
             child: child,
           );
         });
@@ -116,8 +116,8 @@ class _ResturantFormState extends State<ResturantForm> {
                                     setState(() {
                                       _isUploadingImage = true;
                                     });
-                                    await uploadFile(
-                                            value, "profile-photo", token)
+                                    await uploadFile(value, "profile-photo",
+                                            await gettoken())
                                         .then((value) => resturantModel.avatar =
                                             value['uriPath']);
 
@@ -418,8 +418,6 @@ class _ResturantFormState extends State<ResturantForm> {
       });
       var resturantProvider =
           Provider.of<ResturantProvider>(context, listen: false);
-
-      print("resturantModel ${resturantModel.resturantName}");
 
       if (widget.resId != null) {
         resturantProvider
