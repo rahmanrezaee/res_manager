@@ -45,10 +45,7 @@ class CustomersPage extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 15),
-                  Text("Customers",
-                      style: Theme.of(context).textTheme.headline4),
-                  SizedBox(height: 14),
+                  SizedBox(height: 10),
                   Expanded(
                     child: ListView.builder(
                       itemCount: customersProvider.getCustomers.length,

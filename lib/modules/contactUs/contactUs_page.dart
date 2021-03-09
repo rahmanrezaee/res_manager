@@ -11,18 +11,23 @@ class ContactUsPage extends StatelessWidget {
       child: Scaffold(
         body: Consumer<ContactProvider>(
           builder: (context, contactProvider, child) {
-            contactProvider.fetchContacts();
             return contactProvider.getContacts == null
-                ? Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: contactProvider.getContacts.length,
-                    itemBuilder: (context, i) {
-                      return _contactItemBuilder(
-                        context,
-                        contactProvider.getContacts[i],
+                ? FutureBuilder(
+                    future: contactProvider.fetchContacts(),
+                    builder: (context, snapshot) {
+                      return Center(child: CircularProgressIndicator());
+                    })
+                : contactProvider.getContacts.isEmpty
+                    ? Center(child: Text("No Contact us "))
+                    : ListView.builder(
+                        itemCount: contactProvider.getContacts.length,
+                        itemBuilder: (context, i) {
+                          return _contactItemBuilder(
+                            context,
+                            contactProvider.getContacts[i],
+                          );
+                        },
                       );
-                    },
-                  );
           },
         ),
       ),
@@ -31,36 +36,33 @@ class ContactUsPage extends StatelessWidget {
 }
 
 _contactItemBuilder(context, ContactModel contact) {
-  try {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              contact.username,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            SizedBox(height: 5),
-            Text(contact.email),
-            SizedBox(height: 5),
-            Text(contact.restaurant),
-            SizedBox(height: 5),
-            Text(contact.subject),
-            SizedBox(height: 5),
-            Text(
-              contact.message,
-              style: TextStyle(color: Colors.black54),
-            ),
-          ],
-        ),
+  return Card(
+    child: Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "${contact.username}",
+            style: Theme.of(context).textTheme.headline4,
+          ),
+          SizedBox(height: 5),
+          Text(
+            "${contact.email}",
+          ),
+          SizedBox(height: 5),
+          Text("${contact.restaurant}"),
+          SizedBox(height: 5),
+          Text("${contact.subject}"),
+          SizedBox(height: 5),
+          Text(
+            "${contact.message}",
+            style: TextStyle(color: Colors.black54),
+          ),
+        ],
       ),
-    );
-  } catch (e, s) {
-    print(contact.message);
-    return Text("Error Accured");
-  }
+    ),
+  );
 }
 
 // class ContactItem extends StatelessWidget {
