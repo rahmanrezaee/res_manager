@@ -452,7 +452,24 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                 SizedBox(width: 5),
                 IconButton(
                   icon: Icon(Icons.delete, color: AppColors.green),
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                              title:
+                                  Text("Are you sure to delete the category!?"),
+                              actions: [
+                                RaisedButton(
+                                    child: Text("Delete"), onPressed: () {}),
+                                RaisedButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    }),
+                              ]);
+                        });
+                  },
                 ),
               ],
             ),
