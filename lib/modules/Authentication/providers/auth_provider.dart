@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
+
+  
   Future login(String username, String password) async {
     try {
       print("Loging in");

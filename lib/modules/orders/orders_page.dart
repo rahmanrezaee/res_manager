@@ -122,7 +122,7 @@ class _OrderPageState extends State<OrderPage>
                   scaffoldKey: _scaffoldKey,
                 ),
                 OrderItem(
-                  status: "completed",
+                  status: "past",
                   scaffoldKey: _scaffoldKey,
                 ),
               ],

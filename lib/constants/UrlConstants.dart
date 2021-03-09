@@ -1,3 +1,9 @@
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+
 final baseUrl = "https://restaurant.webfumeprojects.online/api";
-final token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjAzYzdhYTA4ZWIwNjdiZGZjOGFkZTc1IiwiZW1haWwiOiJyLm1vaGFtbWFkaUB3ZWJmdW1lLmNvbSJ9LCJpYXQiOjE2MTUxMTMzNDYsImV4cCI6MTYxNTE5OTc0Nn0.6SZMZ0wTUuAp1G2FzeEIc6O7uIaTpDpY_I64RyWO05k";
+Future<String> gettoken() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String token = json.decode(prefs.getString("user"))['token'];
+  return token;
+}

@@ -3,7 +3,7 @@ import 'package:admin/modules/report/widget/buttonResturant.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:admin/modules/addNewDish/addNewDish_page.dart';
+import 'package:admin/modules/dishes/Screen/addNewDish_page.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:provider/provider.dart';
 //provider

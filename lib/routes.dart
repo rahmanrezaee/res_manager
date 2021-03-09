@@ -2,11 +2,11 @@ import 'package:admin/modules/Authentication/screen/forgotPassword.dart';
 import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
-import 'package:admin/modules/dishes/dishes_page.dart';
+import 'package:admin/modules/dishes/Screen/dishes_page.dart';
 import 'package:admin/modules/drawer/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:admin/modules/companyPage/Privacy&Policy.dart';
-import 'package:admin/modules/addNewDish/addNewDish_page.dart';
+import 'package:admin/modules/dishes/Screen/addNewDish_page.dart';
 import 'package:admin/modules/companyPage/term&condition_page.dart';
 
 var routes = <String, WidgetBuilder>{
