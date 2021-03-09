@@ -275,17 +275,17 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                                         Navigator.of(context)
                                                             .pop();
                                                       } else {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                SnackBar(
-                                                          content: const Text(
-                                                              'Something went wrong!'),
-                                                          duration:
-                                                              const Duration(
-                                                            seconds: 3,
-                                                          ),
-                                                        ));
+                                                        // ScaffoldMessenger.of(
+                                                        //         context)
+                                                        //     .showSnackBar(
+                                                        //         SnackBar(
+                                                        //   content: const Text(
+                                                        //       'Something went wrong!'),
+                                                        //   duration:
+                                                        //       const Duration(
+                                                        //     seconds: 3,
+                                                        //   ),
+                                                        // ));
                                                       }
                                                     });
                                                   }
@@ -431,12 +431,12 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                         .then((re) {
                                       Navigator.of(context).pop();
                                       if (re['status'] == true) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content: Text(
-                                                  "The Category Edited Successfully")),
-                                        );
+                                        // ScaffoldMessenger.of(context)
+                                        //     .showSnackBar(
+                                        //   SnackBar(
+                                        //       content: Text(
+                                        //           "The Category Edited Successfully")),
+                                        // );
                                       } else {}
                                     });
                                   } else {}
