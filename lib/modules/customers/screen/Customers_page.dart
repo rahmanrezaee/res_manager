@@ -34,6 +34,13 @@ class CustomersPage extends StatelessWidget {
             customersProvider.fetchCustomers();
             if (customersProvider.getCustomers == null) {
               return Center(child: CircularProgressIndicator());
+            } else if (customersProvider.getCustomers.length < 1) {
+              return Center(
+                child: Text(
+                  "The customer list is empty",
+                  style: TextStyle(color: Colors.black),
+                ),
+              );
             } else {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +54,10 @@ class CustomersPage extends StatelessWidget {
                       itemCount: customersProvider.getCustomers.length,
                       itemBuilder: (context, i) {
                         return _customerItemBuilder(
-                            context, customersProvider.getCustomers[i]);
+                          context,
+                          customersProvider.getCustomers[i],
+                          customersProvider,
+                        );
                       },
                     ),
                   ),
@@ -61,7 +71,8 @@ class CustomersPage extends StatelessWidget {
   }
 }
 
-_customerItemBuilder(context, Customer customer) {
+_customerItemBuilder(
+    context, Customer customer, CustomersProvider customersProvider) {
   return InkWell(
     onTap: () {
       print("this is the customer: ${customer.id}");
@@ -154,7 +165,58 @@ _customerItemBuilder(context, Customer customer) {
                 SizedBox(width: 5),
                 IconButton(
                   icon: Icon(Icons.delete, color: AppColors.green),
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title:
+                                Text("Are you sure to delete this customer!?"),
+                            actions: [
+                              RaisedButton(
+                                child: Text(
+                                  "Delete",
+                                  style: TextStyle(color: AppColors.redText),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(new SnackBar(
+                                    content: Text("Deleting customer..."),
+                                  ));
+                                  customersProvider
+                                      .deleteCustomer(customer.id)
+                                      .then((res) {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    if (res['status'] == true) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(new SnackBar(
+                                        content: Text(
+                                            "The user deleted Successfuly."),
+                                      ));
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(new SnackBar(
+                                        content: Text(
+                                          "Something went wrong while deleting customer.",
+                                          style: TextStyle(
+                                              color: AppColors.redText),
+                                        ),
+                                      ));
+                                    }
+                                  });
+                                },
+                              ),
+                              RaisedButton(
+                                  child: Text("Cancel"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }),
+                            ],
+                          );
+                        });
+                  },
                 ),
               ],
             ),

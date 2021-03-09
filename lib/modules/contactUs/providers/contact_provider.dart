@@ -8,17 +8,16 @@ import 'dart:convert';
 class ContactProvider with ChangeNotifier {
   List<ContactModel> contacts;
   List<ContactModel> get getContacts => this.contacts;
-  fetchContacts() async {
+  void fetchContacts() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = json.decode(prefs.getString("user"))['token'];
     String url = "$baseUrl/admin/contact";
     var res = await APIRequest().get(myUrl: url, token: token);
     this.contacts = [];
     (res.data['data'] as List).forEach((contact) {
-      print(contact);
-      contacts.add(new ContactModel.fromJson(contact));
+      this.contacts.add(new ContactModel.fromJson(contact));
     });
-
+    print(this.contacts[0].username);
     notifyListeners();
   }
 }

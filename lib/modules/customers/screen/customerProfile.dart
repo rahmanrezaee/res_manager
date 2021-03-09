@@ -75,7 +75,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
               ),
               SizedBox(height: 15),
               customerProvider.getOrders == null
-                  ? CircularProgressIndicator()
+                  ? Center(child: CircularProgressIndicator())
                   : ResponsiveGridRow(
                       children: [
                         ...List.generate(customerProvider.getOrders.length,

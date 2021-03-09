@@ -10,58 +10,94 @@ class ContactUsPage extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Scaffold(
         body: Consumer<ContactProvider>(
-            builder: (context, contactProvider, child) {
-          contactProvider.fetchContacts();
-          return contactProvider.getContacts == null
-              ? Center(child: CircularProgressIndicator())
-              : ListView.builder(
-                  itemCount: contactProvider.getContacts.length,
-                  itemBuilder: (context, i) {
-                    return ContactItem(contactProvider.getContacts[0]);
-                  },
-                );
-        }),
+          builder: (context, contactProvider, child) {
+            contactProvider.fetchContacts();
+            return contactProvider.getContacts == null
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: contactProvider.getContacts.length,
+                    itemBuilder: (context, i) {
+                      return _contactItemBuilder(
+                        context,
+                        contactProvider.getContacts[i],
+                      );
+                    },
+                  );
+          },
+        ),
       ),
     );
   }
 }
 
-class ContactItem extends StatelessWidget {
-  final ContactModel contact;
-
-  ContactItem(this.contact);
-  @override
-  Widget build(BuildContext context) {
-    print(contact.email);
-    try {
-      return Card(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                contact.username,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              SizedBox(height: 5),
-              Text(contact.email),
-              SizedBox(height: 5),
-              Text(contact.restaurant),
-              SizedBox(height: 5),
-              Text(contact.subject),
-              SizedBox(height: 5),
-              Text(
-                contact.message,
-                style: TextStyle(color: Colors.black54),
-              ),
-            ],
-          ),
+_contactItemBuilder(context, ContactModel contact) {
+  try {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              contact.username,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            SizedBox(height: 5),
+            Text(contact.email),
+            SizedBox(height: 5),
+            Text(contact.restaurant),
+            SizedBox(height: 5),
+            Text(contact.subject),
+            SizedBox(height: 5),
+            Text(
+              contact.message,
+              style: TextStyle(color: Colors.black54),
+            ),
+          ],
         ),
-      );
-    } catch (e, s) {
-      print(s);
-      return Text("Error Accured");
-    }
+      ),
+    );
+  } catch (e, s) {
+    print(contact.message);
+    return Text("Error Accured");
   }
 }
+
+// class ContactItem extends StatelessWidget {
+//   final ContactModel contact;
+
+//   ContactItem(this.contact);
+//   @override
+//   Widget build(BuildContext context) {
+//     try {
+//       return Card(
+//         child: Padding(
+//           padding: EdgeInsets.all(20),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Text(
+//                 contact.username,
+//                 style: Theme.of(context).textTheme.headline4,
+//               ),
+//               SizedBox(height: 5),
+//               Text(contact.email),
+//               SizedBox(height: 5),
+//               Text(contact.restaurant),
+//               SizedBox(height: 5),
+//               Text(contact.subject),
+//               SizedBox(height: 5),
+//               Text(
+//                 contact.message,
+//                 style: TextStyle(color: Colors.black54),
+//               ),
+//             ],
+//           ),
+//         ),
+//       );
+//     } catch (e, s) {
+//       print(contact.message);
+//       return Text("Error Accured");
+//     }
+//   }
+// }

@@ -49,7 +49,7 @@ class APIRequest {
   Future delete({
     @required String myUrl,
     @required dynamic myBody,
-    @required Map<dynamic, dynamic> myHeaders,
+    @required Map<String, dynamic> myHeaders,
   }) {
     dio.options.headers = myHeaders;
     return dio.delete(myUrl, data: myBody);

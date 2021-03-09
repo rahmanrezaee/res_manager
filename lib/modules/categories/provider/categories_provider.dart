@@ -5,17 +5,21 @@ import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/api_path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../models/restaurant_model.dart';
 
 class CategoryProvider with ChangeNotifier {
-  ///
+  ///cat List
   List<CategoryModel> _categories;
   get getCategories => _categories;
 
-  ///
-  fetchCustomers() async {
+  ///res List
+  List<RestaurantModel> _restaurants;
+  List<RestaurantModel> get getRestaurant => _restaurants;
+
+  fetchCategories(String resId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = json.decode(prefs.getString("user"))['token'];
-    String url = "$baseUrl/admin/food/603f313fd0c6141040de8c89";
+    String url = "$baseUrl/admin/food/$resId";
     var res = await APIRequest().get(myUrl: url, token: token);
     this._categories = [];
     (res.data['data'] as List).forEach((category) {
@@ -43,7 +47,7 @@ class CategoryProvider with ChangeNotifier {
   }
 
   //Edit category
-  Future editCategory(catId, resId, category) async {
+  Future<Map> editCategory(catId, resId, category) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = json.decode(prefs.getString("user"))['token'];
     String url = "$baseUrl/restaurant/category/$catId";
@@ -57,5 +61,35 @@ class CategoryProvider with ChangeNotifier {
         "token": token,
       },
     );
+
+    print(res.data);
+    notifyListeners();
+    return res.data;
+  }
+
+  Future fetchRes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = json.decode(prefs.getString("user"))['token'];
+    String url = "$baseUrl/admin/restaurant";
+    var res = await APIRequest().get(myUrl: url, token: token);
+    this._restaurants = [];
+    (res.data['data'] as List).forEach((res) {
+      this._restaurants.add(new RestaurantModel.fromJson(res));
+    });
+    notifyListeners();
+    return true;
+  }
+
+  deleteCategoy(categryId) async {
+    //getting token
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = json.decode(prefs.getString("user"))['token'];
+    //getting data
+    String url = "$baseUrl/admin/user/customer/$categryId   ";
+    var res = await APIRequest()
+        .delete(myUrl: url, myBody: null, myHeaders: {'token': token});
+    print(res.data);
+    notifyListeners();
+    return res.data;
   }
 }

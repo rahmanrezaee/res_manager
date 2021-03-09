@@ -12,13 +12,19 @@ class ContactModel {
     message,
   });
   factory ContactModel.fromJson(json) {
-    print("this is username: ${json['userId']['username']}");
-    return ContactModel(
-      username: json['userId']['username'],
-      email: json['userId']['email'],
-      restaurant: json['restaurantId']['username'],
-      subject: json['subject'],
-      message: json['message'],
+    return new ContactModel(
+      username: "ali",
+      email: "email",
+      restaurant: "res",
+      subject: "sub",
+      message: "message",
     );
+    // return ContactModel(
+    //   username: json['userId']['username'],
+    //   email: json['userId']['email'],
+    //   restaurant: json['restaurantId']['username'],
+    //   subject: json['subject'],
+    //   message: json['message'],
+    // );
   }
 }
