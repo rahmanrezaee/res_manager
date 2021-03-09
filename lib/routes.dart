@@ -1,4 +1,5 @@
 import 'package:admin/modules/Authentication/screen/forgotPassword.dart';
+import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
 import 'package:admin/modules/dishes/dishes_page.dart';
@@ -15,5 +16,6 @@ var routes = <String, WidgetBuilder>{
   PrivacyPolicy.routeName: (context) => PrivacyPolicy(),
   ResturantScreen.routeName: (context) => ResturantScreen(),
   CustomersPage.routeName: (context) => CustomersPage(),
+  LoginPage.routeName: (context) => LoginPage(),
   // AddNewDish.routeName: (context) => AddNewDish(),
 };

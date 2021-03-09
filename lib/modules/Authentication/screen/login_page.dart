@@ -9,6 +9,7 @@ import '../../drawer/drawer.dart';
 import './forgotPassword.dart';
 
 class LoginPage extends StatefulWidget {
+  static String routeName = "loginpage";
   @override
   _LoginPageState createState() => _LoginPageState();
 }
