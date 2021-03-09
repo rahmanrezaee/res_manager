@@ -180,30 +180,30 @@ _customerItemBuilder(
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).pop();
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(new SnackBar(
-                                    content: Text("Deleting customer..."),
-                                  ));
+                                  // ScaffoldMessenger.of(context)
+                                  //     .showSnackBar(new SnackBar(
+                                  //   content: Text("Deleting customer..."),
+                                  // ));
                                   customersProvider
                                       .deleteCustomer(customer.id)
                                       .then((res) {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
+                                    // ScaffoldMessenger.of(context)
+                                    //     .hideCurrentSnackBar();
                                     if (res['status'] == true) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(new SnackBar(
-                                        content: Text(
-                                            "The user deleted Successfuly."),
-                                      ));
+                                      // ScaffoldMessenger.of(context)
+                                      //     .showSnackBar(new SnackBar(
+                                      //   content: Text(
+                                      //       "The user deleted Successfuly."),
+                                      // ));
                                     } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(new SnackBar(
-                                        content: Text(
-                                          "Something went wrong while deleting customer.",
-                                          style: TextStyle(
-                                              color: AppColors.redText),
-                                        ),
-                                      ));
+                                      // ScaffoldMessenger.of(context)
+                                      //     .showSnackBar(new SnackBar(
+                                      //   content: Text(
+                                      //     "Something went wrong while deleting customer.",
+                                      //     style: TextStyle(
+                                      //         color: AppColors.redText),
+                                      //   ),
+                                      // ));
                                     }
                                   });
                                 },
