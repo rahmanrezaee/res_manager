@@ -1,5 +1,6 @@
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/api_path.dart';
+import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,6 +52,22 @@ class AuthProvider with ChangeNotifier {
       return {'status': true};
     } on DioError catch (e) {
       return e.response.data;
+    }
+  }
+
+  //Logout
+  logOut(context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('user');
+    // Navigator.of(context).pushNamed(LoginPage.routeName);
+  }
+
+  Future checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user') == null) {
+      return false;
+    } else {
+      return true;
     }
   }
 }

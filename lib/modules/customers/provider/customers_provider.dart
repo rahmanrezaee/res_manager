@@ -25,14 +25,14 @@ class CustomersProvider with ChangeNotifier {
   List<ReviewModel> _reviews;
   List<ReviewModel> get getReview => _reviews;
 
-  ///
+  //
   fetchCustomers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = json.decode(prefs.getString("user"))['token'];
     String url = "$baseUrl/admin/user/customer";
     var res = await APIRequest().get(myUrl: url, token: token);
+    this._customers = [];
     (res.data['data'] as List).forEach((element) {
-      this._customers = [];
       print(element);
       Customer newCustomer = new Customer(
         id: element['user']['_id'],
@@ -70,5 +70,18 @@ class CustomersProvider with ChangeNotifier {
     });
 
     notifyListeners();
+  }
+
+  deleteCustomer(customerId) async {
+    //getting token
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = json.decode(prefs.getString("user"))['token'];
+    //getting data
+    String url = "$baseUrl/admin/user/customer/$customerId";
+    var res = await APIRequest()
+        .delete(myUrl: url, myBody: null, myHeaders: {'token': token});
+    print(res.data);
+    notifyListeners();
+    return res.data;
   }
 }

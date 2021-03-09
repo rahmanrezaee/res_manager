@@ -14,7 +14,7 @@ class ReviewModel {
       userId: new Customer.fromJson(json['userId']),
       rate: json['rate'],
       message: json['message'],
-      date: json['createAt'],
+      date: json['createdAt'],
     );
   }
 }

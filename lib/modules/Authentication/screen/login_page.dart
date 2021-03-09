@@ -3,11 +3,13 @@ import 'package:admin/modules/Authentication/validators/formFieldsValidators.dar
 import 'package:admin/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants/assest_path.dart';
 import '../../drawer/drawer.dart';
 import './forgotPassword.dart';
 
 class LoginPage extends StatefulWidget {
+  static String routeName = "loginpage";
   @override
   _LoginPageState createState() => _LoginPageState();
 }
