@@ -275,17 +275,17 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                                         Navigator.of(context)
                                                             .pop();
                                                       } else {
-                                                        // ScaffoldMessenger.of(
-                                                        //         context)
-                                                        //     .showSnackBar(
-                                                        //         SnackBar(
-                                                        //   content: const Text(
-                                                        //       'Something went wrong!'),
-                                                        //   duration:
-                                                        //       const Duration(
-                                                        //     seconds: 3,
-                                                        //   ),
-                                                        // ));
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                SnackBar(
+                                                          content: const Text(
+                                                              'Something went wrong!'),
+                                                          duration:
+                                                              const Duration(
+                                                            seconds: 3,
+                                                          ),
+                                                        ));
                                                       }
                                                     });
                                                   }
@@ -431,12 +431,12 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                         .then((re) {
                                       Navigator.of(context).pop();
                                       if (re['status'] == true) {
-                                        // ScaffoldMessenger.of(context)
-                                        //     .showSnackBar(
-                                        //   SnackBar(
-                                        //       content: Text(
-                                        //           "The Category Edited Successfully")),
-                                        // );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                              content: Text(
+                                                  "The Category Edited Successfully")),
+                                        );
                                       } else {}
                                     });
                                   } else {}
@@ -461,7 +461,27 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                   Text("Are you sure to delete the category!?"),
                               actions: [
                                 RaisedButton(
-                                    child: Text("Delete"), onPressed: () {}),
+                                    child: Text("Delete"),
+                                    onPressed: () {
+                                      catProvider
+                                          .deleteCategoy(category.id)
+                                          .then((res) {
+                                        if (res['status']) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                                "The Category Deleted Successfully"),
+                                          ));
+                                          Navigator.of(context).pop();
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(res['message']),
+                                          ));
+                                          Navigator.of(context).pop();
+                                        }
+                                      });
+                                    }),
                                 RaisedButton(
                                     child: Text("Cancel"),
                                     onPressed: () {

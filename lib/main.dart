@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/modules/categories/provider/categories_provider.dart';
@@ -11,7 +13,7 @@ import './themes/style.dart';
 import './routes.dart';
 import 'package:provider/provider.dart';
 import './modules/dashboard/provider/dashboard_provider.dart';
-
+import 'package:uni_links/uni_links.dart';
 import 'modules/coupons/statement/couponProvider.dart';
 
 void main() {
@@ -42,7 +44,36 @@ class _MyAppState extends State<MyApp> {
 
   initState() {
     getPrefs();
+    initUniLinks();
     super.initState();
+  }
+
+  StreamSubscription _sub;
+  Future<Null> initUniLinks() async {
+    // Uri parsing may fail, so we use a try/catch FormatException.
+    try {
+      Uri initialUri = await getInitialUri();
+      String myUri = initialUri.toString();
+      String routeName =
+          myUri.substring(myUri.indexOf("=") + 1, myUri.indexOf("&"));
+      // String email = myUri.substring(myUri.lastIndexOf("=") + 1, myUri.length);
+      // String id = myUri.substring(myUri.indexOf("id=") + 3, myUri.length);
+      // Navigator.pushNamed(context, routeName, arguments: id);
+
+      print("Mahdi: initUniLinks: 1 $initialUri : $routeName");
+    } on FormatException {
+      // Handle exception by warning the user their action did not succeed
+      // return?
+    } catch (e) {
+      print("Mahdi: initUniLinks: Error $e");
+    }
+
+    print("Mahdi: initUniLinks: 2");
+    _sub = getUriLinksStream().listen((Uri uri) {
+      print("Mahdi: initUniLinks: 3 $uri");
+    }, onError: (err) {
+      print("Mahdi: initUniLinks: Error $err");
+    });
   }
 
   Widget page = LoginPage();

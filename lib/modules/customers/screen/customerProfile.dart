@@ -35,7 +35,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                         radius: 40.0,
                         child: ClipRRect(
                           child: Image.network(
-                              customerProvider.getCustomer.avatar['uriPath']),
+                              customerProvider.getCustomer.avatar),
                           borderRadius: BorderRadius.circular(50.0),
                         ),
                       ),
