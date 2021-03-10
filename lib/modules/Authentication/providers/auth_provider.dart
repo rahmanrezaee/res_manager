@@ -5,10 +5,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
+import 'package:admin/themes/colors.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../validators/formFieldsValidators.dart';
 
 class AuthProvider with ChangeNotifier {
-
-  
   Future login(String username, String password) async {
     try {
       print("Loging in");
@@ -62,12 +66,25 @@ class AuthProvider with ChangeNotifier {
     // Navigator.of(context).pushNamed(LoginPage.routeName);
   }
 
+  get token {
+    return checkLoginStatus();
+  }
+
   Future checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user') == null) {
-      return false;
+      return '';
     } else {
-      return true;
+      //Checking expiery date
+      DateTime expireDate =
+          DateTime.parse(json.decode(prefs.getString('user'))['expierDate']);
+      if (DateTime.now().isAfter(expireDate.add(Duration(days: 1)))) {
+        return refreshToken();
+      } else {
+        return json.decode(prefs.getString('user'))['token'];
+      }
     }
   }
+
+  refreshToken() {}
 }

@@ -50,7 +50,7 @@ class CategoryProvider with ChangeNotifier {
   Future<Map> editCategory(catId, resId, category) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = json.decode(prefs.getString("user"))['token'];
-    String url = "$baseUrl/restaurant/category/$catId";
+    String url = "$baseUrl/public/category/$catId";
     var res = await APIRequest().put(
       myUrl: url,
       myBody: {
@@ -85,7 +85,7 @@ class CategoryProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = json.decode(prefs.getString("user"))['token'];
     //getting data
-    String url = "$baseUrl/admin/user/customer/$categryId   ";
+    String url = "$baseUrl/public/category/$categryId";
     var res = await APIRequest()
         .delete(myUrl: url, myBody: null, myHeaders: {'token': token});
     print(res.data);
