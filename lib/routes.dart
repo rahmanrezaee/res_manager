@@ -1,4 +1,5 @@
 import 'package:admin/modules/Authentication/screen/forgotPassword.dart';
+import 'package:admin/modules/Authentication/screen/forgotPasswordWithKey.dart';
 import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
@@ -17,5 +18,7 @@ var routes = <String, WidgetBuilder>{
   ResturantScreen.routeName: (context) => ResturantScreen(),
   CustomersPage.routeName: (context) => CustomersPage(),
   LoginPage.routeName: (context) => LoginPage(),
+  ForgotPasswordWithKey.routeName: (context) =>
+      ForgotPasswordWithKey(ModalRoute.of(context).settings.arguments),
   // AddNewDish.routeName: (context) => AddNewDish(),
 };

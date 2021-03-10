@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants/assest_path.dart';
 import '../../drawer/drawer.dart';
 import './forgotPassword.dart';
+import '../providers/linkListener.dart';
 
 class LoginPage extends StatefulWidget {
   static String routeName = "loginpage";
@@ -22,6 +23,11 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordController = new TextEditingController();
 
   AuthProvider authProvider;
+  @override
+  void initState() {
+    initUniLinks(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

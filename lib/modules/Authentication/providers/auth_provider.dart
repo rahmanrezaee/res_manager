@@ -55,6 +55,24 @@ class AuthProvider with ChangeNotifier {
       print(res);
       return {'status': true};
     } on DioError catch (e) {
+      print("error ${e.response}");
+      return e.response.data;
+    }
+  }
+
+  Future forgotPasswordWithKey(password, token) async {
+    String url = "$baseUrl/admin/user/changepasswordwithKey";
+    try {
+      var res = await APIRequest().post(
+        myUrl: url,
+        myBody: {
+          "token": token,
+          "newPassword": password,
+        },
+      );
+      print(res);
+      return {'status': true};
+    } on DioError catch (e) {
       return e.response.data;
     }
   }
