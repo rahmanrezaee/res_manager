@@ -19,6 +19,7 @@ import '../categories/catetories_page.dart';
 import '../notifications/notifications_page.dart';
 import '../policy/Privacy&Policy.dart';
 import '../term/term&condition_page.dart';
+import '../Authentication/providers/linkListener.dart';
 
 class PageModel {
   String title;
@@ -119,6 +120,12 @@ class _LayoutExampleState extends State<LayoutExample> {
   ];
 
   int pageIndex = 0;
+
+  @override
+  void initState() {
+    initUniLinks(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
