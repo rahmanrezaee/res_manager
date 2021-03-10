@@ -11,20 +11,11 @@ class ContactModel {
     subject,
     message,
   });
-  factory ContactModel.fromJson(json) {
-    return new ContactModel(
-      username: "ali",
-      email: "email",
-      restaurant: "res",
-      subject: "sub",
-      message: "message",
-    );
-    // return ContactModel(
-    //   username: json['userId']['username'],
-    //   email: json['userId']['email'],
-    //   restaurant: json['restaurantId']['username'],
-    //   subject: json['subject'],
-    //   message: json['message'],
-    // );
+  ContactModel.fromJson(json) {
+    this.username = json['userId']['username'];
+    this.email = json['userId']['email'];
+    this.restaurant = json["restaurantId"]['username'];
+    this.subject = json['subject'];
+    this.message = json['message'];
   }
 }
