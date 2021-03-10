@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "723102209979",
+    "project_id": "resturant-webfume",
+    "storage_bucket": "resturant-webfume.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723102209979:android:37be4fad0fb862d414d69e",
+        "android_client_info": {
+          "package_name": "com.example.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723102209979-qi249oao5bphl8icvo12snbh6aqccabp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPt5L0TKpQQDXzCJvCaQVod1FYzLhfN80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723102209979-qi249oao5bphl8icvo12snbh6aqccabp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
