@@ -12,10 +12,12 @@ class DashboardProvider with ChangeNotifier {
   fetchDashData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = json.decode(prefs.getString("user"))['token'];
+    // if (token == '') {
     String url = "$baseUrl/admin/restaurant/dashboard";
     var res = await APIRequest().get(myUrl: url, token: token);
     this._dashboardData = res.data['data'];
     print(_dashboardData);
     notifyListeners();
+    // }
   }
 }

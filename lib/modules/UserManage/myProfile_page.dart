@@ -1,3 +1,6 @@
+import 'package:admin/modules/Resturant/Screen/formResturant.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
+import 'package:admin/widgets/appbar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //packages
@@ -18,6 +21,69 @@ class _MyProfilePageState extends State<MyProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: showAppBarNodepad(context)
+          ? adaptiveAppBarBuilder(
+              context,
+              AppBar(
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "User Profile",
+                    ),
+                    // SizedBox(
+                    //   width: 35,
+                    //   height: 35,
+                    //   child: RaisedButton(
+                    //     padding: EdgeInsets.all(0),
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //     ),
+                    //     elevation: 0,
+                    //     onPressed: () {
+                    //       Navigator.pushNamed(context, ResturantForm.routeName);
+                    //     },
+                    //     color: Colors.white,
+                    //     child: Icon(Icons.add,
+                    //         color: Theme.of(context).primaryColor),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+            )
+          : AppBar(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("User Profile",
+                      style: Theme.of(context).textTheme.headline4),
+                  // SizedBox(
+                  //   width: 35,
+                  //   height: 35,
+                  //   child: RaisedButton(
+                  //     padding: EdgeInsets.all(0),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //     ),
+                  //     elevation: 0,
+                  //     onPressed: () {
+                  //       Navigator.pushNamed(context, ResturantForm.routeName);
+                  //     },
+                  //     color: Colors.white,
+                  //     child: Icon(Icons.add,
+                  //         color: Theme.of(context).primaryColor),
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
