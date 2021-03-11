@@ -1,3 +1,5 @@
+import 'package:admin/widgets/appbar_widget.dart';
+
 import './customerProfile.dart';
 import 'package:admin/modules/customers/provider/customers_provider.dart';
 import 'package:admin/themes/colors.dart';
@@ -18,51 +20,53 @@ class CustomersPage extends StatelessWidget {
             CustomerProfile(ModalRoute.of(context).settings.arguments),
       },
       theme: restaurantTheme,
-      home: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: .2,
-            automaticallyImplyLeading: false,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+      home: Scaffold(
+        appBar: adaptiveAppBarBuilder(
+          context,
+          AppBar(
             title: Text("Manage Customers"),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
           ),
-          body: Consumer<CustomersProvider>(
-              builder: (context, customersProvider, child) {
-            customersProvider.fetchCustomers();
-            if (customersProvider.getCustomers == null) {
-              return Center(child: CircularProgressIndicator());
-            } else if (customersProvider.getCustomers.length < 1) {
-              return Center(
-                child: Text(
-                  "The customer list is empty",
-                  style: TextStyle(color: Colors.black),
-                ),
-              );
-            } else {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: customersProvider.getCustomers.length,
-                      itemBuilder: (context, i) {
-                        return _customerItemBuilder(
-                          context,
-                          customersProvider.getCustomers[i],
-                          customersProvider,
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              );
-            }
-          }),
         ),
+        body: Consumer<CustomersProvider>(
+            builder: (context, customersProvider, child) {
+          customersProvider.fetchCustomers();
+          if (customersProvider.getCustomers == null) {
+            return Center(child: CircularProgressIndicator());
+          } else if (customersProvider.getCustomers.length < 1) {
+            return Center(
+              child: Text(
+                "The customer list is empty",
+                style: TextStyle(color: Colors.black),
+              ),
+            );
+          } else {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: customersProvider.getCustomers.length,
+                    itemBuilder: (context, i) {
+                      return _customerItemBuilder(
+                        context,
+                        customersProvider.getCustomers[i],
+                        customersProvider,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+        }),
       ),
     );
   }

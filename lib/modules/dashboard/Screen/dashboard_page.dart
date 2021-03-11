@@ -28,6 +28,8 @@ class _DashboardPageState extends State<DashboardPage> {
           appBar: adaptiveAppBarBuilder(
             context,
             AppBar(
+              title: Text("Home Page"),
+              centerTitle: true,
               leading: IconButton(
                 icon: Icon(Icons.menu),
                 onPressed: () {
@@ -47,44 +49,59 @@ class _DashboardPageState extends State<DashboardPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: getHelfIpadAndFullMobWidth(context),
-                    height: 50,
-                    child: RaisedButton(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      color: Theme.of(context).primaryColor,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: SizedBox(
+                      width: getHelfIpadAndFullMobWidth(context),
+                      height: 50,
+                      child: RaisedButton(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        color: Theme.of(context).primaryColor,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          "${dashProvider.getDashData['activeOrders']} Active Orders",
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                        onPressed: () {},
                       ),
-                      child: Text(
-                        "${dashProvider.getDashData['activeOrders']} Active Orders",
-                        style: Theme.of(context).textTheme.button,
-                      ),
-                      onPressed: () {},
                     ),
                   ),
                   SizedBox(height: 10),
-                  Container(
-                    width: getQurIpadAndFullMobWidth(context),
-                    child: LabelDashBoard(
-                      color: Colors.white,
-                      title: "Total earning Today: \$XX.XX",
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Container(
+                      width: getQurIpadAndFullMobWidth(context),
+                      child: LabelDashBoard(
+                        color: Colors.white,
+                        title: "Total earning Today: \$XX.XX",
+                      ),
                     ),
                   ),
-                  Container(
-                    width: getQurIpadAndFullMobWidth(context),
-                    child: LabelDashBoard(
-                      color: Colors.white,
-                      title:
-                          "Total Resturant : ${dashProvider.getDashData['totalRestaurants']}",
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Container(
+                      width: getQurIpadAndFullMobWidth(context),
+                      child: LabelDashBoard(
+                        color: Colors.white,
+                        title:
+                            "Total Resturant : ${dashProvider.getDashData['totalRestaurants']}",
+                      ),
                     ),
                   ),
-                  Container(
-                    width: getQurIpadAndFullMobWidth(context),
-                    child: LabelDashBoard(
-                      color: Colors.white,
-                      title:
-                          "Total Customer : ${dashProvider.getDashData['totalCustomers']}",
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Container(
+                      width: getQurIpadAndFullMobWidth(context),
+                      child: LabelDashBoard(
+                        color: Colors.white,
+                        title:
+                            "Total Customer : ${dashProvider.getDashData['totalCustomers']}",
+                      ),
                     ),
                   ),
                 ],

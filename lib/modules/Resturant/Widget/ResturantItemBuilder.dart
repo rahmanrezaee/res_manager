@@ -1,8 +1,10 @@
 import 'package:admin/modules/Resturant/Models/Resturant.dart';
+import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/modules/dishes/Screen/dishes_page.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:admin/modules/Resturant/Screen/formResturant.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ResturantItem extends StatelessWidget {
   ResturantModel resturantModel;
@@ -33,70 +35,62 @@ class ResturantItem extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.edit, color: AppColors.green),
                   onPressed: () {
-                    Navigator.pushNamed(context, ResturantForm.routeName,arguments: resturantModel.id);
-                    // showDialog(
-                    //   context: context,
-                    //   builder: (context) {
-                    //     return SimpleDialog(
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //       ),
-                    //       title: Text("Add/Edit Resturants",
-                    //           style: TextStyle(
-                    //               fontSize: 14, fontWeight: FontWeight.bold),
-                    //           textAlign: TextAlign.center),
-                    //       contentPadding: EdgeInsets.symmetric(
-                    //           horizontal: 35, vertical: 25),
-                    //       children: [
-                    //         Divider(),
-                    //         TextField(
-                    //           // minLines: 6,
-                    //           // maxLines: 6,
-                    //           decoration: InputDecoration(
-                    //             hintText: "Enter here",
-                    //             hintStyle: TextStyle(color: Colors.grey),
-                    //             contentPadding:
-                    //                 EdgeInsets.only(left: 10, top: 15),
-                    //             enabledBorder: OutlineInputBorder(
-                    //               borderRadius:
-                    //                   BorderRadius.all(Radius.circular(10.0)),
-                    //               borderSide: BorderSide(color: Colors.grey),
-                    //             ),
-                    //             focusedBorder: OutlineInputBorder(
-                    //               borderRadius:
-                    //                   BorderRadius.all(Radius.circular(10.0)),
-                    //               borderSide: BorderSide(color: Colors.grey),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         SizedBox(height: 10),
-                    //         SizedBox(
-                    //           width: MediaQuery.of(context).size.width,
-                    //           child: RaisedButton(
-                    //             padding: EdgeInsets.symmetric(vertical: 10),
-                    //             color: Theme.of(context).primaryColor,
-                    //             elevation: 0,
-                    //             shape: RoundedRectangleBorder(
-                    //               borderRadius: BorderRadius.circular(8),
-                    //             ),
-                    //             child: Text(
-                    //               "Save",
-                    //               style: Theme.of(context).textTheme.button,
-                    //             ),
-                    //             onPressed: () {
-                    //               Navigator.of(context).pop();
-                    //             },
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     );
-                    //   },
-                    // );
+                    Navigator.pushNamed(context, ResturantForm.routeName,
+                        arguments: resturantModel.id);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.delete, color: AppColors.green),
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title:
+                                Text("Are you sure to delete this Resturant!?"),
+                            actions: [
+                              RaisedButton(
+                                child: Text(
+                                  "Delete",
+                                ),
+                                onPressed: () {
+                                  print("hello");
+                                  Provider.of<ResturantProvider>(context,
+                                          listen: false)
+                                      .deleteResturant(resturantModel.id)
+                                      .then((res) {
+                                    // ScaffoldMessenger.of(context)
+                                    //     .hideCurrentSnackBar();
+                                    if (res == true) {
+                                      Navigator.of(context).pop();
+                                      // ScaffoldMessenger.of(context)
+                                      //     .showSnackBar(new SnackBar(
+                                      //   content: Text(
+                                      //       "The user deleted Successfuly."),
+                                      // ));
+                                    } else {
+                                      Navigator.of(context).pop();
+                                      // ScaffoldMessenger.of(context)
+                                      //     .showSnackBar(new SnackBar(
+                                      //   content: Text(
+                                      //     "Something went wrong while deleting customer.",
+                                      //     style: TextStyle(
+                                      //         color: AppColors.redText),
+                                      //   ),
+                                      // ));
+                                    }
+                                  });
+                                },
+                              ),
+                              RaisedButton(
+                                  child: Text("Cancel"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }),
+                            ],
+                          );
+                        });
+                  },
                 ),
               ],
             ),

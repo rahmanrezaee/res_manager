@@ -55,6 +55,7 @@ class AuthProvider with ChangeNotifier {
       print(res);
       return {'status': true};
     } on DioError catch (e) {
+      print("error ${e.response}");
       return e.response.data;
     }
   }

@@ -87,7 +87,14 @@ class _OrderPageState extends State<OrderPage>
           ? adaptiveAppBarBuilder(
               context,
               AppBar(
-                title: Text("Order"),
+                title: Text("Order Page"),
+                centerTitle: true,
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.notifications),
+                    onPressed: () {},
+                  )
+                ],
                 elevation: 0,
                 leading: showAppBarNodepad(context)
                     ? IconButton(

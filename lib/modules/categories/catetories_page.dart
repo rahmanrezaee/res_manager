@@ -2,8 +2,10 @@ import 'package:admin/modules/Resturant/Screen/list_resturant_screen.dart';
 import 'package:admin/modules/dishes/Screen/addNewDish_page.dart';
 import 'package:admin/modules/categories/provider/categories_provider.dart';
 import 'package:admin/modules/dishes/Screen/dishes_page.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/themes/style.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
+import 'package:admin/widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/constants/assest_path.dart';
 import 'package:admin/themes/colors.dart';
@@ -57,75 +59,100 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-          elevation: .2,
-          automaticallyImplyLeading: false,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title:
-              // Consumer<CategoryProvider>(builder: (context, catProvider, child) {
-              ResponsiveGridRow(
-            children: [
-              ResponsiveGridCol(
-                lg: 8,
-                md: 8,
-                sm: 6,
-                xl: 6,
-                xs: 6,
-                child: Text("Manage Categories"),
+      // appBar: adaptiveAppBarBuilder(
+      //   context,
+      //   AppBar(
+      //     title: Text("Manage Category"),
+      //     centerTitle: true,
+
+      //   ),
+      // ),
+      appBar: showAppBarNodepad(context)
+          ? AppBar(
+              elevation: .2,
+              title: Text("Manage Category"),
+              automaticallyImplyLeading: false,
+              centerTitle: true,
+              leading: IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
               ),
-              ResponsiveGridCol(
-                lg: 4,
-                md: 4,
-                sm: 6,
-                xl: 6,
-                xs: 6,
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              // bottom:
+            )
+          : AppBar(
+              elevation: .2,
+              automaticallyImplyLeading: false,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              title:
+                  // Consumer<CategoryProvider>(builder: (context, catProvider, child) {
+                  ResponsiveGridRow(
+                children: [
+                  ResponsiveGridCol(
+                    lg: 8,
+                    md: 8,
+                    sm: 12,
+                    xl: 12,
+                    xs: 12,
+                    child: Text("Manage Categories"),
                   ),
-                  child: catProvider.getRestaurant == null
-                      ? Center(child: Text("Loading restaurants..."))
-                      : DropDownFormField(
-                          hintText: "Interested Industry",
-                          value: resturantid,
-                          validator: (value) {
-                            if (value == null) {
-                              return "Please select an industry";
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            setState(() {
-                              resturantid = value;
-                            });
-                          },
-                          onChanged: (value) {
-                            print(value);
-                            setState(() {
-                              resturantid = value;
-                            });
-                          },
-                          dataSource: [
-                            ...catProvider.getRestaurant.map((e) {
-                              return {
-                                "display": e.restaurant['username'],
-                                "value": e.restaurant['_id'],
-                              };
-                            }).toList()
-                          ],
-                          textField: 'display',
-                          valueField: 'value',
-                        ),
-                ),
+                  ResponsiveGridCol(
+                    lg: 4,
+                    md: 4,
+                    sm: 12,
+                    xl: 12,
+                    xs: 12,
+                    child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                      child: catProvider.getRestaurant == null
+                          ? Center(child: Text("Loading restaurants..."))
+                          : DropDownFormField(
+                              hintText: "Interested Industry",
+                              value: resturantid,
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Please select an industry";
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                setState(() {
+                                  resturantid = value;
+                                });
+                              },
+                              onChanged: (value) {
+                                print(value);
+                                setState(() {
+                                  resturantid = value;
+                                });
+                              },
+                              dataSource: [
+                                ...catProvider.getRestaurant.map((e) {
+                                  return {
+                                    "display": e.restaurant['username'],
+                                    "value": e.restaurant['_id'],
+                                  };
+                                }).toList()
+                              ],
+                              textField: 'display',
+                              valueField: 'value',
+                            ),
+                    ),
+                  ),
+                ],
+              )
+              // }),
               ),
-            ],
-          )
-          // }),
-          ),
       // appBar: AppBar(
       //   elevation: .2,
       //   shape: RoundedRectangleBorder(
@@ -134,203 +161,265 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
       //   title: Text("Manage Categories"),
       // ),
       body: SingleChildScrollView(
-        child:
-            Consumer<CategoryProvider>(builder: (context, catProvider, child) {
-          // if (resturantid == null) {
-          return resturantid == null
-              ? Center(child: CircularProgressIndicator())
-              // } else {
-              : Column(
-                  children: [
-                    SizedBox(height: 15),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Categories",
-                                style: Theme.of(context).textTheme.headline4),
-                            SizedBox(
-                              width: 35,
-                              height: 35,
-                              child: RaisedButton(
-                                padding: EdgeInsets.all(0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                elevation: 0,
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      bool addingCat = false;
-                                      return StatefulBuilder(
-                                          builder: (context, snapshot) {
-                                        return SimpleDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          title: Text("Add New Category",
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold),
-                                              textAlign: TextAlign.center),
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 35, vertical: 25),
-                                          children: [
-                                            Divider(),
-                                            TextField(
-                                              // minLines: 6,
-                                              // maxLines: 6,
-                                              controller: newCategoryController,
-                                              decoration: InputDecoration(
-                                                hintText: "Enter here",
-                                                hintStyle: TextStyle(
-                                                    color: Colors.grey),
-                                                contentPadding: EdgeInsets.only(
-                                                    left: 10, top: 15),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              10.0)),
-                                                  borderSide: BorderSide(
-                                                      color: Colors.grey),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              10.0)),
-                                                  borderSide: BorderSide(
-                                                      color: Colors.grey),
-                                                ),
-                                              ),
-                                            ),
-                                            error == null
-                                                ? Container()
-                                                : Text(error,
-                                                    style: TextStyle(
-                                                        color:
-                                                            AppColors.redText)),
-                                            SizedBox(height: 10),
-                                            addingCat == true
-                                                ? Text("Adding...")
-                                                : Container(),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: RaisedButton(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 10),
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                elevation: 0,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                                child: Text("Save",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .button),
-                                                onPressed: () {
-                                                  if (newCategoryController
-                                                          .text.length <
-                                                      1) {
-                                                    setState(() {
-                                                      error =
-                                                          "Please fill the field";
-                                                    });
-                                                  } else if (newCategoryController
-                                                          .text.length <
-                                                      2) {
-                                                    setState(() {
-                                                      error =
-                                                          "Please add more character";
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      addingCat = true;
-                                                    });
-                                                    catProvider
-                                                        .addNewCategory(
-                                                      resturantid,
-                                                      newCategoryController
-                                                          .text,
-                                                    )
-                                                        .then((value) {
-                                                      setState(() {
-                                                        addingCat = false;
-                                                      });
-                                                      if (value['status'] ==
-                                                          true) {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      } else {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                SnackBar(
-                                                          content: const Text(
-                                                              'Something went wrong!'),
-                                                          duration:
-                                                              const Duration(
-                                                            seconds: 3,
-                                                          ),
-                                                        ));
-                                                      }
-                                                    });
-                                                  }
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      });
-                                    },
-                                  );
-                                },
-                                color: Theme.of(context).primaryColor,
-                                child: Icon(Icons.add, color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+        child: Column(
+          children: [
+            Visibility(
+              visible: showAppBarNodepad(context),
+              child: Padding(
+                padding: new EdgeInsets.all(10),
+                child: PreferredSize(
+                  preferredSize:
+                      Size(double.infinity, AppBar().preferredSize.height),
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
                     ),
-                    catProvider.getCategories == null
-                        ? Center(child: CircularProgressIndicator())
-                        : catProvider.getCategories.length < 1
-                            ? Center(
-                                child: Text(
-                                    "The restaurant doesn't have any category"),
-                              )
-                            : Column(
-                                children: [
-                                  ...List.generate(
-                                    catProvider.getCategories.length,
-                                    (index) {
-                                      return _categoryItemBuilder(
-                                        context,
-                                        catProvider.getCategories[index],
-                                        catProvider,
-                                        resturantid,
+                    child: catProvider.getRestaurant == null
+                        ? Center(child: Text("Loading restaurants..."))
+                        : DropDownFormField(
+                            hintText: "Interested Industry",
+                            value: resturantid,
+                            validator: (value) {
+                              if (value == null) {
+                                return "Please select an industry";
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              setState(() {
+                                resturantid = value;
+                              });
+                            },
+                            onChanged: (value) {
+                              print(value);
+                              setState(() {
+                                resturantid = value;
+                              });
+                            },
+                            dataSource: [
+                              ...catProvider.getRestaurant.map((e) {
+                                return {
+                                  "display": e.restaurant['username'],
+                                  "value": e.restaurant['_id'],
+                                };
+                              }).toList()
+                            ],
+                            textField: 'display',
+                            valueField: 'value',
+                          ),
+                  ),
+                ),
+              ),
+            ),
+            Consumer<CategoryProvider>(builder: (context, catProvider, child) {
+              // if (resturantid == null) {
+              return resturantid == null
+                  ? Center(child: CircularProgressIndicator())
+                  // } else {
+                  : Column(
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Categories",
+                                    style:
+                                        Theme.of(context).textTheme.headline4),
+                                SizedBox(
+                                  width: 35,
+                                  height: 35,
+                                  child: RaisedButton(
+                                    padding: EdgeInsets.all(0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    elevation: 0,
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          bool addingCat = false;
+                                          return StatefulBuilder(
+                                              builder: (context, snapshot) {
+                                            return SimpleDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              title: Text("Add New Category",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center),
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      horizontal: 35,
+                                                      vertical: 25),
+                                              children: [
+                                                Divider(),
+                                                TextField(
+                                                  // minLines: 6,
+                                                  // maxLines: 6,
+                                                  controller:
+                                                      newCategoryController,
+                                                  decoration: InputDecoration(
+                                                    hintText: "Enter here",
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.grey),
+                                                    contentPadding:
+                                                        EdgeInsets.only(
+                                                            left: 10, top: 15),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0)),
+                                                      borderSide: BorderSide(
+                                                          color: Colors.grey),
+                                                    ),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0)),
+                                                      borderSide: BorderSide(
+                                                          color: Colors.grey),
+                                                    ),
+                                                  ),
+                                                ),
+                                                error == null
+                                                    ? Container()
+                                                    : Text(error,
+                                                        style: TextStyle(
+                                                            color: AppColors
+                                                                .redText)),
+                                                SizedBox(height: 10),
+                                                addingCat == true
+                                                    ? Text("Adding...")
+                                                    : Container(),
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: RaisedButton(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10),
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    elevation: 0,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                    child: Text("Save",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .button),
+                                                    onPressed: () {
+                                                      if (newCategoryController
+                                                              .text.length <
+                                                          1) {
+                                                        setState(() {
+                                                          error =
+                                                              "Please fill the field";
+                                                        });
+                                                      } else if (newCategoryController
+                                                              .text.length <
+                                                          2) {
+                                                        setState(() {
+                                                          error =
+                                                              "Please add more character";
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          addingCat = true;
+                                                        });
+                                                        catProvider
+                                                            .addNewCategory(
+                                                          resturantid,
+                                                          newCategoryController
+                                                              .text,
+                                                        )
+                                                            .then((value) {
+                                                          setState(() {
+                                                            addingCat = false;
+                                                          });
+                                                          if (value['status'] ==
+                                                              true) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          } else {
+                                                            // ScaffoldMessenger.of(
+                                                            //         context)
+                                                            //     .showSnackBar(
+                                                            //         SnackBar(
+                                                            //   content: const Text(
+                                                            //       'Something went wrong!'),
+                                                            //   duration:
+                                                            //       const Duration(
+                                                            //     seconds: 3,
+                                                            //   ),
+                                                            // ));
+                                                          }
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                        },
                                       );
                                     },
+                                    color: Theme.of(context).primaryColor,
+                                    child: Icon(Icons.add, color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        catProvider.getCategories == null
+                            ? Center(child: CircularProgressIndicator())
+                            : catProvider.getCategories.length < 1
+                                ? Center(
+                                    child: Text(
+                                        "The restaurant doesn't have any category"),
                                   )
-                                ],
-                              ),
-                  ],
-                );
-        }),
+                                : Column(
+                                    children: [
+                                      ...List.generate(
+                                        catProvider.getCategories.length,
+                                        (index) {
+                                          return _categoryItemBuilder(
+                                            context,
+                                            catProvider.getCategories[index],
+                                            catProvider,
+                                            resturantid,
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  ),
+                      ],
+                    );
+            }),
+          ],
+        ),
       ),
     );
   }
@@ -431,12 +520,12 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                         .then((re) {
                                       Navigator.of(context).pop();
                                       if (re['status'] == true) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content: Text(
-                                                  "The Category Edited Successfully")),
-                                        );
+                                        // ScaffoldMessenger.of(context)
+                                        //     .showSnackBar(
+                                        //   SnackBar(
+                                        //       content: Text(
+                                        //           "The Category Edited Successfully")),
+                                        // );
                                       } else {}
                                     });
                                   } else {}
@@ -467,17 +556,17 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                           .deleteCategoy(category.id)
                                           .then((res) {
                                         if (res['status']) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: Text(
-                                                "The Category Deleted Successfully"),
-                                          ));
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text(
+                                          //       "The Category Deleted Successfully"),
+                                          // ));
                                           Navigator.of(context).pop();
                                         } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: Text(res['message']),
-                                          ));
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text(res['message']),
+                                          // ));
                                           Navigator.of(context).pop();
                                         }
                                       });
