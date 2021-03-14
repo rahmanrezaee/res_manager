@@ -4,10 +4,11 @@ import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/contactUs/contactUs_page.dart';
 import 'package:admin/modules/coupons/coupons_page.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
+import 'package:admin/modules/notifications/notification_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
+import 'package:admin/scaffold/templates/layout/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:responsive_scaffold/responsive_scaffold.dart';
 import 'package:admin/constants/assest_path.dart';
 import 'package:admin/modules/report/report.dart';
 import 'package:admin/themes/colors.dart';
@@ -16,7 +17,6 @@ import '../dashboard/Screen/dashboard_page.dart';
 import '../orders/orders_page.dart';
 import '../UserManage/myProfile_page.dart';
 import '../categories/catetories_page.dart';
-import '../notifications/notifications_page.dart';
 import '../policy/Privacy&Policy.dart';
 import '../term/term&condition_page.dart';
 import '../Authentication/providers/linkListener.dart';
@@ -92,11 +92,11 @@ class _LayoutExampleState extends State<LayoutExample> {
       ),
       page: CouponsPage(),
     ),
-    PageModel(
-      title: "Notifications",
-      icon: Icon(Icons.notifications_outlined, color: Colors.yellow),
-      page: NotificationsPage(),
-    ),
+    // PageModel(
+    //   title: "Notifications",
+    //   icon: Icon(Icons.notifications_outlined, color: Colors.yellow),
+    //   page: NotificationPage(),
+    // ),
     PageModel(
       title: "Report",
       icon: Icon(Icons.report, color: Colors.yellow),
@@ -111,11 +111,6 @@ class _LayoutExampleState extends State<LayoutExample> {
       title: "Privary Policy",
       icon: Icon(Icons.format_align_center),
       page: PrivacyPolicy(),
-    ),
-    PageModel(
-      title: "LogOut",
-      icon: Icon(Icons.logout),
-      page: LoginPage(),
     ),
   ];
 
@@ -133,34 +128,68 @@ class _LayoutExampleState extends State<LayoutExample> {
         Provider.of<AuthProvider>(context, listen: false);
     return ResponsiveScaffold(
       kDesktopBreakpoint: 768,
-      body: SafeArea(child: pages[pageIndex].page),
+      body: pages[pageIndex].page,
       drawer: SizedBox(
         width: 281,
         child: Padding(
           padding: const EdgeInsets.all(15),
-          child: ListView(
-            children: <Widget>[
-              ...pages.map((page) {
-                int index = pages.indexOf(page);
-                return drawerListItemBuilder(
-                  icon: page.icon,
-                  title: page.title,
-                  isActive: pageIndex == index,
-                  onClick: () {
-                    if (page.title == 'LogOut') {
-                      authProvider.logOut(context);
-                    } else {
-                      setState(() {
-                        pageIndex = index;
-                      });
-                      if (showAppBarNodepad(context)) {
-                        Navigator.pop(context);
-                      }
-                    }
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ListView(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: <Widget>[
+                    ...pages.map((page) {
+                      int index = pages.indexOf(page);
+                      return drawerListItemBuilder(
+                        icon: page.icon,
+                        title: page.title,
+                        isActive: pageIndex == index,
+                        onClick: () {
+                          if (page.title == 'LogOut') {
+                            authProvider.logOut(context);
+                          } else {
+                            setState(() {
+                              pageIndex = index;
+                            });
+                            if (showAppBarNodepad(context)) {
+                              Navigator.pop(context);
+                            }
+                          }
+                        },
+                      );
+                    }).toList(),
+                  ],
+                ),
+                InkWell(
+                  onTap: () {
+                    AuthProvider().logOut(context);
+                    Navigator.pushReplacementNamed(
+                        context, LoginPage.routeName);
                   },
-                );
-              }).toList(),
-            ],
+                  child: Card(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(child: Text("Logout")),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/GlobleService/APIRequest.dart';
@@ -27,10 +28,9 @@ class CustomersProvider with ChangeNotifier {
 
   //
   fetchCustomers() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = json.decode(prefs.getString("user"))['token'];
     String url = "$baseUrl/admin/user/customer";
-    var res = await APIRequest().get(myUrl: url, token: token);
+    var res =
+        await APIRequest().get(myUrl: url, token: await AuthProvider().token);
     this._customers = [];
     (res.data['data'] as List).forEach((element) {
       print(element);
@@ -45,12 +45,10 @@ class CustomersProvider with ChangeNotifier {
   }
 
   fetchCustomer(String customerId) async {
-    //getting token
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = json.decode(prefs.getString("user"))['token'];
     //getting data
     String url = "$baseUrl/admin/user/customer/$customerId";
-    var res = await APIRequest().get(myUrl: url, token: token);
+    var res =
+        await APIRequest().get(myUrl: url, token: await AuthProvider().token);
     //getting user data
     var userJson = res.data['data']['userData'];
     userJson['totalOrder'] = (res.data['data']['orders'] as List).length;
@@ -73,14 +71,12 @@ class CustomersProvider with ChangeNotifier {
   }
 
   deleteCustomer(customerId) async {
-    //getting token
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = json.decode(prefs.getString("user"))['token'];
-    //getting data
     String url = "$baseUrl/admin/user/customer/$customerId";
-    var res = await APIRequest()
-        .delete(myUrl: url, myBody: null, myHeaders: {'token': token});
-    print(res.data);
+    var res = await APIRequest().delete(
+        myUrl: url,
+        myBody: null,
+        myHeaders: {'token': await AuthProvider().token});
+    _customers = null;
     notifyListeners();
     return res.data;
   }

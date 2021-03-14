@@ -1,5 +1,6 @@
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/UrlConstants.dart';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/orders/Models/OrderModels.dart';
 import 'package:dio/dio.dart';
 
@@ -10,9 +11,9 @@ class OrderServices {
       String url = "$baseUrl/admin/order?status=$state";
 
       final result =
-          await APIRequest().get(myUrl: url, token: await gettoken());
+          await APIRequest().get(myUrl: url, token:  await AuthProvider().token);
 
-      final extractedData = result.data["data"];
+      final extractedData = result.data["data"]['docs'];
 
       if (extractedData == null) {
         listOrder = [];
@@ -20,6 +21,7 @@ class OrderServices {
       }
 
       final List<OrderModels> loadedOrder = [];
+      print("extractedData $extractedData");
       int i = 0;
       extractedData.forEach((tableData) {
         i++;
@@ -46,7 +48,7 @@ class OrderServices {
       String url = "$baseUrl/admin/order/${resturantId}?status=$state";
 
       final result =
-          await APIRequest().get(myUrl: url, token: await gettoken());
+          await APIRequest().get(myUrl: url, token:  await AuthProvider().token);
 
       print("result $result");
 
@@ -81,7 +83,7 @@ class OrderServices {
 
       final result = await APIRequest().post(
           myUrl: url,
-          myHeaders: {"token": await gettoken()},
+          myHeaders: {"token":  await AuthProvider().token},
           myBody: {"status": statue});
 
       print("result $result");
@@ -101,7 +103,7 @@ class OrderServices {
 
       final result = await APIRequest().post(
           myUrl: url,
-          myHeaders: {"token": await gettoken()},
+          myHeaders: {"token":  await AuthProvider().token},
           myBody: {"pickUpTime": pickUpTime});
 
       print("result $result");

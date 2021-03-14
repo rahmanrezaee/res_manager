@@ -12,7 +12,9 @@ class DishModel {
   String restaurantId;
   String categoryId;
   double price;
-  List<AddonModel> addOn = [];
+  List<List<AddonItems>> addOn = [];
+  List<AddonItems> addOnDishAdmin = [];
+  List orderNote = [];
   String description;
   List<ImageModel> images = [];
 
@@ -26,11 +28,18 @@ class DishModel {
       this.foodId = element['foodId'];
       this.foodName = element['foodName'];
       this.quantity = element['quantity'];
+      this.price = double.parse("${element['price']}");
       List addonLi = element['addOn'];
+      orderNote = element['orderNote'];
 
       if (addonLi != null && addonLi.isNotEmpty) {
         addonLi.forEach((element) {
-          addOn.add(AddonModel.toJson(element));
+          List<AddonItems> temp = [];
+
+          element.forEach((elementItem) {
+            temp.add(AddonItems.toJson(elementItem));
+          });
+          addOn.add(temp);
         });
       }
     } catch (e) {
@@ -63,7 +72,7 @@ class DishModel {
       "name": this.foodName,
       "price": this.price,
       "addOn": this
-          .addOn
+          .addOnDishAdmin
           .map((data) => {"name": data.name, "price": data.price})
           .toList(),
       "description": this.description,
@@ -98,10 +107,9 @@ class DishModel {
 
       if (addOnList != null && addOnList.isNotEmpty) {
         addOnList.forEach((element) {
-          addOn.add(AddonModel.toJson(element));
+          addOnDishAdmin.add(AddonItems.toJson(element));
         });
       }
-
     } catch (e) {
       print("Error In dish $e");
     }

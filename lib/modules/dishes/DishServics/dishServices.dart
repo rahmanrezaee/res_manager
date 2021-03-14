@@ -1,5 +1,6 @@
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/UrlConstants.dart';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/dishes/Models/dishModels.dart';
 import 'package:dio/dio.dart';
 
@@ -7,7 +8,8 @@ Future<DishModel> getSingleDish(id) async {
   try {
     String url = "$baseUrl/admin/food/view/$id";
 
-    final result = await APIRequest().get(myUrl: url, token: await gettoken());
+    final result =
+        await APIRequest().get(myUrl: url, token: await AuthProvider().token);
 
     print("result $result");
 
@@ -31,11 +33,12 @@ Future<List<DishModel>> getFootListWithoutPro(catId) async {
   try {
     String url = "$baseUrl/admin/food/category/$catId";
 
-    final result = await APIRequest().get(myUrl: url, token: await gettoken());
+    final result =
+        await APIRequest().get(myUrl: url, token: await AuthProvider().token);
 
     print("result $result");
 
-    final extractedData = result.data["data"]['foods'];
+    final extractedData = result.data["data"]['foods']['docs'];
 
     List<DishModel> loadedProducts = [];
 
@@ -62,7 +65,7 @@ Future<bool> addDishService(data) async {
     final response = await APIRequest().post(
       myBody: data,
       myHeaders: {
-        "token": await gettoken(),
+        "token": await AuthProvider().token,
       },
       myUrl: url.toString(),
     );
@@ -89,7 +92,7 @@ Future<bool> editDishService(data, id) async {
     final response = await APIRequest().put(
       myBody: data,
       myHeaders: {
-        "token": await gettoken(),
+        "token": await AuthProvider().token,
       },
       myUrl: url.toString(),
     );
@@ -107,13 +110,34 @@ Future<bool> editDishService(data, id) async {
   }
 }
 
+Future<bool> deleteDish(resturantId) async {
+  try {
+    //getting token
+
+    String url = "$baseUrl/admin/restaurant/$resturantId";
+    var res = await APIRequest().delete(
+        myUrl: url,
+        myBody: null,
+        myHeaders: {'token': await AuthProvider().token});
+
+    return true;
+  } on DioError catch (e) {
+    print("error In Response");
+    print(e.response);
+    print(e.error);
+    print(e.request);
+    print(e.type);
+    return false;
+  }
+}
+
 Future<bool> changeVisiablity(foodId, vis) async {
   try {
     String url = "$baseUrl/admin/food/changevisibility/$foodId";
 
     final result = await APIRequest().post(
         myUrl: url,
-        myHeaders: {"token": await gettoken()},
+        myHeaders: {"token": await AuthProvider().token},
         myBody: {"visibility": vis});
 
     print("result $result");

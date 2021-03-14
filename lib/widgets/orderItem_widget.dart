@@ -1,9 +1,13 @@
+import 'dart:ffi';
+
 import 'package:admin/modules/dishes/Models/AddonModel.dart';
 import 'package:admin/modules/dishes/Models/dishModels.dart';
 import 'package:admin/modules/orders/Models/OrderModels.dart';
 import 'package:admin/modules/orders/Services/OrderSerives.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:numbers_to_words/numbers_to_words.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import '../themes/colors.dart';
 
@@ -314,20 +318,39 @@ class DishItem extends StatelessWidget {
                           iconColor: AppColors.green,
                           textColor: AppColors.green,
                           child: Theme(
-                            data: Theme.of(context).copyWith(
-                                toggleableActiveColor: AppColors.green),
-                            child: SimpleDialog(
+                              data: Theme.of(context).copyWith(
+                                  toggleableActiveColor: AppColors.green),
+                              child: SimpleDialog(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                title: Text(
-                                  "Add On List",
-                                  style: Theme.of(context).textTheme.headline3,
-                                  textAlign: TextAlign.center,
+                                title: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "Add On List",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline3,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: Icon(Icons.close))
+                                  ],
                                 ),
                                 titlePadding: EdgeInsets.only(top: 15),
-                                children: getAddonList(model.addOn)),
-                          ),
+                                children: [
+                                  Divider(),
+                                  getAddonList(model.addOn, context)
+                                ],
+                                // children: Column(
+                                //   children: [],
+                                // ),
+                              )),
                         );
                       });
                     });
@@ -370,7 +393,43 @@ class DishItem extends StatelessWidget {
                               contentPadding: EdgeInsets.all(15),
                               children: [
                                 Divider(),
-                                Text("Heloo w", textAlign: TextAlign.center),
+                                Container(
+                                  height: getHelfDeviceHeightSize(context),
+                                  width: 200,
+                                  child: ListView.builder(
+                                    itemCount: model.orderNote.length,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, i) {
+                                      return new Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 5,
+                                            ),
+                                            child: new Text(
+                                              "${NumberToWords.convert(i + 1, "en")} dish",
+                                            ),
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            padding: EdgeInsets.all(10),
+                                            color: Colors.grey[100],
+                                            child: new Text(
+                                              model.orderNote[i] == ""
+                                                  ? "No Instrucation"
+                                                  : model.orderNote[i],
+                                              style:
+                                                  new TextStyle(fontSize: 14.0),
+                                            ),
+                                          ),
+                                          Divider()
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -383,21 +442,70 @@ class DishItem extends StatelessWidget {
             SizedBox(
               width: 20,
             ),
-            Text("Price : ${model.quantity}"),
+            Text("Price : ${model.price}"),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> getAddonList(List<AddonModel> addOn) {
-    List<Widget> addonItem = [];
+  Widget getAddonList(List<List<AddonItems>> addOn, context) {
+    return Container(
+      height: getDeviceHeightSize(context),
+      width: getDeviceWidthSize(context),
+      child: SingleChildScrollView(
+        physics: ScrollPhysics(),
+        child: Column(
+          children: <Widget>[
+            ListView.builder(
+              itemCount: addOn.length,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, i) {
+                return new ExpansionTile(
+                  title: new Text("${NumberToWords.convert(i + 1, "en")} dish",
+                      style: Theme.of(context).textTheme.headline6),
+                  children: <Widget>[
+                    addOn[i].length > 0
+                        ? Container(
+                            color: Colors.grey[100],
+                            child: new Column(
+                              children: _buildExpandableContent(addOn[i]),
+                            ),
+                          )
+                        : Container(
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            color: Colors.grey[100],
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("no Addon"),
+                            ),
+                          ),
+                  ],
+                );
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
-    for (AddonModel item in model.addOn) {
-      addonItem.add(
-          Text("${item.name} : ${item.quantity}", textAlign: TextAlign.center));
-    }
+  _buildExpandableContent(List<AddonItems> addon) {
+    List<Widget> columnContent = [];
 
-    return addonItem;
+    for (AddonItems content in addon)
+      columnContent.add(
+        new ListTile(
+          title: new Text(
+            content.name,
+            style: new TextStyle(fontSize: 14.0),
+          ),
+          trailing: Text("${content.price}"),
+        ),
+      );
+
+    return columnContent;
   }
 }

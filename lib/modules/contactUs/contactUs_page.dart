@@ -1,5 +1,7 @@
 import 'package:admin/modules/contactUs/model/contact_model.dart';
 import 'package:admin/modules/contactUs/providers/contact_provider.dart';
+import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,18 +10,25 @@ class ContactUsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: adaptiveAppBarBuilder(
-        context,
-        AppBar(
-          title: Text("Contact Us Request"),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.menu),
+      appBar: AppBar(
+        title: Text("Contact Us Request"),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Image.asset("assets/images/notification.png"),
             onPressed: () {
-              Scaffold.of(context).openDrawer();
+              Navigator.pushNamed(context, NotificationPage.routeName);
             },
-          ),
-        ),
+          )
+        ],
+        leading: showAppBarNodepad(context)
+            ? IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              )
+            : null,
       ),
       body: Consumer<ContactProvider>(
         builder: (context, contactProvider, child) {

@@ -1,5 +1,6 @@
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/UrlConstants.dart';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/Models/Resturant.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,7 +38,7 @@ class ResturantProvider with ChangeNotifier {
       String url = "$baseUrl/admin/restaurant/profile/$id";
 
       final result =
-          await APIRequest().get(myUrl: url, token: await gettoken());
+          await APIRequest().get(myUrl: url, token:  await AuthProvider().token);
 
       print("result $result");
 
@@ -62,7 +63,7 @@ class ResturantProvider with ChangeNotifier {
       String url = "$baseUrl/admin/restaurant";
 
       final result =
-          await APIRequest().get(myUrl: url, token: await gettoken());
+          await APIRequest().get(myUrl: url, token:  await AuthProvider().token);
 
       print("result $result");
 
@@ -100,7 +101,7 @@ class ResturantProvider with ChangeNotifier {
       String url = "$baseUrl/admin/restaurant";
 
       final result =
-          await APIRequest().get(myUrl: url, token: await gettoken());
+          await APIRequest().get(myUrl: url, token:  await AuthProvider().token);
 
       print("result $result");
 
@@ -136,7 +137,7 @@ class ResturantProvider with ChangeNotifier {
       final response = await APIRequest().post(
         myBody: data,
         myHeaders: {
-          "token": await gettoken(),
+          "token":  await AuthProvider().token,
         },
         myUrl: url.toString(),
       );
@@ -168,7 +169,7 @@ class ResturantProvider with ChangeNotifier {
       final response = await APIRequest().put(
         myBody: data,
         myHeaders: {
-          "token": await gettoken(),
+          "token":  await AuthProvider().token,
         },
         myUrl: url.toString(),
       );

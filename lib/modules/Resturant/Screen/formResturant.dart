@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:admin/Services/UploadFile.dart';
 import 'package:admin/constants/UrlConstants.dart';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/Models/Resturant.dart';
 import 'package:admin/modules/Resturant/Models/location.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
@@ -37,7 +38,7 @@ class _ResturantFormState extends State<ResturantForm> {
   TextEditingController locationPickerController = new TextEditingController();
   TimeOfDay selectedTime = TimeOfDay.now();
   ResturantModel resturantModel = new ResturantModel();
-
+  LocationModel locationMo = new LocationModel();
   bool _loadUpdate = true;
 
   Future<String> _selectTime(BuildContext context) async {
@@ -47,10 +48,20 @@ class _ResturantFormState extends State<ResturantForm> {
         context: context,
         initialTime: selectedTime,
         builder: (BuildContext context, Widget child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child,
-          );
+          return Theme(
+              data: ThemeData.light().copyWith(
+                primaryColor: const Color(0xFF504d4d),
+                accentColor: const Color(0xFF504d4d),
+                colorScheme:
+                    ColorScheme.light(primary: const Color(0xFF504d4d)),
+                buttonTheme:
+                    ButtonThemeData(textTheme: ButtonTextTheme.primary),
+              ),
+              child: MediaQuery(
+                data: MediaQuery.of(context)
+                    .copyWith(alwaysUse24HourFormat: true),
+                child: child,
+              ));
         });
 
     if (picked_s != null) return "${picked_s.hour}:${picked_s.minute}";
@@ -106,6 +117,8 @@ class _ResturantFormState extends State<ResturantForm> {
                       Row(children: [
                         Container(
                           height: 130,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
                           width: 130,
                           child: ClipRRect(
                             child: GestureDetector(
@@ -117,7 +130,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                       _isUploadingImage = true;
                                     });
                                     await uploadFile(value, "profile-photo",
-                                            await gettoken())
+                                            await AuthProvider().token)
                                         .then((value) => resturantModel.avatar =
                                             value['uriPath']);
 
@@ -148,8 +161,12 @@ class _ResturantFormState extends State<ResturantForm> {
                                         ? ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(70.0),
-                                            child: Image.network(
-                                                resturantModel.avatar))
+                                            child: Stack(
+                                              children: [
+                                                Image.network(
+                                                    resturantModel.avatar),
+                                              ],
+                                            ))
                                         : Icon(Icons.add_a_photo),
                               ),
                             ),
@@ -194,7 +211,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                 children: [
                                   Expanded(
                                     child: TextFormFieldResturant(
-                                      icon: Icons.location_searching,
+                                      icon: Icons.location_on_outlined,
                                       hintText: "Resturant Location",
 
                                       onChange: (value) {},
@@ -207,18 +224,17 @@ class _ResturantFormState extends State<ResturantForm> {
                                               apiKey:
                                                   "AIzaSyBY1nLDcGY1NNgV89rnDR8jg_eBsQBJ39E", // Put YOUR OWN KEY here.
                                               onPlacePicked: (result) {
-                                                LocationModel locationMo =
-                                                    new LocationModel();
                                                 locationMo.lat = result
                                                     .geometry.location.lat;
                                                 locationMo.log = result
                                                     .geometry.location.lng;
                                                 locationMo.type = "Point";
-
+                                                print(
+                                                    "locationMo.log ${locationMo.log}");
                                                 setState(() {
                                                   locationPickerController
                                                           .text =
-                                                      "(${resturantModel.location.lat.toStringAsFixed(2)}, ${resturantModel.location.log.toStringAsFixed(2)})";
+                                                      "(${result.geometry.location.lat.toStringAsFixed(2)}, ${result.geometry.location.lng.toStringAsFixed(2)})";
                                                 });
 
                                                 resturantModel.location =
@@ -532,7 +548,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.sunday.startTime == null ? '0:00' : resturantModel.sunday.startTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.sunday.startTime = value;
@@ -548,7 +564,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.sunday.endTime == null ? '0:00' : resturantModel.sunday.endTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.sunday.endTime = value;
@@ -569,7 +585,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.monday.startTime == null ? '0:00' : resturantModel.monday.startTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.monday.startTime = value;
@@ -585,7 +601,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.monday.endTime == null ? '0:00' : resturantModel.monday.endTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.monday.endTime = value;
@@ -606,7 +622,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.tuesday.startTime == null ? '0:00' : resturantModel.tuesday.startTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.tuesday.startTime = value;
@@ -622,7 +638,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.tuesday.endTime == null ? '0:00' : resturantModel.tuesday.endTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.tuesday.endTime = value;
@@ -643,7 +659,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.wednesday.startTime == null ? '0:00' : resturantModel.wednesday.startTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.wednesday.startTime = value;
@@ -659,7 +675,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.wednesday.endTime == null ? '0:00' : resturantModel.wednesday.endTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.wednesday.endTime = value;
@@ -680,7 +696,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.thursday.startTime == null ? '0:00' : resturantModel.thursday.startTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.thursday.startTime = value;
@@ -696,7 +712,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.thursday.endTime == null ? '0:00' : resturantModel.thursday.endTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.thursday.endTime = value;
@@ -717,7 +733,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.friday.startTime == null ? '0:00' : resturantModel.friday.startTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.friday.startTime = value;
@@ -733,7 +749,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.friday.endTime == null ? '0:00' : resturantModel.friday.endTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.friday.endTime = value;
@@ -754,7 +770,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.saturday.startTime == null ? '0:00' : resturantModel.saturday.startTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.saturday.startTime = value;
@@ -770,7 +786,7 @@ class _ResturantFormState extends State<ResturantForm> {
                     Text(
                         "${resturantModel.saturday.endTime == null ? '0:00' : resturantModel.saturday.endTime}"),
                     IconButton(
-                      icon: Icon(Icons.edit),
+                      icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
                         _selectTime(context).then((value) => setState(() {
                               resturantModel.saturday.endTime = value;
