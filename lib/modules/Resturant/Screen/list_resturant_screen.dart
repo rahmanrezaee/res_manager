@@ -4,6 +4,7 @@ import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
 import 'package:admin/widgets/appbar_widget.dart';
+import 'package:admin/widgets/fancy_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
@@ -16,9 +17,12 @@ class ListResturantScreen extends StatefulWidget {
 }
 
 class _ListResturantScreenState extends State<ListResturantScreen> {
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: showAppBarNodepad(context)
           ? adaptiveAppBarBuilder(
               context,
@@ -34,7 +38,6 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                   children: [
                     Text(
                       "Manage Resturants",
-                      
                     ),
                     SizedBox(
                       width: 35,
@@ -55,6 +58,12 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                     ),
                   ],
                 ),
+                bottom: isLoading
+                    ? PreferredSize(
+                        preferredSize: Size(10, 10),
+                        child: LinearProgressIndicator(),
+                      )
+                    : null,
               ),
             )
           : AppBar(
@@ -82,6 +91,12 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                   ),
                 ],
               ),
+              bottom: isLoading
+                  ? PreferredSize(
+                      preferredSize: Size(10, 10),
+                      child: LinearProgressIndicator(),
+                    )
+                  : null,
             ),
       body: Consumer<ResturantProvider>(
         builder: (BuildContext context, value, Widget child) {
@@ -97,7 +112,7 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                     : ListView.builder(
                         itemCount: value.listResturant.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return ResturantItem(value.listResturant[index]);
+                          return resturantItem(value.listResturant[index]);
                         },
                       )
                 : FutureBuilder(
@@ -119,6 +134,86 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                   ),
           );
         },
+      ),
+    );
+  }
+
+  Widget resturantItem(resturantModel) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text("${resturantModel.resturantName}",
+                  style: Theme.of(context).textTheme.headline4),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text("${resturantModel.activeOrder} Active Orders",
+                  style: TextStyle(color: Colors.grey)),
+            ),
+            Row(
+              children: [
+                IconButton(
+                  icon: Image.asset("assets/images/edit.png"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, ResturantForm.routeName,
+                        arguments: resturantModel.id);
+                  },
+                ),
+                IconButton(
+                  icon: Image.asset("assets/images/delete.png"),
+                  onPressed: () {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => FancyDialog(
+                              title: "Delete Resturant!",
+                              okFun: () {
+                                Provider.of<ResturantProvider>(context,
+                                        listen: false)
+                                    .deleteResturant(resturantModel.id)
+                                    .then((res) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  // ScaffoldMessenger.of(context)
+                                  //     .hideCurrentSnackBar();
+                                  if (res == true) {
+                                    // Navigator.of(context).pop();
+                                    // ScaffoldMessenger.of(context)
+                                    //     .showSnackBar(new SnackBar(
+                                    //   content: Text(
+                                    //       "The user deleted Successfuly."),
+                                    // ));
+                                  } else {
+                                    // Navigator.of(context).pop();
+                                    // ScaffoldMessenger.of(context)
+                                    //     .showSnackBar(new SnackBar(
+                                    //   content: Text(
+                                    //     "Something went wrong while deleting customer.",
+                                    //     style: TextStyle(
+                                    //         color: AppColors.redText),
+                                    //   ),
+                                    // ));
+                                  }
+                                });
+                              },
+                              cancelFun: () {},
+                              descreption: "Are You Sure To Delete Resturants?",
+                            ));
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

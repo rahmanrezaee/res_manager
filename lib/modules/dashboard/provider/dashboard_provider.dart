@@ -1,3 +1,4 @@
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/GlobleService/APIRequest.dart';
@@ -10,11 +11,9 @@ class DashboardProvider with ChangeNotifier {
   get getDashData => _dashboardData;
 
   fetchDashData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = json.decode(prefs.getString("user"))['token'];
     // if (token == '') {
     String url = "$baseUrl/admin/restaurant/dashboard";
-    var res = await APIRequest().get(myUrl: url, token: token);
+    var res = await APIRequest().get(myUrl: url, token: await AuthProvider().token);
     this._dashboardData = res.data['data'];
     print(_dashboardData);
     notifyListeners();

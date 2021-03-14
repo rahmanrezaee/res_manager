@@ -1,3 +1,4 @@
+import 'package:admin/modules/notifications/notification_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/appbar_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -91,8 +92,10 @@ class _OrderPageState extends State<OrderPage>
                 centerTitle: true,
                 actions: [
                   IconButton(
-                    icon: Icon(Icons.notifications),
-                    onPressed: () {},
+                    icon: Image.asset("assets/images/notification.png"),
+                    onPressed: () {
+                      Navigator.pushNamed(context, NotificationPage.routeName);
+                    },
                   )
                 ],
                 elevation: 0,

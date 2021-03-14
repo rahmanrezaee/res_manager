@@ -19,7 +19,7 @@ Future<Map> uploadFile(File imageFile, String category, String token) async {
     FormData formData = FormData.fromMap(
       {
         "uploadFile": await MultipartFile.fromFile(imageFile.path),
-        "permission": false,
+        "permission": true,
         "category": category
       },
     );

@@ -1,23 +1,22 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
-import 'package:admin/modules/Authentication/screen/forgotPasswordWithKey.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/modules/categories/provider/categories_provider.dart';
 import 'package:admin/modules/contactUs/providers/contact_provider.dart';
 import 'package:admin/modules/customers/provider/customers_provider.dart';
+import 'package:admin/modules/notifications/provider/notificaction_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/modules/drawer/drawer.dart';
 import 'package:admin/modules/Authentication/screen/login_page.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './themes/style.dart';
 import './routes.dart';
 import 'package:provider/provider.dart';
 import './modules/dashboard/provider/dashboard_provider.dart';
-import 'package:uni_links/uni_links.dart';
 import 'modules/coupons/statement/couponProvider.dart';
 
 void main() {
@@ -139,7 +138,6 @@ class _MyAppState extends State<MyApp> {
     getPrefs();
 
     Future.delayed(Duration.zero, () {
-      notifyInitialize();
       _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
@@ -177,7 +175,7 @@ class _MyAppState extends State<MyApp> {
         },
       );
     });
-    
+
     super.initState();
   }
 
@@ -232,6 +230,8 @@ class _MyAppState extends State<MyApp> {
                   create: (_) => CoupenProvider()),
               ChangeNotifierProvider<ContactProvider>(
                   create: (_) => ContactProvider()),
+              ChangeNotifierProvider<NotificationProvider>(
+                  create: (_) => NotificationProvider()),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

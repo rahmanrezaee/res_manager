@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 double getDeviceHeightSize(BuildContext context) {
   return MediaQuery.of(context).size.height;
 }
+double getHelfDeviceHeightSize(BuildContext context) {
+  return MediaQuery.of(context).size.height/2;
+}
 
 double getDeviceWidthSize(BuildContext context) {
   return MediaQuery.of(context).size.width;

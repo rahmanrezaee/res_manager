@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import '../validators/formFieldsValidators.dart';
 
 class AuthProvider with ChangeNotifier {
-  Future login(String username, String password) async {
+  Future login(String username, String password,String fcm) async {
     try {
       print("Loging in");
       print({"email": username, "password": password});
@@ -21,7 +21,7 @@ class AuthProvider with ChangeNotifier {
       String url = "$baseUrl/admin/user/login";
       var res = await APIRequest().post(
         myUrl: url,
-        myBody: {"email": username, "password": password},
+        myBody: {"email": username, "password": password,"fcmToken":fcm},
       );
       //getting user data
       var user = {
