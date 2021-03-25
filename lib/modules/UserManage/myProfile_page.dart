@@ -22,6 +22,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 20),
             Row(children: [
               CircleAvatar(
                 radius: 40.0,
@@ -80,7 +81,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 ),
               ],
             ),
-         
           ],
         ),
       ),

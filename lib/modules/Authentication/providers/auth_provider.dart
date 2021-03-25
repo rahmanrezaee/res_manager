@@ -1,42 +1,73 @@
-import 'dart:io';
-
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/api_path.dart';
+import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
-  Dio dio = new Dio();
+
+  
   Future login(String username, String password) async {
     try {
-      // print("Loging in");
-      // print({"email": username, "password": password});
+      print("Loging in");
+      print({"email": username, "password": password});
+      //sending data
       String url = "$baseUrl/admin/user/login";
-      // print(url);
       var res = await APIRequest().post(
         myUrl: url,
         myBody: {"email": username, "password": password},
-        myHeaders: null,
       );
-      print(res);
-      // await Future.delayed(Duration(seconds: 4));
-      return false;
-    } catch (e, s) {
-      print("Stacktrace $s");
-      print("Mahdi Error $e");
+      //getting user data
+      var user = {
+        'token': res.data['data']['token'],
+        'expierDate': DateTime.now().add(Duration(days: 1)).toString(),
+        'userId': res.data['data']['user']['_id'],
+      };
+      //saving user data to sharedpreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      print(json.encode(user));
+      await prefs.setString('user', json.encode(user));
+      //return message
+      return {"status": true, "message": "logedIn"};
+    } on DioError catch (e) {
+      print(e.response.data);
+      return e.response.data;
     }
   }
 
+  // token
+  // expierdate
+  // userid
   Future forgotPassword(email) async {
     String url = "$baseUrl/admin/user/forgotpassword";
-    // print(url);
-    // var res = await APIRequest().post(
-    //   myUrl: url,
-    //   myBody: {"email": email},
-    //   myHeaders: null,
-    // );
-    // print(res);
-    await Future.delayed(Duration(seconds: 4));
-    return true;
+    print(email);
+    try {
+      var res = await APIRequest().post(
+        myUrl: url,
+        myBody: {"email": email},
+      );
+      print(res);
+      return {'status': true};
+    } on DioError catch (e) {
+      return e.response.data;
+    }
+  }
+
+  //Logout
+  logOut(context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('user');
+    // Navigator.of(context).pushNamed(LoginPage.routeName);
+  }
+
+  Future checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user') == null) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

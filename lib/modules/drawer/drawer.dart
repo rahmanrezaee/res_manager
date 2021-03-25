@@ -1,21 +1,24 @@
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
+import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
+import 'package:admin/modules/contactUs/contactUs_page.dart';
 import 'package:admin/modules/coupons/coupons_page.dart';
-import 'package:admin/modules/customers/Customers_page.dart';
+import 'package:admin/modules/customers/screen/Customers_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_scaffold/responsive_scaffold.dart';
 import 'package:admin/constants/assest_path.dart';
-import 'package:admin/modules/addNewDish/addNewDish_page.dart';
 import 'package:admin/modules/report/report.dart';
 import 'package:admin/themes/colors.dart';
-import 'package:admin/themes/style.dart';
 //pages
 import '../dashboard/Screen/dashboard_page.dart';
 import '../orders/orders_page.dart';
 import '../UserManage/myProfile_page.dart';
 import '../categories/catetories_page.dart';
-import '../dishes/dishes_page.dart';
 import '../notifications/notifications_page.dart';
+import '../policy/Privacy&Policy.dart';
+import '../term/term&condition_page.dart';
 
 class PageModel {
   String title;
@@ -66,9 +69,9 @@ class _LayoutExampleState extends State<LayoutExample> {
       page: OrderPage(),
     ),
     PageModel(
-      title: "My Profile",
+      title: "Contact Us Requests",
       icon: Icon(Icons.account_circle_outlined, color: Colors.yellow),
-      page: MyProfilePage(),
+      page: ContactUsPage(),
     ),
     PageModel(
       title: "Categories",
@@ -98,15 +101,32 @@ class _LayoutExampleState extends State<LayoutExample> {
       icon: Icon(Icons.report, color: Colors.yellow),
       page: ReportPage(),
     ),
+    PageModel(
+      title: "Term&Conditions",
+      icon: Icon(Icons.subject),
+      page: TermCondition(),
+    ),
+    PageModel(
+      title: "Privary Policy",
+      icon: Icon(Icons.format_align_center),
+      page: PrivacyPolicy(),
+    ),
+    PageModel(
+      title: "LogOut",
+      icon: Icon(Icons.logout),
+      page: LoginPage(),
+    ),
   ];
 
   int pageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     return ResponsiveScaffold(
       kDesktopBreakpoint: 768,
-      body: pages[pageIndex].page,
+      body: SafeArea(child: pages[pageIndex].page),
       drawer: SizedBox(
         width: 281,
         child: Padding(
@@ -115,17 +135,20 @@ class _LayoutExampleState extends State<LayoutExample> {
             children: <Widget>[
               ...pages.map((page) {
                 int index = pages.indexOf(page);
-
                 return drawerListItemBuilder(
                   icon: page.icon,
                   title: page.title,
                   isActive: pageIndex == index,
                   onClick: () {
-                    setState(() {
-                      pageIndex = index;
-                    });
-                    if (showAppBarNodepad(context)) {
-                      Navigator.pop(context);
+                    if (page.title == 'LogOut') {
+                      authProvider.logOut(context);
+                    } else {
+                      setState(() {
+                        pageIndex = index;
+                      });
+                      if (showAppBarNodepad(context)) {
+                        Navigator.pop(context);
+                      }
                     }
                   },
                 );
@@ -161,7 +184,7 @@ drawerListItemBuilder({
           children: [
             icon,
             SizedBox(width: 10),
-            Text(title),
+            Expanded(child: Text(title)),
           ],
         ),
       ),

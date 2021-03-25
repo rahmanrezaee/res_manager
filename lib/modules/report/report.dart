@@ -146,6 +146,7 @@ class _ReportPageState extends State<ReportPage>
                               color: Theme.of(context).primaryColor,
                               label: Text(
                                 "Email Report",
+                                style: TextStyle(color: Colors.white),
                               ),
                               onPress: () {},
                             ),
@@ -158,6 +159,7 @@ class _ReportPageState extends State<ReportPage>
                               color: Theme.of(context).primaryColor,
                               label: Text(
                                 "Email Report",
+                                style: TextStyle(color: Colors.white),
                               ),
                               onPress: () {},
                             ),
@@ -280,6 +282,7 @@ class _ReportPageState extends State<ReportPage>
                               color: Theme.of(context).primaryColor,
                               label: Text(
                                 "Email Report",
+                                style: TextStyle(color: Colors.white),
                               ),
                               onPress: () {},
                             ),
@@ -292,6 +295,7 @@ class _ReportPageState extends State<ReportPage>
                               color: Theme.of(context).primaryColor,
                               label: Text(
                                 "Email Report",
+                                style: TextStyle(color: Colors.white),
                               ),
                               onPress: () {},
                             ),
