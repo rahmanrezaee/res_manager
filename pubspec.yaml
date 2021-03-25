@@ -44,7 +44,8 @@ dependencies:
   flutter_local_notifications: ^3.0.2
   numbers_to_words: ^0.1.2
   scroll_to_index: 
- 
+  cached_network_image: ^2.5.1
+  incrementally_loading_listview: ^0.3.0
   # responsive_scaffold:
   #   git:
   #     url: https://github.com/AzadCoder/responsive_scaffold

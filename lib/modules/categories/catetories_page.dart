@@ -150,7 +150,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Visibility(
+               Visibility(
               visible: showAppBarNodepad(context),
               child: Padding(
                 padding: new EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -197,7 +197,8 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                 ),
               ),
             ),
-            Card(
+          
+           Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Padding(

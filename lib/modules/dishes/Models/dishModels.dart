@@ -13,6 +13,8 @@ class DishModel {
   String categoryId;
   double price;
   List<List<AddonItems>> addOn = [];
+
+
   List<AddonItems> addOnDishAdmin = [];
   List orderNote = [];
   String description;

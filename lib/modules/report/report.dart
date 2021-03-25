@@ -42,12 +42,18 @@ class _ReportPageState extends State<ReportPage> {
   String earingResturantId;
   String startDateEarn;
   String endDateEarn;
-  double income = 0;
+  String startDateOrder;
+  String endDateOrder;
+  String income = "";
+  String earning = "";
+  var couponController = TextEditingController();
 
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: adaptiveAppBarBuilder(
           context,
           AppBar(
@@ -137,6 +143,7 @@ class _ReportPageState extends State<ReportPage> {
                                       ),
                                       TextFormFieldResturant(
                                         hintText: "By Coupen",
+                                        controller: couponController,
                                       ),
                                       SizedBox(
                                         height: 10,
@@ -155,13 +162,19 @@ class _ReportPageState extends State<ReportPage> {
                                                   children: [
                                                     Expanded(
                                                       child: Text(
-                                                        endDateEarn ??
+                                                        startDateOrder ??
                                                             "To Date",
                                                       ),
                                                     ),
                                                     IconButton(
-                                                      onPressed: () => _selectDate(
-                                                          context), // Refer step 3
+                                                      onPressed: () {
+                                                        _selectDate(context)
+                                                            .then((value) =>
+                                                                setState(() {
+                                                                  startDateOrder =
+                                                                      value;
+                                                                }));
+                                                      },
                                                       icon: Icon(
                                                         Icons.calendar_today,
                                                       ),
@@ -182,12 +195,19 @@ class _ReportPageState extends State<ReportPage> {
                                                   children: [
                                                     Expanded(
                                                       child: Text(
-                                                        "From Date",
+                                                        endDateOrder ??
+                                                            "From Date",
                                                       ),
                                                     ),
                                                     IconButton(
-                                                      onPressed: () => _selectDate(
-                                                          context), // Refer step 3
+                                                      onPressed: () {
+                                                        _selectDate(context)
+                                                            .then((value) =>
+                                                                setState(() {
+                                                                  endDateOrder =
+                                                                      value;
+                                                                }));
+                                                      }, // Refer step 3
                                                       icon: Icon(
                                                         Icons.calendar_today,
                                                       ),
@@ -202,6 +222,13 @@ class _ReportPageState extends State<ReportPage> {
                                       SizedBox(
                                         height: 10,
                                       ),
+                                      Visibility(
+                                        visible: earning != "",
+                                        child: ListTile(
+                                          title: Text("Total Orders"),
+                                          trailing: Text("$earning"),
+                                        ),
+                                      ),
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: <Widget>[
@@ -215,7 +242,30 @@ class _ReportPageState extends State<ReportPage> {
                                                     color: Colors.white,
                                                     fontSize: 15),
                                               ),
-                                              onPress: () {},
+                                              onPress: () {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                getSendReportEmil(
+                                                  fromDate: startDateOrder,
+                                                  toDate: endDateOrder,
+                                                  coupenCode:
+                                                      couponController.text,
+                                                ).then((value) {
+                                                  setState(() {
+                                                    isLoading = false;
+                                                  });
+                                                  _scaffoldKey.currentState
+                                                      .showSnackBar(SnackBar(
+                                                    backgroundColor:
+                                                        Colors.greenAccent,
+                                                    content: Text(
+                                                        "Successfuly Send To Email."),
+                                                    duration:
+                                                        Duration(seconds: 3),
+                                                  ));
+                                                });
+                                              },
                                             ),
                                           ),
                                           SizedBox(
@@ -226,12 +276,32 @@ class _ReportPageState extends State<ReportPage> {
                                               color: Theme.of(context)
                                                   .primaryColor,
                                               label: Text(
-                                                "Email Report",
+                                                "View Report",
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 15),
                                               ),
-                                              onPress: () {},
+                                              onPress: () {
+                                                setState(() {
+                                                  isLoading = true;
+                                                  earning = "";
+                                                });
+                                                getReport(
+                                                  type: "orders",
+                                                  fromDate: startDateOrder,
+                                                  toDate: endDateOrder,
+                                                  restaurantId:
+                                                      this.orderResturantId,
+                                                  coupenCode:
+                                                      couponController.text,
+                                                ).then((value) {
+                                                  setState(() {
+                                                    earning = "${value}";
+
+                                                    isLoading = false;
+                                                  });
+                                                });
+                                              },
                                             ),
                                           ),
                                         ],
@@ -259,9 +329,6 @@ class _ReportPageState extends State<ReportPage> {
                                           "Earnings",
                                           style: TextStyle(fontSize: 20),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
                                       ),
                                       SizedBox(
                                         height: 5,
@@ -368,7 +435,7 @@ class _ReportPageState extends State<ReportPage> {
                                         height: 10,
                                       ),
                                       Visibility(
-                                        visible: income != 0,
+                                        visible: income != "",
                                         child: ListTile(
                                           title: Text("Total Earning"),
                                           trailing: Text("$income"),
@@ -387,7 +454,28 @@ class _ReportPageState extends State<ReportPage> {
                                                     color: Colors.white,
                                                     fontSize: 15),
                                               ),
-                                              onPress: () {},
+                                              onPress: () {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                getSendReportEmailEarnings(
+                                                  fromDate: startDateEarn,
+                                                  toDate: endDateEarn,
+                                                ).then((value) {
+                                                  setState(() {
+                                                    isLoading = false;
+                                                  });
+                                                  _scaffoldKey.currentState
+                                                      .showSnackBar(SnackBar(
+                                                    backgroundColor:
+                                                        Colors.greenAccent,
+                                                    content: Text(
+                                                        "Successfuly Send To Email."),
+                                                    duration:
+                                                        Duration(seconds: 3),
+                                                  ));
+                                                });
+                                              },
                                             ),
                                           ),
                                           SizedBox(
@@ -407,16 +495,15 @@ class _ReportPageState extends State<ReportPage> {
                                                 setState(() {
                                                   isLoading = true;
 
-                                                  income = 0;
+                                                  income = "";
                                                 });
-                                                getEarningReport(
-                                                        fromDate: startDateEarn,
-                                                        toDate: endDateEarn,
-                                                        resId:
-                                                            earingResturantId)
-                                                    .then((value) {
+                                                getReport(
+                                                  type: "earnings",
+                                                  fromDate: startDateEarn,
+                                                  toDate: endDateEarn,
+                                                ).then((value) {
                                                   setState(() {
-                                                    income = value;
+                                                    income = "${value}";
 
                                                     isLoading = false;
                                                   });
