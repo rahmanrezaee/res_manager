@@ -5,11 +5,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
+import 'package:admin/themes/colors.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../validators/formFieldsValidators.dart';
 
 class AuthProvider with ChangeNotifier {
-
-  
-  Future login(String username, String password) async {
+  Future login(String username, String password,String fcm) async {
     try {
       print("Loging in");
       print({"email": username, "password": password});
@@ -17,7 +21,7 @@ class AuthProvider with ChangeNotifier {
       String url = "$baseUrl/admin/user/login";
       var res = await APIRequest().post(
         myUrl: url,
-        myBody: {"email": username, "password": password},
+        myBody: {"email": username, "password": password,"fcmToken":fcm},
       );
       //getting user data
       var user = {
@@ -51,6 +55,24 @@ class AuthProvider with ChangeNotifier {
       print(res);
       return {'status': true};
     } on DioError catch (e) {
+      print("error ${e.response}");
+      return e.response.data;
+    }
+  }
+
+  Future forgotPasswordWithKey(password, token) async {
+    String url = "$baseUrl/admin/user/changepasswordwithKey";
+    try {
+      var res = await APIRequest().post(
+        myUrl: url,
+        myBody: {
+          "token": token,
+          "newPassword": password,
+        },
+      );
+      print(res);
+      return {'status': true};
+    } on DioError catch (e) {
       return e.response.data;
     }
   }
@@ -62,12 +84,25 @@ class AuthProvider with ChangeNotifier {
     // Navigator.of(context).pushNamed(LoginPage.routeName);
   }
 
+  get token {
+    return checkLoginStatus();
+  }
+
   Future checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user') == null) {
-      return false;
+      return '';
     } else {
-      return true;
+      //Checking expiery date
+      DateTime expireDate =
+          DateTime.parse(json.decode(prefs.getString('user'))['expierDate']);
+      if (DateTime.now().isAfter(expireDate.add(Duration(days: 1)))) {
+        return refreshToken();
+      } else {
+        return json.decode(prefs.getString('user'))['token'];
+      }
     }
   }
+
+  refreshToken() {}
 }

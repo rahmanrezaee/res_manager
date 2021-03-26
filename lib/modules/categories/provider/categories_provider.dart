@@ -1,4 +1,6 @@
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/categories/models/categorie_model.dart';
+import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/GlobleService/APIRequest.dart';
@@ -11,16 +13,29 @@ class CategoryProvider with ChangeNotifier {
   ///cat List
   List<CategoryModel> _categories;
   get getCategories => _categories;
+  String resturantId;
+
+  setCategoryToNull() {
+    _categories = null;
+    notifyListeners();
+  }
+
+  setResturantId(resId) {
+    this.resturantId = resId;
+    notifyListeners();
+  }
 
   ///res List
   List<RestaurantModel> _restaurants;
   List<RestaurantModel> get getRestaurant => _restaurants;
+  String get getRestaurantId => resturantId;
 
-  fetchCategories(String resId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = json.decode(prefs.getString("user"))['token'];
-    String url = "$baseUrl/admin/food/$resId";
-    var res = await APIRequest().get(myUrl: url, token: token);
+  fetchCategories() async {
+    String url = "$baseUrl/admin/food/$resturantId";
+    var res = await APIRequest().get(
+      myUrl: url,
+      token: await AuthProvider().token,
+    );
     this._categories = [];
     (res.data['data'] as List).forEach((category) {
       print("thsi is the single cat: $category");
@@ -31,26 +46,27 @@ class CategoryProvider with ChangeNotifier {
 
   //add Category
   Future addNewCategory(String resId, String newCategory) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = json.decode(prefs.getString("user"))['token'];
-    print(token);
-    String url = "$baseUrl/restaurant/category";
-    var res = await APIRequest().post(
-      myUrl: url,
-      myBody: {"restaurantId": resId, "categoryName": newCategory},
-      myHeaders: {
-        "token": token,
-      },
-    );
-    notifyListeners();
-    return res.data;
+    try {
+      String url = "$baseUrl/restaurant/category";
+      var res = await APIRequest().post(
+        myUrl: url,
+        myBody: {"restaurantId": resId, "categoryName": newCategory},
+        myHeaders: {
+          "token": await AuthProvider().token,
+        },
+      );
+
+      this._categories = null;
+      notifyListeners();
+      return res.data;
+    } on DioError catch (e) {
+      print("error ${e.response}");
+    }
   }
 
   //Edit category
   Future<Map> editCategory(catId, resId, category) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = json.decode(prefs.getString("user"))['token'];
-    String url = "$baseUrl/restaurant/category/$catId";
+    String url = "$baseUrl/public/category/$catId";
     var res = await APIRequest().put(
       myUrl: url,
       myBody: {
@@ -58,7 +74,7 @@ class CategoryProvider with ChangeNotifier {
         "categoryName": category,
       },
       myHeaders: {
-        "token": token,
+        "token": await AuthProvider().token,
       },
     );
 
@@ -68,10 +84,11 @@ class CategoryProvider with ChangeNotifier {
   }
 
   Future fetchRes() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = json.decode(prefs.getString("user"))['token'];
     String url = "$baseUrl/admin/restaurant";
-    var res = await APIRequest().get(myUrl: url, token: token);
+    var res = await APIRequest().get(
+      myUrl: url,
+      token: await AuthProvider().token,
+    );
     this._restaurants = [];
     (res.data['data'] as List).forEach((res) {
       this._restaurants.add(new RestaurantModel.fromJson(res));
@@ -82,13 +99,13 @@ class CategoryProvider with ChangeNotifier {
 
   deleteCategoy(categryId) async {
     //getting token
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = json.decode(prefs.getString("user"))['token'];
+
     //getting data
-    String url = "$baseUrl/admin/user/customer/$categryId   ";
-    var res = await APIRequest()
-        .delete(myUrl: url, myBody: null, myHeaders: {'token': token});
-    print(res.data);
+    String url = "$baseUrl/public/category/$categryId";
+    var res = await APIRequest().delete(myUrl: url, myBody: null, myHeaders: {
+      'token': await AuthProvider().token,
+    });
+    this._categories = null;
     notifyListeners();
     return res.data;
   }

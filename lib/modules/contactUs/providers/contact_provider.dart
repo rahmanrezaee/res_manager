@@ -1,5 +1,6 @@
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/UrlConstants.dart';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/contactUs/model/contact_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +18,7 @@ class ContactProvider with ChangeNotifier {
       print("URl $url");
 
       final result =
-          await APIRequest().get(myUrl: url, token: await gettoken());
+          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
 
       print("result $result");
 
@@ -27,7 +28,7 @@ class ContactProvider with ChangeNotifier {
         contacts = [];
         return false;
       }
-
+      print("result $result");
       final List<ContactModel> loadedProducts = [];
 
       extractedData.forEach((tableData) {

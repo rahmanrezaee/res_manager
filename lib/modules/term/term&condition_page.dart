@@ -1,3 +1,6 @@
+import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
+import 'package:admin/widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 import './services/term&condition_service.dart';
 
@@ -7,11 +10,9 @@ class TermCondition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Terms and Conditions",
-            style: Theme.of(context).textTheme.button),
-        centerTitle: true,
-      ),
+      appBar:AppBar(
+                
+              title: Text("Terms and Conditions")),
       body: FutureBuilder(
           future: termConditionService.getTerm(),
           builder: (context, snapshot) {
@@ -19,12 +20,19 @@ class TermCondition extends StatelessWidget {
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(15),
-                  child: Text(snapshot.data),
+                  child: Text(
+                    snapshot.data,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400, fontSize: 14, height: 1.5),
+                  ),
                 ),
               );
             } else if (snapshot.hasError) {
-              return Text(
-                  "Something went wrong!! Please check your internet connection and try again.");
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                    "Something went wrong!! Please check your internet connection and try again."),
+              );
             } else {
               return Center(child: CircularProgressIndicator());
             }

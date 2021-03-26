@@ -5,6 +5,7 @@ import 'dart:developer';
 // import 'package:DoctorProject/Providers/auth_provider.dart';
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/UrlConstants.dart';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/coupons/model/CouponModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -16,7 +17,8 @@ class CoupenProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/coupon/$id";
 
-      final result = await APIRequest().get(myUrl: url, token: await gettoken());
+      final result =
+          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
 
       print("result $result");
 
@@ -40,11 +42,12 @@ class CoupenProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/coupon";
 
-      final result = await APIRequest().get(myUrl: url, token: await gettoken());
+      final result =
+          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
 
       print("result $result");
 
-      final extractedData = result.data["data"];
+      final extractedData = result.data["data"]['docs'];
 
       if (extractedData == null) {
         list = [];
@@ -80,7 +83,7 @@ class CoupenProvider with ChangeNotifier {
       final response = await APIRequest().post(
         myBody: data,
         myHeaders: {
-          "token": await gettoken(),
+          "token": await AuthProvider().token,
         },
         myUrl: url.toString(),
       );
@@ -110,9 +113,7 @@ class CoupenProvider with ChangeNotifier {
 
       final response = await APIRequest().put(
         myBody: data,
-        myHeaders: {
-          "token": await gettoken(),
-        },
+        myHeaders: {"token": await AuthProvider().token},
         myUrl: url.toString(),
       );
 
@@ -129,6 +130,27 @@ class CoupenProvider with ChangeNotifier {
       print(e.error);
       print(e.request);
       print(e.type);
+    }
+  }
+
+  Future<bool> deleteCoupen(id) async {
+    try {
+      String url = "$baseUrl/admin/coupon/$id";
+      var res = await APIRequest().delete(
+          myUrl: url,
+          myBody: null,
+          myHeaders: {'token': await AuthProvider().token});
+
+      list = null;
+      notifyListeners();
+      return true;
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
+      return false;
     }
   }
 

@@ -12,6 +12,7 @@ class OrderModels {
   double restaurantCharges;
   String cardName;
   String date;
+  String timePicker;
 
   OrderModels.toJson(tableData) {
     try {
@@ -26,6 +27,7 @@ class OrderModels {
           double.parse("${tableData['restaurantCharges']}") ?? 0;
       this.grandTotal = double.parse("${tableData['grandTotal']}") ?? 0;
       this.cardName = tableData['cardName'] ?? "";
+      this.timePicker = tableData['pickUpTime'] ?? "00:00";
 
       List food = tableData['items'];
       if (food != null && food.isNotEmpty) {

@@ -1,6 +1,7 @@
 //core
 import 'package:admin/modules/dishes/DishServics/dishServices.dart';
 import 'package:admin/modules/dishes/Models/dishModels.dart';
+import 'package:admin/widgets/fancy_dialog.dart';
 import 'package:flutter/material.dart';
 
 //packages
@@ -46,6 +47,7 @@ class _DishHomeState extends State<DishPage> {
     super.initState();
   }
 
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +58,13 @@ class _DishHomeState extends State<DishPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        title: Text("Manage Doshes"),
+        title: Text("Manage Dishes"),
+        bottom: isLoading
+            ? PreferredSize(
+                preferredSize: Size(10, 10),
+                child: LinearProgressIndicator(),
+              )
+            : null,
         actions: [
           IconButton(
             icon: Icon(
@@ -79,38 +87,38 @@ class _DishHomeState extends State<DishPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: FutureBuilder(
-            future: getDish,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+      body: FutureBuilder(
+          future: getDish,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: Text("error in Fetch orders"),
                 );
-              } else if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text("error in Fetch orders"),
-                  );
-                } else {
-                  return dishList.isEmpty
-                      ? Center(
-                          child: Text("No Order"),
-                        )
-                      : Padding(
+              } else {
+                return dishList.isEmpty
+                    ? Center(
+                        child: Text("No Dish"),
+                      )
+                    : SingleChildScrollView(
+                        child: Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: ResponsiveGridRow(
                             children: getColumnDish(dishList),
                           ),
-                        );
-                }
-              } else {
-                return Center(
-                  child: Text("error in Fetch orders"),
-                );
+                        ),
+                      );
               }
-            }),
-      ),
+            } else {
+              return Center(
+                child: Text("error in Fetch orders"),
+              );
+            }
+          }),
     );
   }
 
@@ -123,7 +131,39 @@ class _DishHomeState extends State<DishPage> {
         sm: 6,
         md: 4,
         lg: 3,
-        child: DishItem(element, this.catId, this.resturantId),
+        child: DishItem(element, this.catId, this.resturantId, () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => FancyDialog(
+                    title: "Delete Dish!",
+                    okFun: () {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      deleteDish(element.foodId).then((res) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (res) {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(SnackBar(
+                          //   content: Text(
+                          //       "The Category Deleted Successfully"),
+                          // ));
+
+                        } else {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(SnackBar(
+                          //   content: Text(res['message']),
+                          // ));
+
+                        }
+                      });
+                    },
+                    cancelFun: () {},
+                    descreption: "Are You Sure To Delete Dish?",
+                  ));
+        }),
       ));
     });
 
@@ -135,7 +175,8 @@ class DishItem extends StatefulWidget {
   DishModel dishItem;
   String catId;
   String resturantId;
-  DishItem(this.dishItem, this.catId, this.resturantId);
+  Function onDelete;
+  DishItem(this.dishItem, this.catId, this.resturantId, this.onDelete);
 
   @override
   _DishItemState createState() => _DishItemState();
@@ -280,7 +321,7 @@ class _DishItemState extends State<DishItem> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     elevation: 0,
-                    onPressed: () {},
+                    onPressed: () => widget.onDelete(),
                     color: Theme.of(context).primaryColor,
                     child: Icon(Icons.delete, color: Colors.white),
                   ),

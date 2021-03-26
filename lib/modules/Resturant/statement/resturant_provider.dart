@@ -1,5 +1,6 @@
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/UrlConstants.dart';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/Models/Resturant.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,12 +10,35 @@ import 'dart:convert';
 class ResturantProvider with ChangeNotifier {
   List<ResturantModel> listResturant;
 
+  Future<bool> deleteResturant(resturantId) async {
+    try {
+      //getting token
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = json.decode(prefs.getString("user"))['token'];
+      //getting data
+      String url = "$baseUrl/admin/restaurant/$resturantId";
+      var res = await APIRequest()
+          .delete(myUrl: url, myBody: null, myHeaders: {'token': token});
+
+      listResturant = null;
+      notifyListeners();
+      return true;
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
+      return false;
+    }
+  }
+
   Future<ResturantModel> getSingleResturant(id) async {
     try {
       String url = "$baseUrl/admin/restaurant/profile/$id";
 
       final result =
-          await APIRequest().get(myUrl: url, token: await gettoken());
+          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
 
       print("result $result");
 
@@ -39,7 +63,7 @@ class ResturantProvider with ChangeNotifier {
       String url = "$baseUrl/admin/restaurant";
 
       final result =
-          await APIRequest().get(myUrl: url, token: await gettoken());
+          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
 
       print("result $result");
 
@@ -77,7 +101,7 @@ class ResturantProvider with ChangeNotifier {
       String url = "$baseUrl/admin/restaurant";
 
       final result =
-          await APIRequest().get(myUrl: url, token: await gettoken());
+          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
 
       print("result $result");
 
@@ -113,7 +137,7 @@ class ResturantProvider with ChangeNotifier {
       final response = await APIRequest().post(
         myBody: data,
         myHeaders: {
-          "token": await gettoken(),
+          "token": await AuthProvider().token,
         },
         myUrl: url.toString(),
       );
@@ -145,7 +169,7 @@ class ResturantProvider with ChangeNotifier {
       final response = await APIRequest().put(
         myBody: data,
         myHeaders: {
-          "token": await gettoken(),
+          "token": await AuthProvider().token,
         },
         myUrl: url.toString(),
       );

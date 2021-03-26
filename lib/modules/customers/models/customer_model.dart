@@ -1,5 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
 part 'customer_model.g.dart';
 
 // @JsonSerializable(explicitToJson: true)
@@ -7,7 +5,7 @@ class Customer {
   String id;
   int activeOrders;
   String username;
-  Map avatar;
+  dynamic avatar;
   String email;
   int totalOrder;
   Customer({
@@ -19,6 +17,7 @@ class Customer {
     this.totalOrder,
   });
   factory Customer.fromJson(json) {
+    print("ID: ${json['id']}");
     return Customer(
       id: json['id'],
       username: json['username'],
