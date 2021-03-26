@@ -71,7 +71,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: SizedBox(
-                          width: getHelfIpadAndFullMobWidth(context),
+                          width: getQurIpadAndFullMobWidth(context),
                           height: 50,
                           child: RaisedButton(
                             padding: EdgeInsets.symmetric(vertical: 10),
@@ -83,7 +83,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             child: Text(
                               "${dashProvider.getDashData['activeOrders']} Active Orders",
                               style: Theme.of(context).textTheme.button,
-                            ),
+                            ), 
                             onPressed: () {},
                           ),
                         ),
@@ -95,7 +95,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           width: getQurIpadAndFullMobWidth(context),
                           child: LabelDashBoard(
                             color: Colors.white,
-                            title: "Total earning Today: \$XX.XX",
+                            title: "Total earning Today: \$${dashProvider.getDashData['totalEarning'] ?? 0}",
                           ),
                         ),
                       ),

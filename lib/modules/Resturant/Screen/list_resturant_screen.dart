@@ -75,18 +75,21 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                   SizedBox(
                     width: 35,
                     height: 35,
-                    child: RaisedButton(
-                      padding: EdgeInsets.all(0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    child: Visibility(
+                      visible: showAppBarNodepad(context),
+                                          child: RaisedButton(
+                        padding: EdgeInsets.all(0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 0,
+                        onPressed: () {
+                          Navigator.pushNamed(context, ResturantForm.routeName);
+                        },
+                        color: Colors.white,
+                        child: Icon(Icons.add,
+                            color: Theme.of(context).primaryColor),
                       ),
-                      elevation: 0,
-                      onPressed: () {
-                        Navigator.pushNamed(context, ResturantForm.routeName);
-                      },
-                      color: Colors.white,
-                      child: Icon(Icons.add,
-                          color: Theme.of(context).primaryColor),
                     ),
                   ),
                 ],
@@ -98,42 +101,78 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                     )
                   : null,
             ),
-      body: Consumer<ResturantProvider>(
-        builder: (BuildContext context, value, Widget child) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              await Provider.of<ResturantProvider>(context, listen: false)
-                  .getResturantList();
-              return true;
-            },
-            child: value.listResturant != null
-                ? value.listResturant.isEmpty
-                    ? Text("No Resturants")
-                    : ListView.builder(
-                        itemCount: value.listResturant.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return resturantItem(value.listResturant[index]);
-                        },
-                      )
-                : FutureBuilder(
-                    future: value.getResturantList(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        if (snapshot.hasData) {
-                          return Center(
-                            child: Text("Error In Fetch Data"),
-                          );
-                        }
-                      }
-                    },
+      body: Column(
+        children: [
+          SizedBox(height: 15),
+          Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Resturants", style: Theme.of(context).textTheme.headline4),
+                  SizedBox(
+                    width: 35,
+                    height: 35,
+                    child: RaisedButton(
+                      padding: EdgeInsets.all(0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 0,
+                      onPressed: () {
+                        Navigator.pushNamed(context, ResturantForm.routeName);
+                      },
+                      color: Theme.of(context).primaryColor,
+                      child: Icon(Icons.add, color: Colors.white),
+                    ),
                   ),
-          );
-        },
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+                      child: Consumer<ResturantProvider>(
+              builder: (BuildContext context, value, Widget child) {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await Provider.of<ResturantProvider>(context, listen: false)
+                        .getResturantList();
+                    return true;
+                  },
+                  child: value.listResturant != null
+                      ? value.listResturant.isEmpty
+                          ? Text("No Resturants")
+                          : ListView.builder(
+                              itemCount: value.listResturant.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return resturantItem(value.listResturant[index]);
+                              },
+                            )
+                      : FutureBuilder(
+                          future: value.getResturantList(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<dynamic> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              if (snapshot.hasData) {
+                                return Center(
+                                  child: Text("Error In Fetch Data"),
+                                );
+                              }
+                            }
+                          },
+                        ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
