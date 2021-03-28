@@ -91,7 +91,7 @@ class _ForgotPasswordWithKeyState extends State<ForgotPasswordWithKey> {
                                   }
                                 }),
                                 SizedBox(height: 10),
-                                _loginFieldBuilder("Repead Password",
+                                _loginFieldBuilder("Repeat Password",
                                     _repeadPasswordController, (v) {
                                   if (v == '' ||
                                       v != _passwordController.text) {

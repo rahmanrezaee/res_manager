@@ -7,6 +7,7 @@ class PrivacyPolicy extends StatelessWidget {
   static String routeName = "PrivacyPolicy";
   @override
   Widget build(BuildContext context) {
+    String page = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: showAppBarNodepad(context)
           ? adaptiveAppBarBuilder(
@@ -24,12 +25,19 @@ class PrivacyPolicy extends StatelessWidget {
                 ],
                 elevation: 0,
                 leading: showAppBarNodepad(context)
-                    ? IconButton(
-                        icon: Icon(Icons.menu),
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                      )
+                    ? page == "login"
+                        ? IconButton(
+                            icon: Icon(Icons.arrow_back),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        : IconButton(
+                            icon: Icon(Icons.menu),
+                            onPressed: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                          )
                     : null,
               ),
             )

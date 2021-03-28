@@ -4,7 +4,6 @@ import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/contactUs/contactUs_page.dart';
 import 'package:admin/modules/coupons/coupons_page.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
-import 'package:admin/modules/notifications/notification_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/scaffold/templates/layout/scaffold.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +14,9 @@ import 'package:admin/themes/colors.dart';
 //pages
 import '../dashboard/Screen/dashboard_page.dart';
 import '../orders/orders_page.dart';
-import '../UserManage/myProfile_page.dart';
 import '../categories/catetories_page.dart';
 import '../policy/Privacy&Policy.dart';
 import '../term/term&condition_page.dart';
-import '../Authentication/providers/linkListener.dart';
 
 class PageModel {
   String title;
@@ -118,7 +115,7 @@ class _LayoutExampleState extends State<LayoutExample> {
 
   @override
   void initState() {
-    initUniLinks(context);
+    // initUniLinks(context);
     super.initState();
   }
 
