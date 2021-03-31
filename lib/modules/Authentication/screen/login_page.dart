@@ -23,7 +23,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final FirebaseMessaging _fcm = FirebaseMessaging();
-  String fcmToken = "";
+  String fcmToken = "fcm token";
   TextEditingController _emailController = new TextEditingController();
 
   TextEditingController _passwordController = new TextEditingController();
