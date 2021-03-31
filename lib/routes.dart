@@ -6,10 +6,12 @@ import 'package:admin/modules/customers/screen/Customers_page.dart';
 import 'package:admin/modules/dishes/Screen/dishes_page.dart';
 import 'package:admin/modules/drawer/drawer.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/policy/Privacy&Policy.dart';
+import 'package:admin/modules/term/term&condition_page.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:admin/modules/companyPage/Privacy&Policy.dart';
+// import 'package:admin/modules/companyPage/Privacy&Policy.dart';
 import 'package:admin/modules/dishes/Screen/addNewDish_page.dart';
-import 'package:admin/modules/companyPage/term&condition_page.dart';
+// import 'package:admin/modules/companyPage/term&condition_page.dart';
 
 var routes = <String, WidgetBuilder>{
   LayoutExample.routeName: (context) => LayoutExample(),

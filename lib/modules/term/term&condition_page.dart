@@ -10,37 +10,8 @@ class TermCondition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: showAppBarNodepad(context)
-          ? adaptiveAppBarBuilder(
-              context,
-              AppBar(
-                title: Text("Terms and Conditions"),
-                centerTitle: true,
-                actions: [
-                  IconButton(
-                    icon: Image.asset("assets/images/notification.png"),
-                    onPressed: () {
-                      Navigator.pushNamed(context, NotificationPage.routeName);
-                    },
-                  )
-                ],
-                elevation: 0,
-                leading: showAppBarNodepad(context)
-                    ? IconButton(
-                        icon: Icon(Icons.menu),
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                      )
-                    : null,
-              ),
-            )
-          : AppBar(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              elevation: 0,
-              backgroundColor: Colors.transparent,
+      appBar:AppBar(
+                
               title: Text("Terms and Conditions")),
       body: FutureBuilder(
           future: termConditionService.getTerm(),

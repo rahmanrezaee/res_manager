@@ -1,6 +1,7 @@
 //core
 import 'package:admin/modules/dishes/DishServics/dishServices.dart';
 import 'package:admin/modules/dishes/Models/dishModels.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/fancy_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -66,59 +67,108 @@ class _DishHomeState extends State<DishPage> {
               )
             : null,
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.add,
-            ),
-            onPressed: () {
-              Navigator.of(context).pushNamed(AddNewDish.routeName, arguments: {
-                "dishId": null,
-                "catId": catId,
-                "resturantId": resturantId,
-              }).then((value) {
-                print("Done Adding");
-                getFootListWithoutPro(catId).then((value) {
-                  setState(() {
-                    dishList = value;
+          Visibility(
+            visible: showAppBarNodepad(context),
+                      child: IconButton(
+              icon: Icon(
+                Icons.add,
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AddNewDish.routeName, arguments: {
+                  "dishId": null,
+                  "catId": catId,
+                  "resturantId": resturantId,
+                }).then((value) {
+                  print("Done Adding");
+                  getFootListWithoutPro(catId).then((value) {
+                    setState(() {
+                      dishList = value;
+                    });
                   });
                 });
-              });
-            },
+              },
+            ),
           ),
         ],
       ),
-      body: FutureBuilder(
-          future: getDish,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("error in Fetch orders"),
-                );
-              } else {
-                return dishList.isEmpty
-                    ? Center(
-                        child: Text("No Dish"),
-                      )
-                    : SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: ResponsiveGridRow(
-                            children: getColumnDish(dishList),
-                          ),
-                        ),
-                      );
-              }
-            } else {
-              return Center(
-                child: Text("error in Fetch orders"),
-              );
-            }
-          }),
+      body: Column(
+        children: [
+          SizedBox(height: 15),
+          Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Dish of Category", style: Theme.of(context).textTheme.headline4),
+                  SizedBox(
+                    width: 35,
+                    height: 35,
+                    child: RaisedButton(
+                      padding: EdgeInsets.all(0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 0,
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(AddNewDish.routeName, arguments: {
+                          "dishId": null,
+                          "catId": catId,
+                          "resturantId": resturantId,
+                        }).then((value) {
+                          print("Done Adding");
+                          getFootListWithoutPro(catId).then((value) {
+                            setState(() {
+                              dishList = value;
+                            });
+                          });
+                        });
+                      },
+                      color: Theme.of(context).primaryColor,
+                      child: Icon(Icons.add, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          FutureBuilder(
+              future: getDish,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text("error in Fetch orders"),
+                    );
+                  } else {
+                    return dishList.isEmpty
+                        ? Center(
+                            child: Text("No Dish"),
+                          )
+                        : SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: ResponsiveGridRow(
+                                children: getColumnDish(dishList),
+                              ),
+                            ),
+                          );
+                  }
+                } else {
+                  return Center(
+                    child: Text("error in Fetch orders"),
+                  );
+                }
+              }),
+        ],
+      ),
     );
   }
 

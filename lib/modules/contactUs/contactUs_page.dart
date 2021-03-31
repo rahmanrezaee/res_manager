@@ -56,7 +56,7 @@ class ContactUsPage extends StatelessWidget {
 }
 
 _contactItemBuilder(context, ContactModel contact) {
-  return Card(
+  return contact.email != null ? Card(
     child: Padding(
       padding: EdgeInsets.all(20),
       child: Column(
@@ -71,18 +71,18 @@ _contactItemBuilder(context, ContactModel contact) {
             "${contact.email}",
           ),
           SizedBox(height: 5),
-          Text("${contact.restaurant}"),
+          Text("${contact.restaurant ?? "All resturant"}"),
           SizedBox(height: 5),
-          Text("${contact.subject}"),
+          Text("${contact.subject ?? "no Subject"}"),
           SizedBox(height: 5),
           Text(
-            "${contact.message}",
+            "${contact.message?? "No Message"}",
             style: TextStyle(color: Colors.black54),
           ),
         ],
       ),
     ),
-  );
+  ):SizedBox();
 }
 
 // class ContactItem extends StatelessWidget {

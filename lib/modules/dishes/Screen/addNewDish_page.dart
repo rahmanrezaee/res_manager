@@ -373,8 +373,8 @@ class _AddNewDishState extends State<AddNewDish> {
                                           ),
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
-                                                vertical: 20, horizontal: 40),
-                                            width: 400,
+                                                vertical: 20, horizontal: 20),
+                                            width: 450,
                                             height: 280,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
@@ -387,7 +387,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                               child: Column(
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.all(20),
+                                                    padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
                                                     child: Text(
                                                       "New Add On",
                                                       style: Theme.of(context)
@@ -426,7 +426,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                                       ),
                                                       SizedBox(width: 10),
                                                       Container(
-                                                        width: 140,
+                                                        width: 200,
                                                         child:
                                                             TextFormFieldResturant(
                                                           hintText:

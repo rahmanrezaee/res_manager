@@ -4,6 +4,10 @@ import 'dart:io';
 
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Authentication/validators/formFieldsValidators.dart';
+// import 'package:admin/modules/companyPage/Privacy&Policy.dart';
+import 'package:admin/modules/policy/Privacy&Policy.dart';
+import 'package:admin/modules/term/term&condition_page.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +27,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final FirebaseMessaging _fcm = FirebaseMessaging();
-  String fcmToken = "";
+  String fcmToken = "fcm token";
   TextEditingController _emailController = new TextEditingController();
 
   TextEditingController _passwordController = new TextEditingController();
@@ -86,64 +90,70 @@ class _LoginPageState extends State<LoginPage> {
                       Text("Login with your account",
                           style: Theme.of(context).textTheme.headline4),
                       SizedBox(height: 15),
-                      _loginFieldBuilder(
-                        "Email Address",
-                        emailValidator,
-                        _emailController,
+                      Container(
+                        width: getHelfIpadAndFullMobWidth(context),
+                        child: _loginFieldBuilder(
+                          "Email Address",
+                          emailValidator,
+                          _emailController,
+                        ),
                       ),
                       SizedBox(height: 15),
-                      TextFormField(
-                        obscureText: obscureText,
-                        controller: _passwordController,
-                        // validator: (v) {
-                        //   return validator(v);
-                        // },
-                        decoration: InputDecoration(
-                          hintText: "Password",
-                          suffix: InkWell(
-                            onTap: () {
-                              setState(() {
-                                obscureText = !obscureText;
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: obscureText
-                                  ? Icon(Icons.visibility_off)
-                                  : Icon(Icons.visibility),
+                      Container(
+                        width: getHelfIpadAndFullMobWidth(context),
+                        child: TextFormField(
+                          obscureText: obscureText,
+                          controller: _passwordController,
+                          // validator: (v) {
+                          //   return validator(v);
+                          // },
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            suffix: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: obscureText
+                                    ? Icon(Icons.visibility_off)
+                                    : Icon(Icons.visibility),
+                              ),
                             ),
-                          ),
-                          hintStyle: TextStyle(color: Colors.grey),
-                          contentPadding: EdgeInsets.only(left: 10),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: AppColors.redText),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            contentPadding: EdgeInsets.only(left: 10),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: AppColors.redText),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            disabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
                           ),
                         ),
                       ),
@@ -173,31 +183,69 @@ class _LoginPageState extends State<LoginPage> {
                     ? Container()
                     : Text(error, style: TextStyle(color: AppColors.redText)),
                 SizedBox(height: 10),
-                RaisedButton(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  color: Theme.of(context).primaryColor,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                Container(
+                   width: getHelfIpadAndFullMobWidth(context),
+                  child: RaisedButton(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    color: Theme.of(context).primaryColor,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        loading == true
+                            ? CircularProgressIndicator()
+                            : Text(
+                                "Login",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.button,
+                              ),
+                      ],
+                    ),
+                    onPressed: () {
+                      login();
+                      // Navigator.pushReplacementNamed(
+                      //     context, LayoutExample.routeName);
+                    },
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      loading == true
-                          ? CircularProgressIndicator()
-                          : Text(
-                              "Login",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.button,
-                            ),
-                    ],
-                  ),
-                  onPressed: () {
-                    login();
-                    // Navigator.pushReplacementNamed(
-                    //     context, LayoutExample.routeName);
-                  },
+                ),
+                SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, TermCondition.routeName);
+                      },
+                      child: Text("Term&Conditions",
+                          style: Theme.of(context).textTheme.headline4),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, PrivacyPolicy.routeName);
+                      },
+                      child: Text("Privary Policy",
+                          style: Theme.of(context).textTheme.headline4),
+                    ),
+                  ],
+
+                  //              PageModel(
+                  //   title: "",
+                  //   icon: Icon(Icons.subject),
+                  //   page: (),
+                  // ),
+                  // PageModel(
+                  //   title: "Privary Policy",
+                  //   icon: Icon(Icons.format_align_center),
+                  //   page: PrivacyPolicy(),
+                  // ),
                 ),
               ],
             ),
