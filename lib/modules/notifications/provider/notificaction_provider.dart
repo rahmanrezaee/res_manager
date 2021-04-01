@@ -60,7 +60,7 @@ class NotificationProvider with ChangeNotifier {
         print("result $notify");
        NotificationModel tem =  NotificationModel.fromJson(notify);
 
-        6
+        
         loadedProducts.add(tem);
       });
 
