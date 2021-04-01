@@ -10,6 +10,8 @@ import '../../widgets/orderItem_widget.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 class OrdersPageNotification extends StatefulWidget {
+  static var routeName = "/orderpageNotification";
+
   @override
   _OrderPageState createState() => _OrderPageState();
 }

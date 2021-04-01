@@ -12,6 +12,14 @@ class NotificationProvider with ChangeNotifier {
   int page = 1;
   int lastPage;
 
+  int countNotification = 0;
+
+  void setCountNotification(int mount) {
+    countNotification = mount;
+    clearToNullList();
+    notifyListeners();
+  }
+
   List<NotificationModel> notificatins;
   void setPage(int t) {
     this.page = t;
@@ -45,12 +53,15 @@ class NotificationProvider with ChangeNotifier {
       } else {
         hasMoreItems = true;
       }
-
+      int tempNotification = 0;
       List<NotificationModel> loadedProducts = [];
 
       (result.data['data']['docs'] as List).forEach((notify) {
         print("result $notify");
-        loadedProducts.add(NotificationModel.fromJson(notify));
+       NotificationModel tem =  NotificationModel.fromJson(notify);
+
+        6
+        loadedProducts.add(tem);
       });
 
       if (notificatins == null) {
@@ -97,5 +108,9 @@ class NotificationProvider with ChangeNotifier {
   showLoadingBottom(bool state) {
     loadingMore = state;
     notifyListeners();
+  }
+
+  void incrementQuentity() {
+    fetchNotifications();
   }
 }

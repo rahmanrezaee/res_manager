@@ -112,13 +112,8 @@ class _NotificationItemState extends State<NotificationItem> {
               height: 50,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: CachedNetworkImage(
-                  imageUrl: widget.notification.image,
-                  placeholder: (context, url) => Container(
-                      height: 10,
-                      width: 10,
-                      child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                child: Image.asset(
+                  "assets/images/desk-bell.png",
                   fit: BoxFit.cover,
                 ),
               ),
@@ -127,7 +122,7 @@ class _NotificationItemState extends State<NotificationItem> {
             Expanded(
               child: Column(
                 children: [
-                  Text("${widget.notification.body.substring(0, 100)}"),
+                  Text("${widget.notification.body}"),
                   SizedBox(height: 10),
                   Align(
                     alignment: Alignment.centerRight,

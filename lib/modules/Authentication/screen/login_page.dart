@@ -12,7 +12,6 @@ import 'package:admin/themes/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants/assest_path.dart';
 import '../../drawer/drawer.dart';
 import './forgotPassword.dart';
@@ -26,7 +25,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final FirebaseMessaging _fcm = FirebaseMessaging();
   String fcmToken = "fcm token";
   TextEditingController _emailController = new TextEditingController();
 
@@ -50,17 +48,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> getFcmToken() async {
     print('get Fcm Token');
-    if (Platform.isIOS) {
-      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) async {
-        fcmToken = await _fcm.getToken();
-        log("firebase token $fcmToken");
-      });
 
-      _fcm.requestNotificationPermissions(IosNotificationSettings());
-    } else {
-      fcmToken = await _fcm.getToken();
+    FirebaseMessaging.instance.getToken().then((valu) {
+      this.fcmToken = valu;
       log("firebase token $fcmToken");
-    }
+    });
   }
 
   bool obscureText = true;
@@ -184,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                     : Text(error, style: TextStyle(color: AppColors.redText)),
                 SizedBox(height: 10),
                 Container(
-                   width: getHelfIpadAndFullMobWidth(context),
+                  width: getHelfIpadAndFullMobWidth(context),
                   child: RaisedButton(
                     padding: EdgeInsets.symmetric(vertical: 15),
                     color: Theme.of(context).primaryColor,
