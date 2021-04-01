@@ -1,5 +1,6 @@
 import 'package:admin/modules/dashboard/widget/label.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/modules/report/widget/buttonResturant.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,14 +38,7 @@ class _DashboardPageState extends State<DashboardPage> {
         AppBar(
           title: Text("Dashboard"),
           centerTitle: true,
-          actions: [
-            IconButton(
-              icon: Image.asset("assets/images/notification.png"),
-              onPressed: () {
-                Navigator.pushNamed(context, NotificationPage.routeName);
-              },
-            )
-          ],
+          actions: [NotificationAppBarWidget()],
           leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
@@ -83,7 +77,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             child: Text(
                               "${dashProvider.getDashData['activeOrders']} Active Orders",
                               style: Theme.of(context).textTheme.button,
-                            ), 
+                            ),
                             onPressed: () {},
                           ),
                         ),
@@ -95,7 +89,8 @@ class _DashboardPageState extends State<DashboardPage> {
                           width: getQurIpadAndFullMobWidth(context),
                           child: LabelDashBoard(
                             color: Colors.white,
-                            title: "Total earning Today: \$${dashProvider.getDashData['totalEarning'] ?? 0}",
+                            title:
+                                "Total earning Today: \$${dashProvider.getDashData['totalEarning'] ?? 0}",
                           ),
                         ),
                       ),
