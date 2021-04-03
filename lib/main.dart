@@ -20,6 +20,7 @@ import './routes.dart';
 import 'package:provider/provider.dart';
 import './modules/dashboard/provider/dashboard_provider.dart';
 import 'modules/coupons/statement/couponProvider.dart';
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -235,13 +236,65 @@ class _MyAppState extends State<MyApp> {
               ChangeNotifierProvider<NotificationProvider>(
                   create: (_) => NotificationProvider()),
             ],
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Flutter Demo',
-              theme: restaurantTheme,
-              home: page,
-              routes: routes,
+            child: ConnectivityAppWrapper(
+              app: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Flutter Demo',
+                theme: restaurantTheme,
+                home: Scaffold(body: MainWidget(page: page)),
+                routes: routes,
+              ),
             ),
           );
+  }
+}
+
+class MainWidget extends StatelessWidget {
+  const MainWidget({
+    Key key,
+    @required this.page,
+  }) : super(key: key);
+
+  final Widget page;
+  // checkInternet(context) async {
+  //   print("checkInternet");
+  //   ConnectivityWrapper
+  //   if (!await ConnectivityWrapper.instance.isConnected) {
+  //     print("No Internet");
+  //     Scaffold.of(context).showSnackBar(
+
+  //     );
+  //   }
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    // Timer.periodic(Duration(seconds: 1), (timer) {
+    //   checkInternet(context);
+    // });
+    return ConnectivityWidgetWrapper(
+      stacked: true,
+      height: 30,
+      message: "Connecting...",
+      // offlineWidget: Row(
+      //   mainAxisAlignment: MainAxisAlignment.end,
+      //   children: [
+      //     Padding(
+      //       padding: const EdgeInsets.all(8.0),
+      //       child: CircularProgressIndicator(
+      //         strokeWidth: 5,
+      //         valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
+      //       ),
+      //     ),
+      //     SizedBox(width: 10),
+      //     Text(
+      //       "Connecting",
+      //       style: TextStyle(
+      //           fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+      //     ),
+      //   ],
+      // ),
+      child: page,
+    );
   }
 }
