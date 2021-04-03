@@ -10,6 +10,7 @@ import 'package:admin/modules/term/term&condition_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../constants/assest_path.dart';
@@ -205,39 +206,34 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, TermCondition.routeName);
-                      },
-                      child: Text("Term&Conditions",
-                          style: Theme.of(context).textTheme.headline4),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, PrivacyPolicy.routeName);
-                      },
-                      child: Text("Privary Policy",
-                          style: Theme.of(context).textTheme.headline4),
-                    ),
-                  ],
-
-                  //              PageModel(
-                  //   title: "",
-                  //   icon: Icon(Icons.subject),
-                  //   page: (),
-                  // ),
-                  // PageModel(
-                  //   title: "Privary Policy",
-                  //   icon: Icon(Icons.format_align_center),
-                  //   page: PrivacyPolicy(),
-                  // ),
+                RichText(
+                  text: TextSpan(
+                      style: TextStyle(color: Colors.black),
+                      text: "By clicking on Log In you are accepting our ",
+                      children: [
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.of(context)
+                                  .pushNamed(TermCondition.routeName);
+                            },
+                          text: "Terms and Conditions",
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                        TextSpan(
+                          text: " and ",
+                        ),
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              print('privacy policy');
+                              Navigator.of(context)
+                                  .pushNamed(PrivacyPolicy.routeName);
+                            },
+                          text: "Privacy Policy",
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                      ]),
                 ),
               ],
             ),

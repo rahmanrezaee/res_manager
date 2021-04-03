@@ -43,9 +43,9 @@ class NotificationProvider with ChangeNotifier {
 
       print("result $result");
 
-      maxItems = result.data['data']['totalDocs'];
-      page = result.data['data']['page'];
-      lastPage = result.data['data']['totalPages'];
+      maxItems = result.data['data']['notification']['totalDocs'];
+      page = result.data['data']['notification']['page'];
+      lastPage = result.data['data']['notification']['totalPages'];
       print("result $lastPage");
 
       if (page == lastPage) {
@@ -53,15 +53,11 @@ class NotificationProvider with ChangeNotifier {
       } else {
         hasMoreItems = true;
       }
-      int tempNotification = 0;
+
       List<NotificationModel> loadedProducts = [];
 
-      (result.data['data']['docs'] as List).forEach((notify) {
-        print("result $notify");
-       NotificationModel tem =  NotificationModel.fromJson(notify);
-
-        
-        loadedProducts.add(tem);
+      (result.data['data']['notification']['docs'] as List).forEach((notify) {
+        loadedProducts.add(NotificationModel.fromJson(notify));
       });
 
       if (notificatins == null) {
