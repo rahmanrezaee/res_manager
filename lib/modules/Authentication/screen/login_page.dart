@@ -3,12 +3,18 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
+import 'package:admin/modules/Authentication/screen/forgotPasswordWithKey.dart';
 import 'package:admin/modules/Authentication/validators/formFieldsValidators.dart';
+import 'package:admin/modules/term/term&condition_page.dart';
+import 'package:admin/modules/policy/Privacy&Policy.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uni_links/uni_links.dart';
 import '../../../constants/assest_path.dart';
 import '../../drawer/drawer.dart';
 import './forgotPassword.dart';
@@ -20,7 +26,64 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+bool first = true;
+
 class _LoginPageState extends State<LoginPage> {
+  StreamSubscription _sub;
+  String _latestLink = 'Unknown';
+  Uri _latestUri;
+
+  /// An implementation using a [String] link
+  initPlatformStateForStringUniLinks() async {
+    // Attach a listener to the links stream
+    _sub = getLinksStream().listen((String link) {
+      if (!mounted) return;
+      _latestLink = link ?? 'Unknown';
+      _latestUri = null;
+      try {
+        if (link != null) {
+          String token = link.toString().substring(
+              link.toString().indexOf("token=") + 6, link.toString().length);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ForgotPasswordWithKey(token);
+          }));
+        }
+      } on FormatException {}
+    }, onError: (err) {
+      if (!mounted) return;
+      setState(() {
+        _latestLink = 'Failed to get latest link: $err.';
+        _latestUri = null;
+      });
+    });
+
+    // Get the latest link
+    String initialLink;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      initialLink = await getInitialLink();
+      //   print('initial link: $initialLink');
+      if (initialLink != null && first == true) {
+        first = false;
+        String token = initialLink.toString().substring(
+            initialLink.toString().indexOf("token=") + 6,
+            initialLink.toString().length);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return ForgotPasswordWithKey(token);
+        }));
+      }
+    } on PlatformException {
+      initialLink = 'Failed to get initial link.';
+    } on FormatException {
+      initialLink = 'Failed to parse the initial link as Uri.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+  }
+
   final _formKey = GlobalKey<FormState>();
   final FirebaseMessaging _fcm = FirebaseMessaging();
   String fcmToken = "";
@@ -33,13 +96,14 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    if (_sub != null) _sub.cancel();
     if (iosSubscription != null) iosSubscription.cancel();
     super.dispose();
   }
 
   @override
   void initState() {
-    initUniLinks(context);
+    initPlatformStateForStringUniLinks();
     getFcmToken();
     super.initState();
   }
@@ -165,6 +229,36 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       SizedBox(height: 20),
+                      RichText(
+                        text: TextSpan(
+                            style: TextStyle(color: Colors.black),
+                            text: "By using this app you are accepting our ",
+                            children: [
+                              TextSpan(
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.of(context)
+                                        .pushNamed(TermCondition.routeName);
+                                  },
+                                text: "Terms and Conditions",
+                                style: Theme.of(context).textTheme.subtitle2,
+                              ),
+                              TextSpan(
+                                text: " and ",
+                              ),
+                              TextSpan(
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    print('privacy policy');
+                                    Navigator.of(context).pushNamed(
+                                        PrivacyPolicy.routeName,
+                                        arguments: "login");
+                                  },
+                                text: "Privacy Policy",
+                                style: Theme.of(context).textTheme.subtitle2,
+                              ),
+                            ]),
+                      ),
                     ],
                   ),
                 ),

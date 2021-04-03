@@ -15,7 +15,7 @@
                android:value="AIzaSyBY1nLDcGY1NNgV89rnDR8jg_eBsQBJ39E"/>
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
@@ -42,17 +42,41 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <!-- App Links -->
-            <intent-filter android:autoVerify="true">
+             <!-- Deep Links -->
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
+        <data
+          android:host="restaurant.webfumeprojects.online"
+          android:pathPrefix="/api/forgotpassword"  
+          />
+      </intent-filter>
+
+      <!-- App Links -->
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <!-- Accepts URIs that begin with https://YOUR_HOST -->
+        <data
+          android:scheme="https"
+          android:host="restaurant.webfumeprojects.online"
+          android:pathPrefix="/api/forgotpassword" 
+           />
+      </intent-filter>
+            <!-- <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with https://YOUR_HOST -->
+                 Accepts URIs that begin with https://YOUR_HOST
                 <data
           android:scheme="https"
           android:host="restaurant.webfumeprojects.online"
           android:pathPrefix="/api/forgotpassword" 
            />
-            </intent-filter>
+            </intent-filter> -->
         </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

@@ -27,11 +27,10 @@ class _ForgotPasswordWithKeyState extends State<ForgotPasswordWithKey> {
     authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
-
-        title:  Text("Rest Password",),
+        title: Text(
+          "Reset Password",
+        ),
         centerTitle: true,
-
-
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -63,7 +62,7 @@ class _ForgotPasswordWithKeyState extends State<ForgotPasswordWithKey> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "Forgotten your Password ? Don't worry just choose a new password.",
+                          "Forgotten your Password? Don't worry just choose a new password.",
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -74,7 +73,7 @@ class _ForgotPasswordWithKeyState extends State<ForgotPasswordWithKey> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            alignment:Alignment.centerLeft,
+                            alignment: Alignment.centerLeft,
                             child: Text("Enter New Password",
                                 style: Theme.of(context).textTheme.headline4),
                           ),
@@ -114,9 +113,9 @@ class _ForgotPasswordWithKeyState extends State<ForgotPasswordWithKey> {
                               child: loading == true
                                   ? CircularProgressIndicator()
                                   : Text(
-                                "Submit",
-                                style: Theme.of(context).textTheme.button,
-                              ),
+                                      "Submit",
+                                      style: Theme.of(context).textTheme.button,
+                                    ),
                               onPressed: () {
                                 forgotPasswordWithKey();
                               },
@@ -133,7 +132,6 @@ class _ForgotPasswordWithKeyState extends State<ForgotPasswordWithKey> {
                           )
                         : Container(),
                     SizedBox(height: 15),
-
                   ],
                 ),
               ),
