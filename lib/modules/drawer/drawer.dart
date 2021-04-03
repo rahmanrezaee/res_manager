@@ -13,6 +13,7 @@ import 'package:admin/constants/assest_path.dart';
 import 'package:admin/modules/report/report.dart';
 import 'package:admin/themes/colors.dart';
 //pages
+import '../../main.dart';
 import '../dashboard/Screen/dashboard_page.dart';
 import '../orders/orders_page.dart';
 import '../UserManage/myProfile_page.dart';
@@ -102,16 +103,6 @@ class _LayoutExampleState extends State<LayoutExample> {
       icon: Icon(Icons.report, color: Colors.yellow),
       page: ReportPage(),
     ),
-    PageModel(
-      title: "Term&Conditions",
-      icon: Icon(Icons.subject),
-      page: TermCondition(),
-    ),
-    PageModel(
-      title: "Privary Policy",
-      icon: Icon(Icons.format_align_center),
-      page: PrivacyPolicy(),
-    ),
   ];
 
   int pageIndex = 0;
@@ -124,8 +115,11 @@ class _LayoutExampleState extends State<LayoutExample> {
 
   @override
   Widget build(BuildContext context) {
+  
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
+
+        
     return ResponsiveScaffold(
       kDesktopBreakpoint: 768,
       body: pages[pageIndex].page,

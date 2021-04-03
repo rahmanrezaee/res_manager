@@ -22,7 +22,7 @@ class ContactProvider with ChangeNotifier {
 
       print("result $result");
 
-      final extractedData = result.data["data"];
+      final extractedData = result.data["data"]['docs'];
 
       if (extractedData == null) {
         contacts = [];

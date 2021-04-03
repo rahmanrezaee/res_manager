@@ -6,6 +6,8 @@ import 'package:admin/modules/Authentication/screen/forgotPasswordWithKey.dart';
 import 'package:admin/modules/Authentication/validators/formFieldsValidators.dart';
 import 'package:admin/modules/term/term&condition_page.dart';
 import 'package:admin/modules/policy/Privacy&Policy.dart';
+// import 'package:admin/modules/companyPage/Privacy&Policy.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
@@ -84,8 +86,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   final _formKey = GlobalKey<FormState>();
-  final FirebaseMessaging _fcm = FirebaseMessaging();
-  String fcmToken = "";
+  String fcmToken = "fcm token";
   TextEditingController _emailController = new TextEditingController();
 
   TextEditingController _passwordController = new TextEditingController();
@@ -109,17 +110,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> getFcmToken() async {
     print('get Fcm Token');
-    if (Platform.isIOS) {
-      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) async {
-        fcmToken = await _fcm.getToken();
-        log("firebase token $fcmToken");
-      });
 
-      _fcm.requestNotificationPermissions(IosNotificationSettings());
-    } else {
-      fcmToken = await _fcm.getToken();
+    FirebaseMessaging.instance.getToken().then((valu) {
+      this.fcmToken = valu;
       log("firebase token $fcmToken");
-    }
+    });
   }
 
   bool obscureText = true;
@@ -149,64 +144,70 @@ class _LoginPageState extends State<LoginPage> {
                       Text("Login with your account",
                           style: Theme.of(context).textTheme.headline4),
                       SizedBox(height: 15),
-                      _loginFieldBuilder(
-                        "Email Address",
-                        emailValidator,
-                        _emailController,
+                      Container(
+                        width: getHelfIpadAndFullMobWidth(context),
+                        child: _loginFieldBuilder(
+                          "Email Address",
+                          emailValidator,
+                          _emailController,
+                        ),
                       ),
                       SizedBox(height: 15),
-                      TextFormField(
-                        obscureText: obscureText,
-                        controller: _passwordController,
-                        // validator: (v) {
-                        //   return validator(v);
-                        // },
-                        decoration: InputDecoration(
-                          hintText: "Password",
-                          suffix: InkWell(
-                            onTap: () {
-                              setState(() {
-                                obscureText = !obscureText;
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: obscureText
-                                  ? Icon(Icons.visibility_off)
-                                  : Icon(Icons.visibility),
+                      Container(
+                        width: getHelfIpadAndFullMobWidth(context),
+                        child: TextFormField(
+                          obscureText: obscureText,
+                          controller: _passwordController,
+                          // validator: (v) {
+                          //   return validator(v);
+                          // },
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            suffix: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: obscureText
+                                    ? Icon(Icons.visibility_off)
+                                    : Icon(Icons.visibility),
+                              ),
                             ),
-                          ),
-                          hintStyle: TextStyle(color: Colors.grey),
-                          contentPadding: EdgeInsets.only(left: 10),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: AppColors.redText),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            contentPadding: EdgeInsets.only(left: 10),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: AppColors.redText),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            disabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
                           ),
                         ),
                       ),
@@ -266,31 +267,64 @@ class _LoginPageState extends State<LoginPage> {
                     ? Container()
                     : Text(error, style: TextStyle(color: AppColors.redText)),
                 SizedBox(height: 10),
-                RaisedButton(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  color: Theme.of(context).primaryColor,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                Container(
+                  width: getHelfIpadAndFullMobWidth(context),
+                  child: RaisedButton(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    color: Theme.of(context).primaryColor,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        loading == true
+                            ? CircularProgressIndicator()
+                            : Text(
+                                "Login",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.button,
+                              ),
+                      ],
+                    ),
+                    onPressed: () {
+                      login();
+                      // Navigator.pushReplacementNamed(
+                      //     context, LayoutExample.routeName);
+                    },
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      loading == true
-                          ? CircularProgressIndicator()
-                          : Text(
-                              "Login",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.button,
-                            ),
-                    ],
-                  ),
-                  onPressed: () {
-                    login();
-                    // Navigator.pushReplacementNamed(
-                    //     context, LayoutExample.routeName);
-                  },
+                ),
+                SizedBox(height: 10),
+                RichText(
+                  text: TextSpan(
+                      style: TextStyle(color: Colors.black),
+                      text: "By clicking on Log In you are accepting our ",
+                      children: [
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.of(context)
+                                  .pushNamed(TermCondition.routeName);
+                            },
+                          text: "Terms and Conditions",
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                        TextSpan(
+                          text: " and ",
+                        ),
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              print('privacy policy');
+                              Navigator.of(context)
+                                  .pushNamed(PrivacyPolicy.routeName);
+                            },
+                          text: "Privacy Policy",
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                      ]),
                 ),
               ],
             ),

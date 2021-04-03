@@ -108,39 +108,42 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                         ),
-                        // child: catProvider.getRestaurant == null
-                        //     ? Center(child: Text("Loading restaurants..."))
-                        //     : DropDownFormField(
-                        //         hintText: "Interested Industry",
-                        //         value: resturantid,
-                        //         validator: (value) {
-                        //           if (value == null) {
-                        //             return "Please select an industry";
-                        //           }
-                        //           return null;
-                        //         },
-                        //         onSaved: (value) {
-                        //           setState(() {
-                        //             resturantid = value;
-                        //           });
-                        //         },
-                        //         onChanged: (value) {
-                        //           print(value);
-                        //           setState(() {
-                        //             resturantid = value;
-                        //           });
-                        //         },
-                        //         dataSource: [
-                        //           ...catProvider.getRestaurant.map((e) {
-                        //             return {
-                        //               "display": e.restaurant['username'],
-                        //               "value": e.restaurant['_id'],
-                        //             };
-                        //           }).toList()
-                        //         ],
-                        //         textField: 'display',
-                        //         valueField: 'value',
-                        //       ),
+                        child: catProvider.getRestaurant == null
+                            ? Center(child: Text("Loading restaurants..."))
+                            : DropDownFormField(
+                                hintText: "Select Resturants",
+                                value: catProvider.resturantId,
+                                validator: (value) {
+                                  if (value == null) {
+                                    return "Please select an Resturants";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  catProvider.setResturantId(value);
+                                  // setState(() {
+                                  //   resturantid = value;
+                                  // });
+                                },
+                                onChanged: (value) {
+
+                                  catProvider.setResturantId(value);
+                                  print(value);
+                                  // setState(() {
+                                  //   resturantid = value;
+                                  // });
+                                },
+                                dataSource: [
+                                  ...catProvider.getRestaurant.map((e) {
+                                    return {
+                                      "display": e.restaurant['username'],
+                                      "value": e.restaurant['_id'],
+                                    };
+                                  }).toList()
+                                ],
+                                textField: 'display',
+                                valueField: 'value',
+                              ),
                       ),
                     ),
                   ],
