@@ -15,8 +15,13 @@ class NotificationAppBarWidget extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, NotificationPage.routeName);
               }),
-          data.countNotification != 0
-              ? new Positioned(
+          data.notificatins == null
+              ? FutureBuilder(
+                  future: data.fetchNotifications(),
+                  builder: (context, snapshot) {
+                    return Container();
+                  })
+              : new Positioned(
                   right: 11,
                   top: 11,
                   child: new Container(
@@ -39,7 +44,6 @@ class NotificationAppBarWidget extends StatelessWidget {
                     ),
                   ),
                 )
-              : new Container()
         ],
       );
     });
