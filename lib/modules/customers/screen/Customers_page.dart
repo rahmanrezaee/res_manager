@@ -10,8 +10,19 @@ import 'package:admin/themes/colors.dart';
 import 'package:admin/themes/style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pagination_view/pagination_view.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 //models
 import '../models/customer_model.dart';
+
+import 'dart:core';
+
+extension IndexedIterable<E> on Iterable<E> {
+  Iterable<T> mapIndexed<T>(T Function(E e, int i) f) {
+    var i = 0;
+    return map((e) => f(e, i++));
+  }
+}
 
 class CustomersPage extends StatefulWidget {
   static String routeName = "CustomersPage";
@@ -21,8 +32,54 @@ class CustomersPage extends StatefulWidget {
 }
 
 class _CustomersPageState extends State<CustomersPage> {
-  bool isLoading = false;
+  static const _pageSize = 19;
 
+  final PagingController<int, Customer> _pagingController =
+      PagingController(firstPageKey: 0);
+
+  @override
+  void initState() {
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+    super.initState();
+  }
+
+  CustomersProvider customersProvider;
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      customersProvider =
+          Provider.of<CustomersProvider>(context, listen: false);
+      final newItems = await customersProvider.fetchCustomers(pageKey);
+      print(
+          "newItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems");
+      print(newItems.length);
+      print(_pageSize);
+      print(
+          "_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize");
+      final isLastPage = newItems.length >= _pageSize;
+      if (isLastPage) {
+        print("Its last page");
+        _pagingController.appendLastPage(newItems);
+      } else {
+        print("ITs not last page");
+        final nextPageKey = pageKey + newItems.length;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error, s) {
+      print(s);
+      print(error);
+      _pagingController.error = error;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -60,40 +117,118 @@ class _CustomersPageState extends State<CustomersPage> {
                 )
               : null,
         ),
-        body: Consumer<CustomersProvider>(
-            builder: (context, customersProvider, child) {
-          if (customersProvider.getCustomers == null) {
-            customersProvider.fetchCustomers();
-
-            return Center(child: CircularProgressIndicator());
-          } else if (customersProvider.getCustomers.length < 1) {
-            return Center(
-              child: Text(
-                "The customer list is empty",
-                style: TextStyle(color: Colors.black),
+        body: RefreshIndicator(
+          onRefresh: () => Future.sync(
+            () => _pagingController.refresh(),
+          ),
+          child: PagedListView<int, Customer>(
+            pagingController: _pagingController,
+            builderDelegate: PagedChildBuilderDelegate<Customer>(
+              itemBuilder: (context, item, index) => _customerItemBuilder(
+                context,
+                item,
+                customersProvider,
               ),
-            );
-          } else {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 10),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: customersProvider.getCustomers.length,
-                    itemBuilder: (context, i) {
-                      return _customerItemBuilder(
-                        context,
-                        customersProvider.getCustomers[i],
-                        customersProvider,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-        }),
+            ),
+          ),
+        ),
+        // body: Consumer<CustomersProvider>(
+        //     builder: (context, customersProvider, child) {
+        //   if (customersProvider.getCustomers == null) {
+        //     customersProvider.fetchCustomers(0);
+        //     return Center(child: CircularProgressIndicator());
+        //   } else if (customersProvider.getCustomers.length < 1) {
+        //     return Center(
+        //       child: Text(
+        //         "The customer list is empty",
+        //         style: TextStyle(color: Colors.black),
+        //       ),
+        //     );
+        //   } else {
+        //     try {
+        //       return PaginationView(
+        //         preloadedItems: customersProvider.getCustomers.map((e) {
+        //           return _customerItemBuilder(
+        //             context,
+        //             e,
+        //             customersProvider,
+        //           );
+        //         }).toList(),
+        //         // preloadedItems: [
+        //         //   Column(
+        //         //       crossAxisAlignment: CrossAxisAlignment.start,
+        //         //       children: [
+        //         //         SizedBox(height: 10),
+        //         //         Expanded(
+        //         //           child: ListView.builder(
+        //         //             itemCount: customersProvider.getCustomers.length,
+        //         //             itemBuilder: (context, i) {
+        //         //               return _customerItemBuilder(
+        //         //                 context,
+        //         //                 customersProvider.getCustomers[i],
+        //         //                 customersProvider,
+        //         //               );
+        //         //             },
+        //         //           ),
+        //         //         ),
+        //         //       ],
+        //         //     ),
+        //         //   ],
+        //         itemBuilder: (BuildContext context, user, int index) {
+        //           print("Index");
+        //           print(index);
+        //           if ((customersProvider.getCustomers.length - 1) >= index) {
+        //             return _customerItemBuilder(
+        //               context,
+        //               customersProvider.getCustomers[index],
+        //               customersProvider,
+        //             );
+        //           } else {
+        //             return Container();
+        //           }
+        //         },
+        //         paginationViewType: PaginationViewType.listView,
+        //         pageFetch: customersProvider.fetchCustomers,
+        //         pullToRefresh: true,
+        //         onError: (dynamic error) => Center(
+        //           child: Text('Some error occured'),
+        //         ),
+        //         onEmpty: Center(
+        //           child: Text('Sorry! This is empty'),
+        //         ),
+        //         bottomLoader: Center(
+        //           // optional
+        //           child: CircularProgressIndicator(),
+        //         ),
+        //         initialLoader: Center(
+        //           // optional
+        //           child: CircularProgressIndicator(),
+        //         ),
+        //       );
+        //       // return Column(
+        //       //   crossAxisAlignment: CrossAxisAlignment.start,
+        //       //   children: [
+        //       //     SizedBox(height: 10),
+        //       //     Expanded(
+        //       //       child: ListView.builder(
+        //       //         itemCount: customersProvider.getCustomers.length,
+        //       //         itemBuilder: (context, i) {
+        //       //           return _customerItemBuilder(
+        //       //             context,
+        //       //             customersProvider.getCustomers[i],
+        //       //             customersProvider,
+        //       //           );
+        //       //         },
+        //       //       ),
+        //       //     ),
+        //       //   ],
+        //       // );
+        //     } catch (e, s) {
+        //       print(e);
+        //       print(s);
+        //     }
+        //   }
+        // }),
       ),
     );
   }

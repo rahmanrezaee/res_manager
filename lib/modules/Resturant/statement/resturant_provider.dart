@@ -175,14 +175,15 @@ class ResturantProvider with ChangeNotifier {
       );
 
       final extractedData = response.data["data"];
-      print("franch data 1 $extractedData ");
+      print("franch data 1 ${response.data}");
 
       listResturant = null;
 
       notifyListeners();
       return true;
-    } on DioError catch (e) {
+    } on DioError catch (e, s) {
       print("error In Response");
+      print(s);
       print(e.response);
       print(e.error);
       print(e.request);

@@ -436,6 +436,7 @@ class _ResturantFormState extends State<ResturantForm> {
           Provider.of<ResturantProvider>(context, listen: false);
 
       if (widget.resId != null) {
+        print("Editing restaurant");
         resturantProvider
             .editResturant(resturantModel.sendMap(), widget.resId)
             .then((result) {
