@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Authentication/screen/forgotPasswordWithKey.dart';
 import 'package:admin/modules/Authentication/validators/formFieldsValidators.dart';
+// import 'package:admin/modules/companyPage/Privacy&Policy.dart';
+// import 'package:admin/modules/companyPage/term&condition_page.dart';
 import 'package:admin/modules/term/term&condition_page.dart';
 import 'package:admin/modules/policy/Privacy&Policy.dart';
 // import 'package:admin/modules/companyPage/Privacy&Policy.dart';

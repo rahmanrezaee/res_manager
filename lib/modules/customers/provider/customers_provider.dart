@@ -12,7 +12,7 @@ import '../models/review_model.dart';
 class CustomersProvider with ChangeNotifier {
   ///
   List<Customer> _customers;
-  get getCustomers => _customers;
+  List<Customer> get getCustomers => _customers;
 
   ///
   Customer _customer;
@@ -27,21 +27,28 @@ class CustomersProvider with ChangeNotifier {
   List<ReviewModel> get getReview => _reviews;
 
   //
-  fetchCustomers() async {
-    String url = "$baseUrl/admin/user/customer";
+  // int page = 1;
+  // int limit = 10;
+  Future<List<dynamic>> fetchCustomers(int offset) async {
+    int page = (offset / 10).round();
+    String url = "$baseUrl/admin/user/customer?page=$page&limit=10";
     var res =
         await APIRequest().get(myUrl: url, token: await AuthProvider().token);
-    this._customers = [];
-    (res.data['data'] as List).forEach((element) {
-      print(element);
-      Customer newCustomer = new Customer(
-        id: element['user']['_id'],
-        username: element['user']['username'],
-        activeOrders: element['activeOrders'],
-      );
-      this._customers.add(newCustomer);
-    });
+    if (this._customers == null) {
+      this._customers = [];
+    }
+    if ((res.data['data']['data'] as List).length > 0) {
+      (res.data['data']['data'] as List).forEach((element) {
+        Customer newCustomer = new Customer(
+          id: element['user']['_id'],
+          username: element['user']['username'],
+          activeOrders: element['activeOrders'],
+        );
+        this._customers.add(newCustomer);
+      });
+    }
     notifyListeners();
+    return _customers;
   }
 
   fetchCustomer(String customerId) async {
