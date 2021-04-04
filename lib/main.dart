@@ -227,34 +227,8 @@ class _Application extends State<Application> {
     }
     return status == "checkingSharedPrefs"
         ? Center(child: CircularProgressIndicator())
-        : MultiProvider(
-            providers: [
-              ChangeNotifierProvider<ResturantProvider>(
-                  create: (_) => ResturantProvider()),
-              ChangeNotifierProvider<AuthProvider>(
-                  create: (_) => AuthProvider()),
-              ChangeNotifierProvider<DashboardProvider>(
-                  create: (_) => DashboardProvider()),
-              ChangeNotifierProvider<CustomersProvider>(
-                  create: (_) => CustomersProvider()),
-              ChangeNotifierProvider<CategoryProvider>(
-                  create: (_) => CategoryProvider()),
-              ChangeNotifierProvider<CoupenProvider>(
-                  create: (_) => CoupenProvider()),
-              ChangeNotifierProvider<ContactProvider>(
-                  create: (_) => ContactProvider()),
-              ChangeNotifierProvider<NotificationProvider>(
-                  create: (_) => NotificationProvider()),
-            ],
-            child: ConnectivityAppWrapper(
-              app: MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'Flutter Demo',
-                theme: restaurantTheme,
-                home: Scaffold(body: MainWidget(page: page)),
-                routes: routes,
-              ),
-            ),
+        : ConnectivityAppWrapper(
+            app: Scaffold(body: MainWidget(page: page)),
           );
   }
 }
