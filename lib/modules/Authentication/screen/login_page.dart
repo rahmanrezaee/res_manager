@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Authentication/screen/forgotPasswordWithKey.dart';
 import 'package:admin/modules/Authentication/validators/formFieldsValidators.dart';
-import 'package:admin/modules/companyPage/Privacy&Policy.dart';
-import 'package:admin/modules/companyPage/term&condition_page.dart';
+// import 'package:admin/modules/companyPage/Privacy&Policy.dart';
+// import 'package:admin/modules/companyPage/term&condition_page.dart';
+import 'package:admin/modules/term/term&condition_page.dart';
+import 'package:admin/modules/policy/Privacy&Policy.dart';
+// import 'package:admin/modules/companyPage/Privacy&Policy.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
@@ -26,101 +29,66 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+bool first = true;
+
 class _LoginPageState extends State<LoginPage> {
   StreamSubscription _sub;
-   initPlatformStateForStringUniLinks() async {
+  String _latestLink = 'Unknown';
+  Uri _latestUri;
+
+  /// An implementation using a [String] link
+  initPlatformStateForStringUniLinks() async {
     // Attach a listener to the links stream
     _sub = getLinksStream().listen((String link) {
       if (!mounted) return;
-        // if (initialLink != null) initialUri = Uri.parse(String initialLink = initialUri.toString());
-      String token = link.toString().substring(
-          link.toString().indexOf("token=") + 6, link.toString().length);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return ForgotPasswordWithKey(token);
-      }));
+      _latestLink = link ?? 'Unknown';
+      _latestUri = null;
+      try {
+        if (link != null) {
+          String token = link.toString().substring(
+              link.toString().indexOf("token=") + 6, link.toString().length);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ForgotPasswordWithKey(token);
+          }));
+        }
+      } on FormatException {}
     }, onError: (err) {
       if (!mounted) return;
       setState(() {
+        _latestLink = 'Failed to get latest link: $err.';
+        _latestUri = null;
       });
-    });
-
-    // Attach a second listener to the stream
-    getLinksStream().listen((String link) {
-      print('got link: $link');
-    }, onError: (err) {
-      print('got err: $err');
     });
 
     // Get the latest link
     String initialLink;
-    Uri initialUri;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       initialLink = await getInitialLink();
-      print('initial link: $initialLink');
-      // if (initialLink != null) initialUri = Uri.parse(String initialLink = initialUri.toString());
-      String token = initialLink.toString().substring(
-          initialLink.toString().indexOf("token=") + 6, initialLink.toString().length);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return ForgotPasswordWithKey(token);
-      }));
-
+      //   print('initial link: $initialLink');
+      if (initialLink != null && first == true) {
+        first = false;
+        String token = initialLink.toString().substring(
+            initialLink.toString().indexOf("token=") + 6,
+            initialLink.toString().length);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return ForgotPasswordWithKey(token);
+        }));
+      }
     } on PlatformException {
       initialLink = 'Failed to get initial link.';
-      initialUri = null;
     } on FormatException {
       initialLink = 'Failed to parse the initial link as Uri.';
-      initialUri = null;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
-    setState(() {
-    });
   }
-//   Future<Null> initUniLinks(context) async {
-//   // Uri parsing may fail, so we use a try/catch FormatException.
-//   try {
-//       String initialUri = await getInitialLink();
-//       String uri = initialUri.toString();
-//       String token = uri.toString().substring(
-//           uri.toString().indexOf("token=") + 6, uri.toString().length);
-//       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-//         return ForgotPasswordWithKey(token);
-//       }));
-//       print("This is the token and nothing more: $token");
-//   } on FormatException {
-//     print("Error Accured");
-//     // Handle exception by warning the user their action did not succeed
-//     // return?
-//   } catch (e) {
-//     print("Error Catched $e");
-//     // print("Mahdi: initUniLinks: Error $e");
-//   }
-//   print("Mahdi: initUniLinks: 2");
-//   _sub = getUriLinksStream().listen((Uri uri) {
-//     if (!mounted) return;  
-//     String token = uri
-//         .toString()
-//         .substring(uri.toString().indexOf("token=") + 6, uri.toString().length);
 
-//     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-//       return ForgotPasswordWithKey(token);
-//     }));
-//     print("This is the token and nothing more: $token");
-//   }, onError: (err) {
-//     if (!mounted) return;
-//     print("Mahdi: initUniLinks: Error $err");
-//   });
-// }
-
-  
   final _formKey = GlobalKey<FormState>();
-  final FirebaseMessaging _fcm = FirebaseMessaging();
-  String fcmToken = "";
+  String fcmToken = "fcm token";
   TextEditingController _emailController = new TextEditingController();
 
   TextEditingController _passwordController = new TextEditingController();
@@ -137,24 +105,18 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    initUniLinks(context);
+    initPlatformStateForStringUniLinks();
     getFcmToken();
     super.initState();
   }
 
   Future<void> getFcmToken() async {
     print('get Fcm Token');
-    if (Platform.isIOS) {
-      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) async {
-        fcmToken = await _fcm.getToken();
-        log("firebase token $fcmToken");
-      });
 
-      _fcm.requestNotificationPermissions(IosNotificationSettings());
-    } else {
-      fcmToken = await _fcm.getToken();
+    FirebaseMessaging.instance.getToken().then((valu) {
+      this.fcmToken = valu;
       log("firebase token $fcmToken");
-    }
+    });
   }
 
   bool obscureText = true;
@@ -184,64 +146,70 @@ class _LoginPageState extends State<LoginPage> {
                       Text("Login with your account",
                           style: Theme.of(context).textTheme.headline4),
                       SizedBox(height: 15),
-                      _loginFieldBuilder(
-                        "Email Address",
-                        emailValidator,
-                        _emailController,
+                      Container(
+                        width: getHelfIpadAndFullMobWidth(context),
+                        child: _loginFieldBuilder(
+                          "Email Address",
+                          emailValidator,
+                          _emailController,
+                        ),
                       ),
                       SizedBox(height: 15),
-                      TextFormField(
-                        obscureText: obscureText,
-                        controller: _passwordController,
-                        // validator: (v) {
-                        //   return validator(v);
-                        // },
-                        decoration: InputDecoration(
-                          hintText: "Password",
-                          suffix: InkWell(
-                            onTap: () {
-                              setState(() {
-                                obscureText = !obscureText;
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: obscureText
-                                  ? Icon(Icons.visibility_off)
-                                  : Icon(Icons.visibility),
+                      Container(
+                        width: getHelfIpadAndFullMobWidth(context),
+                        child: TextFormField(
+                          obscureText: obscureText,
+                          controller: _passwordController,
+                          // validator: (v) {
+                          //   return validator(v);
+                          // },
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            suffix: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: obscureText
+                                    ? Icon(Icons.visibility_off)
+                                    : Icon(Icons.visibility),
+                              ),
                             ),
-                          ),
-                          hintStyle: TextStyle(color: Colors.grey),
-                          contentPadding: EdgeInsets.only(left: 10),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: AppColors.redText),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            contentPadding: EdgeInsets.only(left: 10),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: AppColors.redText),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            disabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
                           ),
                         ),
                       ),
@@ -266,8 +234,7 @@ class _LoginPageState extends State<LoginPage> {
                       RichText(
                         text: TextSpan(
                             style: TextStyle(color: Colors.black),
-                            text:
-                                "By using this app you are accepting our ",
+                            text: "By using this app you are accepting our ",
                             children: [
                               TextSpan(
                                 recognizer: TapGestureRecognizer()
@@ -285,8 +252,9 @@ class _LoginPageState extends State<LoginPage> {
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     print('privacy policy');
-                                    Navigator.of(context)
-                                        .pushNamed(PrivacyPolicy.routeName, arguments: "login");
+                                    Navigator.of(context).pushNamed(
+                                        PrivacyPolicy.routeName,
+                                        arguments: "login");
                                   },
                                 text: "Privacy Policy",
                                 style: Theme.of(context).textTheme.subtitle2,
@@ -301,31 +269,64 @@ class _LoginPageState extends State<LoginPage> {
                     ? Container()
                     : Text(error, style: TextStyle(color: AppColors.redText)),
                 SizedBox(height: 10),
-                RaisedButton(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  color: Theme.of(context).primaryColor,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                Container(
+                  width: getHelfIpadAndFullMobWidth(context),
+                  child: RaisedButton(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    color: Theme.of(context).primaryColor,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        loading == true
+                            ? CircularProgressIndicator()
+                            : Text(
+                                "Login",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.button,
+                              ),
+                      ],
+                    ),
+                    onPressed: () {
+                      login();
+                      // Navigator.pushReplacementNamed(
+                      //     context, LayoutExample.routeName);
+                    },
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      loading == true
-                          ? CircularProgressIndicator()
-                          : Text(
-                              "Login",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.button,
-                            ),
-                    ],
-                  ),
-                  onPressed: () {
-                    login();
-                    // Navigator.pushReplacementNamed(
-                    //     context, LayoutExample.routeName);
-                  },
+                ),
+                SizedBox(height: 10),
+                RichText(
+                  text: TextSpan(
+                      style: TextStyle(color: Colors.black),
+                      text: "By clicking on Log In you are accepting our ",
+                      children: [
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.of(context)
+                                  .pushNamed(TermCondition.routeName);
+                            },
+                          text: "Terms and Conditions",
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                        TextSpan(
+                          text: " and ",
+                        ),
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              print('privacy policy');
+                              Navigator.of(context)
+                                  .pushNamed(PrivacyPolicy.routeName);
+                            },
+                          text: "Privacy Policy",
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
+                      ]),
                 ),
               ],
             ),

@@ -31,17 +31,22 @@ class CategoryProvider with ChangeNotifier {
   String get getRestaurantId => resturantId;
 
   fetchCategories() async {
-    String url = "$baseUrl/admin/food/$resturantId";
-    var res = await APIRequest().get(
-      myUrl: url,
-      token: await AuthProvider().token,
-    );
-    this._categories = [];
-    (res.data['data'] as List).forEach((category) {
-      print("thsi is the single cat: $category");
-      this._categories.add(new CategoryModel.fromJson(category));
-    });
-    notifyListeners();
+    try {
+      String url = "$baseUrl/admin/food/$resturantId";
+      var res = await APIRequest().get(
+        myUrl: url,
+        token: await AuthProvider().token,
+      );
+      this._categories = [];
+      (res.data['data'] as List).forEach((category) {
+        print("thsi is the single cat: $category");
+        this._categories.add(new CategoryModel.fromJson(category));
+      });
+      notifyListeners();
+    } catch (e, s) {
+      print(e);
+      print(s);
+    }
   }
 
   //add Category

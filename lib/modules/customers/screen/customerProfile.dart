@@ -22,6 +22,9 @@ class CustomerProfile extends StatefulWidget {
 class _CustomerProfileState extends State<CustomerProfile> {
   @override
   Widget build(BuildContext context) {
+
+    print("cust");
+    print(widget.id);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
