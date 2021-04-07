@@ -19,7 +19,7 @@ class ResturantProvider with ChangeNotifier {
       String url = "$baseUrl/admin/restaurant/$resturantId";
       var res = await APIRequest()
           .delete(myUrl: url, myBody: null, myHeaders: {'token': token});
-
+      print("res $res");
       listResturant = null;
       notifyListeners();
       return true;
