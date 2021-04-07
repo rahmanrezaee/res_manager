@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 class ResturantScreen extends StatefulWidget {
-  static var routeName = "resturant";
+  static var routeName = "Restaurants";
 
   @override
   _ResturantScreenState createState() => _ResturantScreenState();
@@ -19,7 +19,6 @@ class _ResturantScreenState extends State<ResturantScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(routes: {
-     
       ResturantForm.routeName: (context) => ResturantForm(
             resId: ModalRoute.of(context).settings.arguments,
           ),

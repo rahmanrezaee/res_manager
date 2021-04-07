@@ -54,7 +54,7 @@ class _LayoutExampleState extends State<LayoutExample> {
       page: CustomersPage(),
     ),
     PageModel(
-      title: "Resturants",
+      title: "Restaurants",
       icon: SizedBox(
         width: 25,
         height: 25,
@@ -112,11 +112,9 @@ class _LayoutExampleState extends State<LayoutExample> {
 
   @override
   Widget build(BuildContext context) {
-  
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
 
-        
     return ResponsiveScaffold(
       kDesktopBreakpoint: 768,
       body: pages[pageIndex].page,

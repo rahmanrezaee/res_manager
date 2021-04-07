@@ -101,8 +101,10 @@ class _ResturantFormState extends State<ResturantForm> {
         resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
-              widget.resId != null ? "Update Resturants" : "Add Resturants"),
+            widget.resId != null ? "Update Restaurants" : "Add Restaurants",
+          ),
         ),
         body: _loadUpdate
             ? SingleChildScrollView(
@@ -184,7 +186,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                   Expanded(
                                     child: TextFormFieldResturant(
                                       initValue: resturantModel.resturantName,
-                                      hintText: "Resturant Name",
+                                      hintText: "Restaurant Name",
                                       onChange: (value) {
                                         setState(() {
                                           resturantModel.resturantName = value;
@@ -192,7 +194,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                       },
                                       valide: (String value) {
                                         if (value.isEmpty) {
-                                          return "Your Resturant Name is Empty";
+                                          return "Your Restaurant Name is Empty";
                                         }
                                       },
                                       onSave: (value) {
@@ -213,7 +215,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                   Expanded(
                                     child: TextFormFieldResturant(
                                       icon: Icons.location_on_outlined,
-                                      hintText: "Resturant Location",
+                                      hintText: "Restaurant Location",
 
                                       onChange: (value) {},
                                       onTap: () {
@@ -262,7 +264,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                       // enable: false,
                                       valide: (String value) {
                                         if (value.isEmpty) {
-                                          return "Your Resturant Name is Empty";
+                                          return "Your Restaurant Name is Empty";
                                         }
                                       },
                                       onSave: (value) {
@@ -362,10 +364,10 @@ class _ResturantFormState extends State<ResturantForm> {
                                 },
                                 valide: (String value) {
                                   if (value.isEmpty) {
-                                    return "Your Resturant Name is Empty";
+                                    return "Your Restaurant Name is Empty";
                                   }
                                   if (!isEmail(value)) {
-                                    return "Your Email envalid";
+                                    return "Your Email Invalid";
                                   }
                                 },
                                 onSave: (value) {

@@ -111,11 +111,11 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                         child: catProvider.getRestaurant == null
                             ? Center(child: Text("Loading restaurants..."))
                             : DropDownFormField(
-                                hintText: "Select Resturants",
+                                hintText: "Select Restaurants ",
                                 value: catProvider.resturantId,
                                 validator: (value) {
                                   if (value == null) {
-                                    return "Please select an Resturants";
+                                    return "Please select an Restaurants";
                                   }
                                   return null;
                                 },
@@ -126,7 +126,6 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                   // });
                                 },
                                 onChanged: (value) {
-
                                   catProvider.setResturantId(value);
                                   print(value);
                                   // setState(() {
@@ -153,7 +152,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-               Visibility(
+            Visibility(
               visible: showAppBarNodepad(context),
               child: Padding(
                 padding: new EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -179,7 +178,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                               return Center(child: CircularProgressIndicator());
                             })
                         : DropDownFormField(
-                            hintText: "Select Resturant",
+                            hintText: "Select Restaurant",
                             value: catProvider.resturantId,
                             onChanged: (value) {
                               catProvider.setResturantId(value);
@@ -200,8 +199,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                 ),
               ),
             ),
-          
-           Card(
+            Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Padding(
@@ -354,7 +352,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
             catProvider.resturantId == null
                 ? Expanded(
                     child: Center(
-                      child: Text("Please Select A Resturants"),
+                      child: Text("Please Select A Restaurants"),
                     ),
                   )
                 : catProvider.getCategories == null
