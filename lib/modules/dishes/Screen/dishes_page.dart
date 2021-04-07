@@ -1,6 +1,7 @@
 //core
 import 'package:admin/modules/dishes/DishServics/dishServices.dart';
 import 'package:admin/modules/dishes/Models/dishModels.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/fancy_dialog.dart';
 import 'package:flutter/material.dart';
@@ -60,36 +61,14 @@ class _DishHomeState extends State<DishPage> {
           borderRadius: BorderRadius.circular(10),
         ),
         title: Text("Manage Dishes"),
+        centerTitle: true,
         bottom: isLoading
             ? PreferredSize(
                 preferredSize: Size(10, 10),
                 child: LinearProgressIndicator(),
               )
             : null,
-        actions: [
-          Visibility(
-            visible: showAppBarNodepad(context),
-                      child: IconButton(
-              icon: Icon(
-                Icons.add,
-              ),
-              onPressed: () {
-                Navigator.of(context).pushNamed(AddNewDish.routeName, arguments: {
-                  "dishId": null,
-                  "catId": catId,
-                  "resturantId": resturantId,
-                }).then((value) {
-                  print("Done Adding");
-                  getFootListWithoutPro(catId).then((value) {
-                    setState(() {
-                      dishList = value;
-                    });
-                  });
-                });
-              },
-            ),
-          ),
-        ],
+        actions: [NotificationAppBarWidget()],
       ),
       body: Column(
         children: [
@@ -102,7 +81,8 @@ class _DishHomeState extends State<DishPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Dish of Category", style: Theme.of(context).textTheme.headline4),
+                  Text("Dish of Category",
+                      style: Theme.of(context).textTheme.headline4),
                   SizedBox(
                     width: 35,
                     height: 35,

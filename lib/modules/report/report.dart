@@ -126,7 +126,7 @@ class _ReportPageState extends State<ReportPage> {
                                         height: 5,
                                       ),
                                       DropDownFormField(
-                                        hintText: "Interested Industry",
+                                        hintText: "Select Restaurant",
                                         value: orderResturantId,
                                         onSaved: (value) {},
                                         onChanged: (value) {
@@ -142,7 +142,7 @@ class _ReportPageState extends State<ReportPage> {
                                         height: 5,
                                       ),
                                       TextFormFieldResturant(
-                                        hintText: "By Coupen",
+                                        hintText: "By Coupon",
                                         controller: couponController,
                                       ),
                                       SizedBox(
@@ -163,7 +163,7 @@ class _ReportPageState extends State<ReportPage> {
                                                     Expanded(
                                                       child: Text(
                                                         startDateOrder ??
-                                                            "To Date",
+                                                            "From Date",
                                                       ),
                                                     ),
                                                     IconButton(
@@ -196,7 +196,7 @@ class _ReportPageState extends State<ReportPage> {
                                                     Expanded(
                                                       child: Text(
                                                         endDateOrder ??
-                                                            "From Date",
+                                                            "To Date",
                                                       ),
                                                     ),
                                                     IconButton(
@@ -334,11 +334,11 @@ class _ReportPageState extends State<ReportPage> {
                                         height: 5,
                                       ),
                                       DropDownFormField(
-                                        hintText: "Interested Industry",
+                                        hintText: "Select Restaurant",
                                         value: earingResturantId,
                                         validator: (value) {
                                           if (value == null) {
-                                            return "Please select an industry";
+                                            return "Please select an Restaurant";
                                           }
                                           return null;
                                         },

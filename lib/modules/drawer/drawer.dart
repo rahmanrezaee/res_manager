@@ -2,7 +2,7 @@ import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/contactUs/contactUs_page.dart';
-import 'package:admin/modules/coupons/coupons_page.dart';
+import 'package:admin/modules/coupons/Screen/coupons_page.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/scaffold/templates/layout/scaffold.dart';

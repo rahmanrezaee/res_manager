@@ -128,7 +128,7 @@ class ResturantProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> addResturant(data) async {
+  Future addResturant(data) async {
     print("da $data");
     try {
       final StringBuffer url = new StringBuffer("$baseUrl/admin/restaurant");
@@ -142,24 +142,25 @@ class ResturantProvider with ChangeNotifier {
         myUrl: url.toString(),
       );
 
-      final extractedData = response.data["data"];
+      final extractedData = response.data;
       print("franch data 1 $extractedData ");
 
       listResturant = null;
       // listResturant.add(ResturantModel.toJson(extractedData));
 
       notifyListeners();
-      return true;
+      return extractedData;
     } on DioError catch (e) {
       print("error In Response");
       print(e.response);
       print(e.error);
       print(e.request);
       print(e.type);
+      return e.response.data;
     }
   }
 
-  Future<bool> editResturant(data, id) async {
+  Future editResturant(data, id) async {
     print("da $data");
     try {
       final StringBuffer url =
@@ -174,13 +175,13 @@ class ResturantProvider with ChangeNotifier {
         myUrl: url.toString(),
       );
 
-      final extractedData = response.data["data"];
+      final extractedData = response.data;
       print("franch data 1 ${response.data}");
 
       listResturant = null;
 
       notifyListeners();
-      return true;
+      return extractedData;
     } on DioError catch (e, s) {
       print("error In Response");
       print(s);
@@ -188,6 +189,8 @@ class ResturantProvider with ChangeNotifier {
       print(e.error);
       print(e.request);
       print(e.type);
+
+      return e.response.data;
     }
   }
 }

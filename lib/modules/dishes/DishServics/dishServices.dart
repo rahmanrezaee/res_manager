@@ -56,7 +56,7 @@ Future<List<DishModel>> getFootListWithoutPro(catId) async {
   }
 }
 
-Future<bool> addDishService(data) async {
+Future addDishService(data) async {
   print("da $data");
   try {
     final StringBuffer url = new StringBuffer("$baseUrl/admin/food");
@@ -73,17 +73,19 @@ Future<bool> addDishService(data) async {
     final extractedData = response.data;
     print("franch data 1 $extractedData ");
 
-    return true;
+    return extractedData;
   } on DioError catch (e) {
     print("error In Response");
     print(e.response);
     print(e.error);
     print(e.request);
     print(e.type);
+
+    return e.response.data;
   }
 }
 
-Future<bool> editDishService(data, id) async {
+Future editDishService(data, id) async {
   print("da $data");
   try {
     final StringBuffer url = new StringBuffer("$baseUrl/admin/food/$id");
@@ -100,21 +102,22 @@ Future<bool> editDishService(data, id) async {
     final extractedData = response.data;
     print("franch data 1 $extractedData ");
 
-    return true;
+    return extractedData;
   } on DioError catch (e) {
     print("error In Response");
     print(e.response);
     print(e.error);
     print(e.request);
     print(e.type);
+    return e.response.data;
   }
 }
 
-Future<bool> deleteDish(resturantId) async {
+Future<bool> deleteDish(foodId) async {
   try {
     //getting token
 
-    String url = "$baseUrl/admin/restaurant/$resturantId";
+    String url = "$baseUrl/admin/food/$foodId";
     var res = await APIRequest().delete(
         myUrl: url,
         myBody: null,

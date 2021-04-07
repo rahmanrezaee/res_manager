@@ -13,6 +13,23 @@ import 'package:flutter/foundation.dart';
 class CoupenProvider with ChangeNotifier {
   List<CouponModel> list;
 
+  bool loadingMore;
+  bool hasMoreItems;
+  int maxItems;
+  int page = 1;
+  int lastPage;
+
+  showLoadingBottom(bool state) {
+    loadingMore = state;
+    notifyListeners();
+  }
+
+  void setPage(int i) {
+    page = i;
+    list = null;
+    notifyListeners();
+  }
+
   Future<CouponModel> getSingleCoupen(id) async {
     try {
       String url = "$baseUrl/admin/coupon/$id";
@@ -40,27 +57,33 @@ class CoupenProvider with ChangeNotifier {
 
   Future<bool> getCoupenList() async {
     try {
-      String url = "$baseUrl/admin/coupon";
+      String url = "$baseUrl/admin/coupon?page=$page";
 
       final result =
           await APIRequest().get(myUrl: url, token: await AuthProvider().token);
 
-      print("result $result");
+      maxItems = result.data['data']['totalDocs'];
+      page = result.data['data']['page'];
+      lastPage = result.data['data']['totalPages'];
+      print("result $lastPage");
 
-      final extractedData = result.data["data"]['docs'];
-
-      if (extractedData == null) {
-        list = [];
-        return false;
+      if (page == lastPage) {
+        hasMoreItems = false;
+      } else {
+        hasMoreItems = true;
       }
 
-      final List<CouponModel> loadedProducts = [];
+      List<CouponModel> loadedProducts = [];
 
-      extractedData.forEach((tableData) {
-        loadedProducts.add(CouponModel.toJson(tableData));
+      (result.data['data']['docs'] as List).forEach((notify) {
+        loadedProducts.add(CouponModel.toJson(notify));
       });
 
-      list = loadedProducts;
+      if (list == null) {
+        list = [];
+      }
+      list.addAll(loadedProducts);
+      page++;
 
       notifyListeners();
 
@@ -74,7 +97,7 @@ class CoupenProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> addCoupen(data) async {
+  Future addCoupen(data) async {
     print("da $data");
     try {
       final StringBuffer url = new StringBuffer("$baseUrl/admin/coupon");
@@ -88,24 +111,24 @@ class CoupenProvider with ChangeNotifier {
         myUrl: url.toString(),
       );
 
-      final extractedData = response.data["data"];
+      final extractedData = response.data;
       print("franch data 1 $extractedData ");
-
-      list = null;
+      setPage(1);
       // listResturant.add(ResturantModel.toJson(extractedData));
 
       notifyListeners();
-      return true;
+      return extractedData;
     } on DioError catch (e) {
       print("error In Response");
       print(e.response);
       print(e.error);
       print(e.request);
       print(e.type);
+      return e.response.data;
     }
   }
 
-  Future<bool> editCoupen(data, id) async {
+  Future editCoupen(data, id) async {
     print("da $data");
     try {
       final StringBuffer url = new StringBuffer("$baseUrl/admin/coupon/$id");
@@ -117,19 +140,20 @@ class CoupenProvider with ChangeNotifier {
         myUrl: url.toString(),
       );
 
-      final extractedData = response.data["data"];
+      final extractedData = response.data;
       print("franch data 1 $extractedData ");
 
-      list = null;
+      setPage(1);
 
       notifyListeners();
-      return true;
+      return extractedData;
     } on DioError catch (e) {
       print("error In Response");
       print(e.response);
       print(e.error);
       print(e.request);
       print(e.type);
+      return e.response.data;
     }
   }
 
@@ -141,7 +165,7 @@ class CoupenProvider with ChangeNotifier {
           myBody: null,
           myHeaders: {'token': await AuthProvider().token});
 
-      list = null;
+      setPage(1);
       notifyListeners();
       return true;
     } on DioError catch (e) {

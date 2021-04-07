@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:flutter/material.dart';
@@ -141,39 +143,42 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 return LayoutBuilder(builder: (context, constraints) {
                   return SizedBox(
                     width: 400,
-                    child: SimpleDialog(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      contentPadding: EdgeInsets.all(15),
-                      children: [
-                        Text(
-                          "A link will be shared to your registered email address please click it to reset your password",
-                          style: Theme.of(context).textTheme.subtitle1,
-                          textAlign: TextAlign.center,
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: SimpleDialog(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        SizedBox(height: 25),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: RaisedButton(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            color: Theme.of(context).primaryColor,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              "OK",
-                              style: Theme.of(context).textTheme.button,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              // Navigator.pushNamed(context, )
-                            },
+                        contentPadding: EdgeInsets.all(15),
+                        children: [
+                          Text(
+                            "A link will be shared to your registered email address please click it to reset your password",
+                            style: Theme.of(context).textTheme.subtitle1,
+                            textAlign: TextAlign.center,
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 25),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: RaisedButton(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              color: Theme.of(context).primaryColor,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                "OK",
+                                style: Theme.of(context).textTheme.button,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                // Navigator.pushNamed(context, )
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 });

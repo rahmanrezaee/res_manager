@@ -163,11 +163,12 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextFormField(
                           obscureText: obscureText,
                           controller: _passwordController,
-                          // validator: (v) {
-                          //   return validator(v);
-                          // },
+                          validator: (v) {
+                            return passwordValidator(v);
+                          },
                           decoration: InputDecoration(
                             hintText: "Password",
+                            errorStyle: TextStyle(color: Colors.red),
                             suffix: InkWell(
                               onTap: () {
                                 setState(() {
@@ -347,8 +348,10 @@ _loginFieldBuilder(
     validator: (v) {
       return validator(v);
     },
+    keyboardType: TextInputType.emailAddress,
     decoration: InputDecoration(
       hintText: hintText,
+      errorStyle: TextStyle(color: Colors.red),
       hintStyle: TextStyle(color: Colors.grey),
       contentPadding: EdgeInsets.only(left: 10),
       enabledBorder: OutlineInputBorder(

@@ -93,6 +93,7 @@ class _ResturantFormState extends State<ResturantForm> {
     });
   }
 
+  bool _isSubmit = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -223,6 +224,15 @@ class _ResturantFormState extends State<ResturantForm> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => PlacePicker(
+                                              enableMapTypeButton: true,
+                                              enableMyLocationButton: true,
+                                              autocompleteOnTrailingWhitespace:
+                                                  true,
+                                              forceSearchOnZoomChanged: true,
+                                              selectInitialPosition: true,
+                                              automaticallyImplyAppBarLeading:
+                                                  true,
+                                              forceAndroidLocationManager: true,
                                               apiKey:
                                                   "AIzaSyBY1nLDcGY1NNgV89rnDR8jg_eBsQBJ39E", // Put YOUR OWN KEY here.
                                               onPlacePicked: (result) {
@@ -271,6 +281,22 @@ class _ResturantFormState extends State<ResturantForm> {
                         ),
                         SizedBox(width: 10),
                       ]),
+
+                      _isSubmit == true && resturantModel.avatar == null ||
+                              resturantModel.avatar == ""
+                          ? Container(
+                              padding: EdgeInsets.only(left: 10, top: 10),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Please select Avatar",
+                                style: TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 13,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            )
+                          : Container(),
                       // Row(
                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       //   children: [
@@ -430,7 +456,13 @@ class _ResturantFormState extends State<ResturantForm> {
   }
 
   addResturant() {
-    if (_formKey.currentState.validate()) {
+    setState(() {
+      _isSubmit = true;
+    });
+
+    if (_formKey.currentState.validate() &&
+        resturantModel.avatar != null &&
+        resturantModel.avatar != "") {
       setState(() {
         _isLoading = true;
       });
@@ -481,7 +513,7 @@ class _ResturantFormState extends State<ResturantForm> {
             _isLoading = false;
           });
 
-          if (result == true) {
+          if (result['status'] == true) {
             print("Mahdi: Executed 2");
             _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text("Successfuly added."),
@@ -494,7 +526,7 @@ class _ResturantFormState extends State<ResturantForm> {
             print("Mahdi: Executed 3");
 
             _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Something went wrong!! Please try again later."),
+              content: Text("${result['message']}"),
               duration: Duration(seconds: 4),
             ));
           }
