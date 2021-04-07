@@ -16,12 +16,12 @@ class NotificationPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Notifications"),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.delete_outline_outlined),
-            onPressed: () {},
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.delete_outline_outlined),
+        //     onPressed: () {},
+        //   ),
+        // ],
       ),
       body: Consumer<NotificationProvider>(
         builder: (BuildContext context, value, Widget child) {
@@ -127,7 +127,7 @@ class _NotificationItemState extends State<NotificationItem> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                        '${Jiffy(widget.notification.createdAt).fromNow()}',
+                        '${Jiffy(widget.notification.createdAt).format("h:mm a / MM.dd.yyyy")}',
                         style: TextStyle(fontWeight: FontWeight.w300)),
                   ),
                 ],

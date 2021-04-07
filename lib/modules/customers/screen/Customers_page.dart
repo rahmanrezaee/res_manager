@@ -83,53 +83,71 @@ class _CustomersPageState extends State<CustomersPage> {
                 )
               : null,
         ),
-        body: RefreshIndicator(
-            onRefresh: () {},
-            child: Consumer<CustomersProvider>(
-                builder: (BuildContext context, value, Widget child) {
-              return value.getCustomers == null
-                  ? FutureBuilder(
-                      future: value.fetchCustomers(),
-                      builder: (context, snapshot) {
-                        return Center(child: CircularProgressIndicator());
-                      })
-                  : IncrementallyLoadingListView(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      hasMore: () => value.hasMoreItems,
-                      itemCount: () => value.getCustomers.length,
-                      loadMore: () async {
-                        await value.fetchCustomers();
-                      },
-                      onLoadMore: () {
-                        value.showLoadingBottom(true);
-                      },
-                      onLoadMoreFinished: () {
-                        value.showLoadingBottom(false);
-                      },
-                      loadMoreOffsetFromBottom: 0,
-                      itemBuilder: (context, index) {
-                        if ((value.loadingMore ?? false) &&
-                            index == value.getCustomers.length - 1) {
-                          return Column(
-                            children: <Widget>[
-                              _customerItemBuilder(
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Customers",
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: RefreshIndicator(
+                  onRefresh: () {},
+                  child: Consumer<CustomersProvider>(
+                      builder: (BuildContext context, value, Widget child) {
+                    return value.getCustomers == null
+                        ? FutureBuilder(
+                            future: value.fetchCustomers(),
+                            builder: (context, snapshot) {
+                              return Center(child: CircularProgressIndicator());
+                            })
+                        : IncrementallyLoadingListView(
+                            shrinkWrap: true,
+                            // physics: NeverScrollableScrollPhysics(),
+                            hasMore: () => value.hasMoreItems,
+                            itemCount: () => value.getCustomers.length,
+                            loadMore: () async {
+                              await value.fetchCustomers();
+                            },
+                            onLoadMore: () {
+                              value.showLoadingBottom(true);
+                            },
+                            onLoadMoreFinished: () {
+                              value.showLoadingBottom(false);
+                            },
+                            loadMoreOffsetFromBottom: 0,
+                            itemBuilder: (context, index) {
+                              if ((value.loadingMore ?? false) &&
+                                  index == value.getCustomers.length - 1) {
+                                return Column(
+                                  children: <Widget>[
+                                    _customerItemBuilder(
+                                      context,
+                                      value.getCustomers[index],
+                                      customersProvider,
+                                    ),
+                                    PlaceholderItemCard()
+                                  ],
+                                );
+                              }
+                              return _customerItemBuilder(
                                 context,
                                 value.getCustomers[index],
                                 customersProvider,
-                              ),
-                              PlaceholderItemCard()
-                            ],
+                              );
+                            },
                           );
-                        }
-                        return _customerItemBuilder(
-                          context,
-                          value.getCustomers[index],
-                          customersProvider,
-                        );
-                      },
-                    );
-            })),
+                  })),
+            ),
+          ],
+        ),
       ),
     );
   }

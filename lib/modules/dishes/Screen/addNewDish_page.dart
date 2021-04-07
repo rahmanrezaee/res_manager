@@ -40,6 +40,7 @@ class _AddNewDishState extends State<AddNewDish> {
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _autoValidate = false;
   bool _isLoading = false;
+  bool _isSubmit = false;
 
   final addonForm = GlobalKey<FormState>();
 
@@ -104,11 +105,11 @@ class _AddNewDishState extends State<AddNewDish> {
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar(
-        elevation: .2,
+        centerTitle: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ), //When Editing a dish title should be the dish name
-        title: Text("${this.dishId != null ? "Edit Dish" : "Add New Dish"}"),
+        title: Text("${this.dishId != null ? "Edit Dish" : "Add Dish"}"),
         actions: [
           Container(
             width: 100,
@@ -127,6 +128,12 @@ class _AddNewDishState extends State<AddNewDish> {
                 }),
           ),
         ],
+        bottom: _isLoading
+            ? PreferredSize(
+                preferredSize: Size(10, 10),
+                child: LinearProgressIndicator(),
+              )
+            : null,
       ),
       body: !_isUpdateDish
           ? SingleChildScrollView(
@@ -185,7 +192,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                             await uploadFile(
                                                     value,
                                                     "profile-photo",
-                                                     await AuthProvider().token)
+                                                    await AuthProvider().token)
                                                 .then((value) => imgList.add(
                                                     ImageModel.toJson(value)));
 
@@ -225,121 +232,176 @@ class _AddNewDishState extends State<AddNewDish> {
                         ],
                       ),
                       SizedBox(height: 15),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: TextFormFieldResturant(
-                                initValue: dishModel.foodName,
-                                hintText: "Dish Name",
-                                onChange: (value) {
-                                  setState(() {
-                                    dishModel.foodName = value;
-                                  });
-                                },
-                                valide: (String value) {
-                                  if (value.isEmpty) {
-                                    return "Your Dish  Name is Empty";
-                                  }
-                                },
-                                onSave: (value) {
-                                  setState(() {
-                                    dishModel.foodName = value;
-                                  });
-                                },
-                              ),
+                      ResponsiveGridRow(children: [
+                        ResponsiveGridCol(
+                          lg: 6,
+                          md: 6,
+                          sm: 12,
+                          xl: 12,
+                          xs: 12,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormFieldResturant(
+                              initValue: dishModel.foodName,
+                              hintText: "Dish Name",
+                              onChange: (value) {
+                                setState(() {
+                                  dishModel.foodName = value;
+                                });
+                              },
+                              valide: (String value) {
+                                if (value.isEmpty) {
+                                  return "Your Dish  Name is Empty";
+                                }
+                              },
+                              onSave: (value) {
+                                setState(() {
+                                  dishModel.foodName = value;
+                                });
+                              },
                             ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: TextFormFieldResturant(
-                                initValue: "${dishModel.price ?? ""}",
-                                typetext: TextInputType.number,
-                                hintText: "Price",
-                                onChange: (value) {
-                                  setState(() {
-                                    dishModel.price = double.parse(value);
-                                  });
-                                },
-                                valide: (String value) {
-                                  if (value.isEmpty) {
-                                    return "Your Price  is Empty";
-                                  }
-                                },
-                                onSave: (value) {
-                                  setState(() {
-                                    dishModel.price = double.parse(value);
-                                  });
-                                },
+                          ),
+                        ),
+                        ResponsiveGridCol(
+                          lg: 6,
+                          md: 6,
+                          sm: 12,
+                          xl: 12,
+                          xs: 12,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormFieldResturant(
+                              initValue: "${dishModel.price ?? ""}",
+                              typetext: TextInputType.number,
+                              hintText: "Price",
+                              onChange: (value) {
+                                setState(() {
+                                  dishModel.price = double.parse(value);
+                                });
+                              },
+                              valide: (String value) {
+                                if (value.isEmpty) {
+                                  return "Your Price  is Empty";
+                                }
+                              },
+                              onSave: (value) {
+                                setState(() {
+                                  dishModel.price = double.parse(value);
+                                });
+                              },
+                            ),
+                          ),
+                        )
+                      ]),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextFormFieldResturant(
+                          initValue: "${dishModel.tax ?? ""}",
+                          typetext: TextInputType.number,
+                          hintText: "Tax",
+                          onChange: (value) {
+                            setState(() {
+                              dishModel.tax = double.parse(value);
+                            });
+                          },
+                          valide: (String value) {
+                            if (value.isEmpty) {
+                              return "Your tax  is Empty";
+                            }
+                          },
+                          onSave: (value) {
+                            setState(() {
+                              dishModel.tax = double.parse(value);
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextFormField(
+                          initialValue: dishModel.description,
+                          minLines: 5,
+                          maxLines: 6,
+                          decoration: InputDecoration(
+                            hintText: "Description",
+                            hintStyle: TextStyle(color: Colors.grey),
+                            contentPadding: EdgeInsets.only(left: 10, top: 20),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              dishModel.description = value;
+                            });
+                          },
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return "Your description  is Empty";
+                            }
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              dishModel.description = value;
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Preparation Time",
+                                style: Theme.of(context).textTheme.headline3),
+                            SizedBox(width: 50),
+                            OutlineButton(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              onPressed: () {
+                                _selectTime(context)
+                                    .then((value) => setState(() {
+                                          dishModel.preparationTime = value;
+                                        }));
+                              },
+                              child: Text(
+                                "${dishModel.preparationTime ?? "00:00"}",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        initialValue: dishModel.description,
-                        minLines: 5,
-                        maxLines: 6,
-                        decoration: InputDecoration(
-                          hintText: "Description",
-                          hintStyle: TextStyle(color: Colors.grey),
-                          contentPadding: EdgeInsets.only(left: 10, top: 20),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            dishModel.description = value;
-                          });
-                        },
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return "Your description  is Empty";
-                          }
-                        },
-                        onSaved: (value) {
-                          setState(() {
-                            dishModel.description = value;
-                          });
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Preparation Time",
-                              style: Theme.of(context).textTheme.headline3),
-                          SizedBox(width: 50),
-                          OutlineButton(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            onPressed: () {
-                              _selectTime(context).then((value) => setState(() {
-                                    dishModel.preparationTime = value;
-                                  }));
-                            },
-                            child: Text(
-                              "${dishModel.preparationTime ?? "00:00"}",
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.normal),
-                            ),
-                          ),
-                        ],
-                      ),
+                      _isSubmit == true && dishModel.preparationTime == null ||
+                              dishModel.preparationTime == ""
+                          ? Container(
+                              padding: EdgeInsets.only(left: 10, top: 10),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Please select Preparation Time",
+                                style: TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 13,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            )
+                          : Container(),
                       SizedBox(height: 10),
                       Card(
                         shape: RoundedRectangleBorder(
@@ -375,7 +437,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                             padding: EdgeInsets.symmetric(
                                                 vertical: 20, horizontal: 20),
                                             width: 450,
-                                            height: 280,
+                                            height: 310,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius:
@@ -384,128 +446,164 @@ class _AddNewDishState extends State<AddNewDish> {
                                             // alignment: Alignment.center,
                                             child: Form(
                                               key: addonForm,
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                                                    child: Text(
-                                                      "New Add On",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline4,
-                                                    ),
-                                                  ),
-                                                  Divider(),
-                                                  SizedBox(height: 15),
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child:
-                                                            TextFormFieldResturant(
-                                                          hintText:
-                                                              "Add On Name",
-                                                          onChange: (value) {
-                                                            setState(() {
-                                                              addonModel.name =
-                                                                  value;
-                                                            });
-                                                          },
-                                                          valide:
-                                                              (String value) {
-                                                            if (value.isEmpty) {
-                                                              return "Your Dish  Name is Empty";
-                                                            }
-                                                          },
-                                                          onSave: (value) {
-                                                            setState(() {
-                                                              addonModel.name =
-                                                                  value;
-                                                            });
-                                                          },
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Container(
-                                                        width: 200,
-                                                        child:
-                                                            TextFormFieldResturant(
-                                                          hintText:
-                                                              "Add On Price",
-                                                          typetext:
-                                                              TextInputType
-                                                                  .number,
-                                                          onChange: (value) {
-                                                            setState(() {
-                                                              addonModel.price =
-                                                                  double.parse(
-                                                                      value);
-                                                            });
-                                                          },
-                                                          valide:
-                                                              (String value) {
-                                                            if (value.isEmpty) {
-                                                              return "Your Add On Price is Empty";
-                                                            }
-                                                          },
-                                                          onSave: (value) {
-                                                            setState(() {
-                                                              addonModel.price =
-                                                                  double.parse(
-                                                                      value);
-                                                            });
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 15),
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: RaisedButton(
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Padding(
                                                       padding:
                                                           EdgeInsets.symmetric(
+                                                              horizontal: 20,
                                                               vertical: 10),
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      elevation: 0,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                      ),
                                                       child: Text(
-                                                        "Save",
+                                                        "New Add On",
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .button,
+                                                            .headline4,
                                                       ),
-                                                      onPressed: () {
-                                                        if (addonForm
-                                                            .currentState
-                                                            .validate()) {
-                                                          setState(() {
-                                                            dishModel
-                                                                .addOnDishAdmin
-                                                                .add(
-                                                                    addonModel);
-                                                          });
-
-                                                          Navigator.pop(
-                                                              context);
-                                                        } else {
-                                                          setState(() {
-                                                            _autoValidateAddon =
-                                                                true;
-                                                          });
-                                                        }
-                                                      },
                                                     ),
-                                                  ),
-                                                ],
+                                                    Divider(),
+                                                    SizedBox(height: 15),
+                                                    ResponsiveGridRow(
+                                                      children: [
+                                                        ResponsiveGridCol(
+                                                          lg: 6,
+                                                          md: 6,
+                                                          sm: 12,
+                                                          xl: 12,
+                                                          xs: 12,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child:
+                                                                TextFormFieldResturant(
+                                                              hintText:
+                                                                  "Add On Name",
+                                                              onChange:
+                                                                  (value) {
+                                                                setState(() {
+                                                                  addonModel
+                                                                          .name =
+                                                                      value;
+                                                                });
+                                                              },
+                                                              valide: (String
+                                                                  value) {
+                                                                if (value
+                                                                    .isEmpty) {
+                                                                  return "Your Dish  Name is Empty";
+                                                                }
+                                                              },
+                                                              onSave: (value) {
+                                                                setState(() {
+                                                                  addonModel
+                                                                          .name =
+                                                                      value;
+                                                                });
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        ResponsiveGridCol(
+                                                          lg: 6,
+                                                          md: 6,
+                                                          sm: 12,
+                                                          xl: 12,
+                                                          xs: 12,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child:
+                                                                TextFormFieldResturant(
+                                                              hintText:
+                                                                  "Add On Price",
+                                                              typetext:
+                                                                  TextInputType
+                                                                      .number,
+                                                              onChange:
+                                                                  (value) {
+                                                                setState(() {
+                                                                  addonModel
+                                                                          .price =
+                                                                      double.parse(
+                                                                          value);
+                                                                });
+                                                              },
+                                                              valide: (String
+                                                                  value) {
+                                                                if (value
+                                                                    .isEmpty) {
+                                                                  return "Your Add On Price is Empty";
+                                                                }
+                                                              },
+                                                              onSave: (value) {
+                                                                setState(() {
+                                                                  addonModel
+                                                                          .price =
+                                                                      double.parse(
+                                                                          value);
+                                                                });
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 15),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: RaisedButton(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 10),
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                        elevation: 0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                        ),
+                                                        child: Text(
+                                                          "Save",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .button,
+                                                        ),
+                                                        onPressed: () {
+                                                          if (addonForm
+                                                              .currentState
+                                                              .validate()) {
+                                                            setState(() {
+                                                              dishModel
+                                                                  .addOnDishAdmin
+                                                                  .add(
+                                                                      addonModel);
+                                                            });
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          } else {
+                                                            setState(() {
+                                                              _autoValidateAddon =
+                                                                  true;
+                                                            });
+                                                          }
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -600,6 +698,7 @@ class _AddNewDishState extends State<AddNewDish> {
     if (_formKey.currentState.validate()) {
       setState(() {
         _isLoading = true;
+        _isSubmit = true;
       });
       dishModel.images = imgList;
       dishModel.categoryId = catId;
@@ -610,7 +709,7 @@ class _AddNewDishState extends State<AddNewDish> {
             _isLoading = false;
           });
 
-          if (result == true) {
+          if (result['status'] == true) {
             print("Mahdi: Executed 2");
             _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text("Successfuly Updated."),
@@ -629,7 +728,7 @@ class _AddNewDishState extends State<AddNewDish> {
             print("Mahdi: Executed 3");
 
             _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Something went wrong!! Please try again later."),
+              content: Text("${result["message"]}"),
               duration: Duration(seconds: 4),
             ));
           }
@@ -651,7 +750,7 @@ class _AddNewDishState extends State<AddNewDish> {
             _isLoading = false;
           });
 
-          if (result == true) {
+          if (result['status'] == true) {
             print("Mahdi: Executed 2");
             _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text("Successfuly added."),
@@ -664,7 +763,7 @@ class _AddNewDishState extends State<AddNewDish> {
             print("Mahdi: Executed 3");
 
             _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Something went wrong!! Please try again later."),
+              content: Text("${result["message"]}"),
               duration: Duration(seconds: 4),
             ));
           }
