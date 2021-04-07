@@ -25,11 +25,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
-
-        title:  Text("Forgot Password",),
+        title: Text(
+          "Forgot Password",
+        ),
         centerTitle: true,
-
-
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -61,8 +60,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "Forgotten your Password ? Don't worry just type in your Registered Email address and we will take it from there",
-                          textAlign: TextAlign.center,
+                          "Forgotten your Password ? \nDon't worry just type in your Registered Email address and we will take it from there",
+                          textAlign: TextAlign.start,
                         ),
                       ),
                     ),
@@ -72,15 +71,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            alignment:Alignment.centerLeft,
-                            child: Text("Inter Your Email Address",
+                            alignment: Alignment.centerLeft,
+                            child: Text("Enter Your Email Address",
                                 style: Theme.of(context).textTheme.headline4),
                           ),
                           SizedBox(height: 15),
                           Form(
                             key: _formKey,
                             child: _loginFieldBuilder(
-                                "Forgot Password", _emailController, () {}),
+                                "Email Address", _emailController, () {}),
                           ),
                           SizedBox(height: 15),
                           SizedBox(
@@ -95,9 +94,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               child: loading == true
                                   ? CircularProgressIndicator()
                                   : Text(
-                                "Submit",
-                                style: Theme.of(context).textTheme.button,
-                              ),
+                                      "Submit",
+                                      style: Theme.of(context).textTheme.button,
+                                    ),
                               onPressed: () {
                                 forgotPassword();
                               },
@@ -113,8 +112,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           )
                         : Container(),
                     SizedBox(height: 15),
-
-
                   ],
                 ),
               ),
@@ -233,4 +230,3 @@ _loginFieldBuilder(
     ),
   );
 }
-

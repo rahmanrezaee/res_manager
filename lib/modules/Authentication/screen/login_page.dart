@@ -141,10 +141,13 @@ class _LoginPageState extends State<LoginPage> {
                 Form(
                   key: _formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Login with your account",
-                          style: Theme.of(context).textTheme.headline4),
+                      Text(
+                        "Login with my Account",
+                        style: Theme.of(context).textTheme.headline4,
+                        textAlign: TextAlign.start,
+                      ),
                       SizedBox(height: 15),
                       Container(
                         width: getHelfIpadAndFullMobWidth(context),
@@ -215,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 15),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           InkWell(
                             onTap: () {
@@ -224,8 +227,10 @@ class _LoginPageState extends State<LoginPage> {
                                   .pushNamed(ForgotPassword.routeName);
                             },
                             child: Text(
-                              "Forgot Password",
-                              style: Theme.of(context).textTheme.subtitle2,
+                              "Forgot Password?",
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.green),
                             ),
                           ),
                         ],

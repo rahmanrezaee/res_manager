@@ -36,8 +36,9 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Container(),
                     Text(
-                      "Manage Resturants",
+                      "Manage Restaurants",
                     ),
                     SizedBox(
                       width: 35,
@@ -77,7 +78,7 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                     height: 35,
                     child: Visibility(
                       visible: showAppBarNodepad(context),
-                                          child: RaisedButton(
+                      child: RaisedButton(
                         padding: EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -112,7 +113,8 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Resturants", style: Theme.of(context).textTheme.headline4),
+                  Text("Restaurants",
+                      style: Theme.of(context).textTheme.headline4),
                   SizedBox(
                     width: 35,
                     height: 35,
@@ -134,7 +136,7 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
             ),
           ),
           Expanded(
-                      child: Consumer<ResturantProvider>(
+            child: Consumer<ResturantProvider>(
               builder: (BuildContext context, value, Widget child) {
                 return RefreshIndicator(
                   onRefresh: () async {
@@ -144,18 +146,20 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                   },
                   child: value.listResturant != null
                       ? value.listResturant.isEmpty
-                          ? Text("No Resturants")
+                          ? Text("No Restaurants")
                           : ListView.builder(
                               itemCount: value.listResturant.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return resturantItem(value.listResturant[index]);
+                                return resturantItem(
+                                    value.listResturant[index]);
                               },
                             )
                       : FutureBuilder(
                           future: value.getResturantList(),
                           builder: (BuildContext context,
                               AsyncSnapshot<dynamic> snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return Center(
                                 child: CircularProgressIndicator(),
                               );
@@ -213,7 +217,7 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => FancyDialog(
-                              title: "Delete Resturant!",
+                              title: "Delete Restaurant!",
                               okFun: () {
                                 Provider.of<ResturantProvider>(context,
                                         listen: false)
@@ -245,7 +249,8 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                                 });
                               },
                               cancelFun: () {},
-                              descreption: "Are You Sure To Delete Resturants?",
+                              descreption:
+                                  "Are You Sure To Delete Restaurants?",
                             ));
                   },
                 ),
