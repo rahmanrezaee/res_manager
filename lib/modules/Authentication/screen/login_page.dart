@@ -304,35 +304,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                RichText(
-                  text: TextSpan(
-                      style: TextStyle(color: Colors.black),
-                      text: "By clicking on Log In you are accepting our ",
-                      children: [
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.of(context)
-                                  .pushNamed(TermCondition.routeName);
-                            },
-                          text: "Terms and Conditions",
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                        TextSpan(
-                          text: " and ",
-                        ),
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              print('privacy policy');
-                              Navigator.of(context)
-                                  .pushNamed(PrivacyPolicy.routeName);
-                            },
-                          text: "Privacy Policy",
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ]),
-                ),
               ],
             ),
           ),

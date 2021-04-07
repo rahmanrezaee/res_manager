@@ -1,4 +1,5 @@
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/GlobleService/APIRequest.dart';
@@ -13,6 +14,11 @@ class CustomersProvider with ChangeNotifier {
   ///
   List<Customer> _customers;
   List<Customer> get getCustomers => _customers;
+  bool loadingMore;
+  bool hasMoreItems;
+  int maxItems;
+  int page = 1;
+  int lastPage;
 
   ///
   Customer _customer;
@@ -29,26 +35,64 @@ class CustomersProvider with ChangeNotifier {
   //
   // int page = 1;
   // int limit = 10;
-  Future<List<dynamic>> fetchCustomers(int offset) async {
-    int page = (offset / 10).round();
-    String url = "$baseUrl/admin/user/customer?page=$page&limit=10";
-    var res =
-        await APIRequest().get(myUrl: url, token: await AuthProvider().token);
-    if (this._customers == null) {
-      this._customers = [];
-    }
-    if ((res.data['data']['data'] as List).length > 0) {
-      (res.data['data']['data'] as List).forEach((element) {
-        Customer newCustomer = new Customer(
-          id: element['user']['_id'],
-          username: element['user']['username'],
-          activeOrders: element['activeOrders'],
-        );
-        this._customers.add(newCustomer);
+  Future<bool> fetchCustomers() async {
+    try {
+      String url = "$baseUrl/admin/user/customer?page=$page";
+      final result =
+          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+
+      print("result $result");
+
+      maxItems = result.data['data']['totalDocs'];
+      page = result.data['data']['page'];
+      lastPage = result.data['data']['totalPages'];
+      print("result $lastPage");
+
+      if (page == lastPage) {
+        hasMoreItems = false;
+      } else {
+        hasMoreItems = true;
+      }
+
+      List<Customer> loadedProducts = [];
+
+      (result.data['data']['data'] as List).forEach((notify) {
+        loadedProducts.add(Customer.fromJson(notify));
       });
+
+      if (this._customers == null) {
+        this._customers = [];
+      }
+      this._customers.addAll(loadedProducts);
+      page++;
+
+      notifyListeners();
+      return true;
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
     }
-    notifyListeners();
-    return _customers;
+
+    // var res =
+    //     await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+    // if (this._customers == null) {
+    //   this._customers = [];
+    // }
+    // if ((res.data['data']['data'] as List).length > 0) {
+    //   (res.data['data']['data'] as List).forEach((element) {
+    //     Customer newCustomer = new Customer(
+    //       id: element['user']['_id'],
+    //       username: element['user']['username'],
+    //       activeOrders: element['activeOrders'],
+    //     );
+    //     this._customers.add(newCustomer);
+    //   });
+    // }
+    // notifyListeners();
+    // return _customers;
   }
 
   fetchCustomer(String customerId) async {
@@ -78,13 +122,34 @@ class CustomersProvider with ChangeNotifier {
   }
 
   deleteCustomer(customerId) async {
-    String url = "$baseUrl/admin/user/customer/$customerId";
-    var res = await APIRequest().delete(
-        myUrl: url,
-        myBody: null,
-        myHeaders: {'token': await AuthProvider().token});
+    try {
+      String url = "$baseUrl/admin/user/customer/$customerId";
+      var res = await APIRequest().delete(
+          myUrl: url,
+          myBody: null,
+          myHeaders: {'token': await AuthProvider().token});
+
+      print("res $res");
+      _customers = null;
+      page = 1;
+      notifyListeners();
+      return res.data;
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
+    }
+  }
+
+  void nullList() {
     _customers = null;
     notifyListeners();
-    return res.data;
+  }
+
+  showLoadingBottom(bool state) {
+    loadingMore = state;
+    notifyListeners();
   }
 }
