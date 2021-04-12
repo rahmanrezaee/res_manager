@@ -7,6 +7,7 @@ import 'package:admin/themes/style.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+import 'package:admin/modules/notifications/notification_page.dart';
 
 class ResturantScreen extends StatefulWidget {
   static var routeName = "Restaurants";
@@ -18,10 +19,16 @@ class ResturantScreen extends StatefulWidget {
 class _ResturantScreenState extends State<ResturantScreen> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(routes: {
-      ResturantForm.routeName: (context) => ResturantForm(
-            resId: ModalRoute.of(context).settings.arguments,
-          ),
-    }, theme: restaurantTheme, home: ListResturantScreen());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {
+        ResturantForm.routeName: (context) => ResturantForm(
+              resId: ModalRoute.of(context).settings.arguments,
+            ),
+        NotificationPage.routeName: (context) => NotificationPage(),
+      },
+      theme: restaurantTheme,
+      home: ListResturantScreen(),
+    );
   }
 }

@@ -82,7 +82,7 @@ class CategoryProvider with ChangeNotifier {
         "token": await AuthProvider().token,
       },
     );
-
+    this._categories = null;
     print(res.data);
     notifyListeners();
     return res.data;

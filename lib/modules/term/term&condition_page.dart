@@ -10,9 +10,7 @@ class TermCondition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(
-                
-              title: Text("Terms and Conditions")),
+      appBar: AppBar(centerTitle: true, title: Text("Terms and Conditions")),
       body: FutureBuilder(
           future: termConditionService.getTerm(),
           builder: (context, snapshot) {

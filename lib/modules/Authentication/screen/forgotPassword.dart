@@ -63,7 +63,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           "Forgotten your Password ? \nDon't worry just type in your Registered Email address and we will take it from there",
-                          textAlign: TextAlign.start,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -80,8 +80,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           SizedBox(height: 15),
                           Form(
                             key: _formKey,
-                            child: _loginFieldBuilder(
-                                "Email Address", _emailController, () {}),
+                            child: _loginFieldBuilder("Email Address",
+                                _emailController, emailValidator, () {}),
                           ),
                           SizedBox(height: 15),
                           SizedBox(
@@ -197,14 +197,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 }
 
-_loginFieldBuilder(
-    String hintText, TextEditingController controller, Function validator) {
+_loginFieldBuilder(String hintText, TextEditingController controller,
+    Function validator, Null Function() param3) {
   return TextFormField(
     controller: controller,
-    // validator: (e) {
-    // return validator(e);
-    // },
+    validator: (e) {
+      return validator(e);
+    },
     decoration: InputDecoration(
+      errorStyle: TextStyle(color: Colors.red),
       hintText: hintText,
       hintStyle: TextStyle(color: Colors.grey),
       contentPadding: EdgeInsets.only(left: 10),

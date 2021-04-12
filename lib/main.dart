@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         key: navigatorKey,
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'admin App',
         theme: restaurantTheme,
         home: Application(),
         routes: routes,
