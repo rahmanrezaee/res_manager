@@ -24,15 +24,20 @@ class CatetoriesPage extends StatefulWidget {
 class _CatetoriesPageState extends State<CatetoriesPage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(routes: {
-      CatetoriesListPage.routeName: (context) => CatetoriesListPage(),
-      DishPage.routeName: (context) => DishPage(
-            ModalRoute.of(context).settings.arguments,
-          ),
-      AddNewDish.routeName: (context) => AddNewDish(
-            ModalRoute.of(context).settings.arguments,
-          ),
-    }, theme: restaurantTheme, home: CatetoriesListPage());
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        routes: {
+          NotificationPage.routeName: (context) => NotificationPage(),
+          CatetoriesListPage.routeName: (context) => CatetoriesListPage(),
+          DishPage.routeName: (context) => DishPage(
+                ModalRoute.of(context).settings.arguments,
+              ),
+          AddNewDish.routeName: (context) => AddNewDish(
+                ModalRoute.of(context).settings.arguments,
+              ),
+        },
+        theme: restaurantTheme,
+        home: CatetoriesListPage());
   }
 }
 
@@ -484,12 +489,12 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                         .then((re) {
                                       Navigator.of(context).pop();
                                       if (re['status'] == true) {
-                                        // ScaffoldMessenger.of(context)
-                                        //     .showSnackBar(
-                                        //   SnackBar(
-                                        //       content: Text(
-                                        //           "The Category Edited Successfully")),
-                                        // );
+                                        Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'The Category Edited Successfully'),
+                                          ),
+                                        );
                                       } else {}
                                     });
                                   } else {}

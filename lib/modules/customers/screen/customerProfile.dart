@@ -22,7 +22,6 @@ class CustomerProfile extends StatefulWidget {
 class _CustomerProfileState extends State<CustomerProfile> {
   @override
   Widget build(BuildContext context) {
-
     print("cust");
     print(widget.id);
     return Scaffold(
@@ -33,7 +32,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        title: Text("Customer Profile"),
+        title: Text("Customer Name"),
         centerTitle: true,
         actions: [
           IconButton(

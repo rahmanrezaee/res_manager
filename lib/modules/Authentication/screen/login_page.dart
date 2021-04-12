@@ -136,6 +136,12 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 50),
+                Text(
+                  "Login",
+                  style: Theme.of(context).textTheme.headline5.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                SizedBox(height: 20),
                 Image.asset("${AssestPath.logo}", width: 150),
                 SizedBox(height: 50),
                 Form(
@@ -144,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Login with my Account",
+                        "Login with Your Account",
                         style: Theme.of(context).textTheme.headline4,
                         textAlign: TextAlign.start,
                       ),
