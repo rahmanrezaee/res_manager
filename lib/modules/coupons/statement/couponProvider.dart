@@ -12,12 +12,14 @@ import 'package:flutter/foundation.dart';
 
 class CoupenProvider with ChangeNotifier {
   List<CouponModel> list;
-
+  AuthProvider auth;
   bool loadingMore;
   bool hasMoreItems;
   int maxItems;
   int page = 1;
   int lastPage;
+
+  CoupenProvider(this.auth);
 
   showLoadingBottom(bool state) {
     loadingMore = state;
@@ -34,8 +36,7 @@ class CoupenProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/coupon/$id";
 
-      final result =
-          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       print("result $result");
 
@@ -59,8 +60,7 @@ class CoupenProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/coupon?page=$page";
 
-      final result =
-          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       maxItems = result.data['data']['totalDocs'];
       page = result.data['data']['page'];
@@ -106,7 +106,7 @@ class CoupenProvider with ChangeNotifier {
       final response = await APIRequest().post(
         myBody: data,
         myHeaders: {
-          "token": await AuthProvider().token,
+          "token": auth.token,
         },
         myUrl: url.toString(),
       );
@@ -136,7 +136,7 @@ class CoupenProvider with ChangeNotifier {
 
       final response = await APIRequest().put(
         myBody: data,
-        myHeaders: {"token": await AuthProvider().token},
+        myHeaders: {"token": auth.token},
         myUrl: url.toString(),
       );
 
@@ -160,10 +160,8 @@ class CoupenProvider with ChangeNotifier {
   Future<bool> deleteCoupen(id) async {
     try {
       String url = "$baseUrl/admin/coupon/$id";
-      var res = await APIRequest().delete(
-          myUrl: url,
-          myBody: null,
-          myHeaders: {'token': await AuthProvider().token});
+      var res = await APIRequest()
+          .delete(myUrl: url, myBody: null, myHeaders: {'token': auth.token});
 
       setPage(1);
       notifyListeners();

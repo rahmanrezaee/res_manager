@@ -98,29 +98,57 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ResturantProvider>(
-            create: (_) => ResturantProvider()),
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
-        ChangeNotifierProvider<DashboardProvider>(
-            create: (_) => DashboardProvider()),
-        ChangeNotifierProvider<CustomersProvider>(
-            create: (_) => CustomersProvider()),
-        ChangeNotifierProvider<CategoryProvider>(
-            create: (_) => CategoryProvider()),
-        ChangeNotifierProvider<CoupenProvider>(create: (_) => CoupenProvider()),
-        ChangeNotifierProvider<ContactProvider>(
-            create: (_) => ContactProvider()),
-        ChangeNotifierProvider<NotificationProvider>(
-            create: (_) => NotificationProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, ResturantProvider>(
+          update: (context, auth, previousMessages) => ResturantProvider(auth),
+          create: (context) => ResturantProvider(null),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, DashboardProvider>(
+          update: (context, auth, previousMessages) => DashboardProvider(auth),
+          create: (context) => DashboardProvider(null),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, CustomersProvider>(
+          update: (context, auth, previousMessages) => CustomersProvider(auth),
+          create: (context) => CustomersProvider(null),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, CategoryProvider>(
+          update: (context, auth, previousMessages) => CategoryProvider(auth),
+          create: (context) => CategoryProvider(null),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, CoupenProvider>(
+          update: (context, auth, previousMessages) => CoupenProvider(auth),
+          create: (context) => CoupenProvider(null),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, ContactProvider>(
+          update: (context, auth, previousMessages) => ContactProvider(auth),
+          create: (context) => ContactProvider(null),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(
+          update: (context, auth, previousMessages) => NotificationProvider(auth),
+          create: (context) => NotificationProvider(null),
+        ),
+     
       ],
-      child: MaterialApp(
-        key: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: restaurantTheme,
-        home: Application(),
-        routes: routes,
-      ),
+      child: Consumer<AuthProvider>(builder: (context, snapshot, b) {
+        return MaterialApp(
+          key: navigatorKey,
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: restaurantTheme,
+          home: snapshot.token != null
+              ? Application()
+              : FutureBuilder(
+                  future: snapshot.autoLogin(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return LoginPage();
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  }),
+          routes: routes,
+        );
+      }),
     );
   }
 }

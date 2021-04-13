@@ -13,6 +13,10 @@ import '../models/review_model.dart';
 class CustomersProvider with ChangeNotifier {
   ///
   List<Customer> _customers;
+
+  AuthProvider auth;
+
+  CustomersProvider(this.auth);
   List<Customer> get getCustomers => _customers;
   bool loadingMore;
   bool hasMoreItems;
@@ -38,8 +42,9 @@ class CustomersProvider with ChangeNotifier {
   Future<bool> fetchCustomers() async {
     try {
       String url = "$baseUrl/admin/user/customer?page=$page";
-      final result =
-          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+
+      print("url $url");
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       print("result $result");
 
@@ -77,7 +82,7 @@ class CustomersProvider with ChangeNotifier {
     }
 
     // var res =
-    //     await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+    //     await APIRequest().get(myUrl: url, token: auth.token);
     // if (this._customers == null) {
     //   this._customers = [];
     // }
@@ -98,8 +103,7 @@ class CustomersProvider with ChangeNotifier {
   fetchCustomer(String customerId) async {
     //getting data
     String url = "$baseUrl/admin/user/customer/$customerId";
-    var res =
-        await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+    var res = await APIRequest().get(myUrl: url, token: auth.token);
     //getting user data
     var userJson = res.data['data']['userData'];
     userJson['totalOrder'] = (res.data['data']['orders'] as List).length;
@@ -124,10 +128,8 @@ class CustomersProvider with ChangeNotifier {
   deleteCustomer(customerId) async {
     try {
       String url = "$baseUrl/admin/user/customer/$customerId";
-      var res = await APIRequest().delete(
-          myUrl: url,
-          myBody: null,
-          myHeaders: {'token': await AuthProvider().token});
+      var res = await APIRequest()
+          .delete(myUrl: url, myBody: null, myHeaders: {'token': auth.token});
 
       print("res $res");
       _customers = null;

@@ -30,7 +30,9 @@ class CouponModel {
     this.id = extractedData['_id'];
     this.name = extractedData['name'];
     this.code = extractedData['code'];
-    this.resturant = extractedData['validRestaurant'][0]['_id'];
+    this.resturant = extractedData['validRestaurant'][0] == null
+        ? null
+        : extractedData['validRestaurant'][0]['_id'];
     this.type = extractedData['type'];
     this.mount = double.parse("${extractedData['percentage']}");
   }

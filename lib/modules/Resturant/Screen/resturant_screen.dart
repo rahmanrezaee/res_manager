@@ -1,5 +1,6 @@
 import 'package:admin/modules/Resturant/Screen/formResturant.dart';
 import 'package:admin/modules/Resturant/Screen/list_resturant_screen.dart';
+import 'package:admin/modules/Resturant/Screen/viewRestaurants.dart';
 import 'package:admin/modules/Resturant/Widget/ResturantItemBuilder.dart';
 import 'package:admin/modules/dishes/Screen/addNewDish_page.dart';
 import 'package:admin/modules/dishes/Screen/dishes_page.dart';
@@ -20,6 +21,9 @@ class _ResturantScreenState extends State<ResturantScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(routes: {
       ResturantForm.routeName: (context) => ResturantForm(
+            resId: ModalRoute.of(context).settings.arguments,
+          ),
+      ViewRestaurant.routeName: (context) => ViewRestaurant(
             resId: ModalRoute.of(context).settings.arguments,
           ),
     }, theme: restaurantTheme, home: ListResturantScreen());

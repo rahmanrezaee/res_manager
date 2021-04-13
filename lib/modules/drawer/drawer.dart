@@ -69,7 +69,7 @@ class _LayoutExampleState extends State<LayoutExample> {
     ),
     PageModel(
       title: "Contact Us Requests",
-      icon: Icon(Icons.account_circle_outlined, color: Colors.yellow),
+      icon: Icon(Icons.call, color: Colors.blue),
       page: ContactUsPage(),
     ),
     PageModel(
@@ -97,7 +97,7 @@ class _LayoutExampleState extends State<LayoutExample> {
     // ),
     PageModel(
       title: "Report",
-      icon: Icon(Icons.report, color: Colors.yellow),
+      icon: Icon(Icons.library_books, color: Colors.yellow),
       page: ReportPage(),
     ),
   ];

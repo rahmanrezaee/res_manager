@@ -8,12 +8,15 @@ import 'dart:convert';
 
 class DashboardProvider with ChangeNotifier {
   var _dashboardData;
+  AuthProvider auth;
+
+  DashboardProvider(this.auth);
   get getDashData => _dashboardData;
 
   fetchDashData() async {
     // if (token == '') {
     String url = "$baseUrl/admin/restaurant/dashboard";
-    var res = await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+    var res = await APIRequest().get(myUrl: url, token: auth.token);
     this._dashboardData = res.data['data'];
     print(_dashboardData);
     notifyListeners();
