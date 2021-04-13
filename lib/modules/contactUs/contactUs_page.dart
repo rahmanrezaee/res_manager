@@ -1,6 +1,7 @@
 import 'package:admin/modules/contactUs/model/contact_model.dart';
 import 'package:admin/modules/contactUs/providers/contact_provider.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +24,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
       appBar: AppBar(
         title: Text("Contact Us Request"),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Image.asset("assets/images/notification.png"),
-            onPressed: () {
-              Navigator.pushNamed(context, NotificationPage.routeName);
-            },
-          )
-        ],
+        actions: [NotificationAppBarWidget()],
         leading: showAppBarNodepad(context)
             ? IconButton(
                 icon: Icon(Icons.menu),

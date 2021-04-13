@@ -41,7 +41,7 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                   },
                 ),
                 title: Text(
-                   "Manage Restaurants",
+                  "Manage Restaurants",
                 ),
                 centerTitle: true,
                 actions: [NotificationAppBarWidget()],
@@ -61,14 +61,7 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                       style: Theme.of(context).textTheme.headline4),
                 ],
               ),
-              actions: [
-                IconButton(
-                  icon: Image.asset("assets/images/notification.png"),
-                  onPressed: () {
-                    Navigator.pushNamed(context, NotificationPage.routeName);
-                  },
-                )
-              ],
+              actions: [NotificationAppBarWidget()],
               bottom: isLoading
                   ? PreferredSize(
                       preferredSize: Size(10, 10),

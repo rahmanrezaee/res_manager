@@ -328,6 +328,7 @@ class _AddNewDishState extends State<AddNewDish> {
                           maxLines: 6,
                           decoration: InputDecoration(
                             hintText: "Description",
+                            errorStyle: TextStyle(color: Colors.red),
                             hintStyle: TextStyle(color: Colors.grey),
                             contentPadding: EdgeInsets.only(left: 10, top: 20),
                             enabledBorder: OutlineInputBorder(
@@ -336,6 +337,17 @@ class _AddNewDishState extends State<AddNewDish> {
                               borderSide: BorderSide(color: Colors.grey),
                             ),
                             focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedErrorBorder
+                            : OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
                               borderSide: BorderSide(color: Colors.grey),
