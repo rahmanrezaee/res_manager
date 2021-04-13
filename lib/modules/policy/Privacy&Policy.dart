@@ -10,8 +10,7 @@ class PrivacyPolicy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-              title: Text("Privacy Policy")),
+      appBar: AppBar(centerTitle: true, title: Text("Privacy Policy")),
       body: FutureBuilder(
           future: privacyPolicyService.getPrivacy(),
           builder: (context, snapshot) {

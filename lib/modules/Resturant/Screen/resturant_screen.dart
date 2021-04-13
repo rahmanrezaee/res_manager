@@ -8,6 +8,7 @@ import 'package:admin/themes/style.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+import 'package:admin/modules/notifications/notification_page.dart';
 
 class ResturantScreen extends StatefulWidget {
   static var routeName = "Restaurants";

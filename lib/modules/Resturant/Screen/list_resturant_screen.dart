@@ -11,6 +11,7 @@ import 'package:admin/widgets/fancy_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+import 'package:admin/modules/notifications/notification_page.dart';
 
 class ListResturantScreen extends StatefulWidget {
   static var routeName = "resturant";
@@ -40,7 +41,7 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                   },
                 ),
                 title: Text(
-                  "Manage Restaurants",
+                   "Manage Restaurants",
                 ),
                 centerTitle: true,
                 actions: [NotificationAppBarWidget()],
@@ -58,28 +59,16 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                 children: [
                   Text("Manage Resturants",
                       style: Theme.of(context).textTheme.headline4),
-                  SizedBox(
-                    width: 35,
-                    height: 35,
-                    child: Visibility(
-                      visible: showAppBarNodepad(context),
-                      child: RaisedButton(
-                        padding: EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                        onPressed: () {
-                          Navigator.pushNamed(context, ResturantForm.routeName);
-                        },
-                        color: Colors.white,
-                        child: Icon(Icons.add,
-                            color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                  ),
                 ],
               ),
+              actions: [
+                IconButton(
+                  icon: Image.asset("assets/images/notification.png"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, NotificationPage.routeName);
+                  },
+                )
+              ],
               bottom: isLoading
                   ? PreferredSize(
                       preferredSize: Size(10, 10),
