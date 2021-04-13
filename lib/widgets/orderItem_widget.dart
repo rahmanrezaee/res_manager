@@ -512,6 +512,8 @@
 
 import 'dart:developer';
 import 'dart:ffi';
+import 'dart:ui';
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/dishes/Models/AddonModel.dart';
 import 'package:admin/modules/dishes/Models/dishModels.dart';
 import 'package:admin/modules/orders/Models/OrderModels.dart';
@@ -519,7 +521,8 @@ import 'package:admin/modules/orders/Services/OrderSerives.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:numbers_to_words/numbers_to_words.dart';
+import 'package:num_to_txt/num_to_txt.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import '../themes/colors.dart';
 
@@ -534,10 +537,10 @@ class OrderItem extends StatefulWidget {
 
 class _OrderItemState extends State<OrderItem> {
   Future getOrder;
-
+  AuthProvider auth;
   @override
   void initState() {
-    super.initState();
+    auth = Provider.of<AuthProvider>(context, listen: false);
 
     getOrderData();
   }
@@ -545,7 +548,8 @@ class _OrderItemState extends State<OrderItem> {
   void getOrderData() {
     if (widget.resturantId != null) {
       getOrder = OrderServices()
-          .getSingleOrder(state: widget.status, resturantId: widget.resturantId)
+          .getSingleOrder(
+              state: widget.status, resturantId: widget.resturantId, auth: auth)
           .then((value) {
         setState(() {
           orderList = value;
@@ -553,9 +557,7 @@ class _OrderItemState extends State<OrderItem> {
       });
     } else {
       getOrder = OrderServices()
-          .getAllOrder(
-            state: widget.status,
-          )
+          .getAllOrder(state: widget.status, auth: auth)
           .then((value) => setState(() {
                 orderList = value;
               }));
@@ -644,14 +646,14 @@ class _OrderItemState extends State<OrderItem> {
                   style: TextStyle(color: AppColors.redText),
                 ),
                 Text(
-                  "${Jiffy(item.date).yMMMMd}",
+                  "${Jiffy(item.date).format(" h:mm a, MMMM do yyyy")}",
                   style: TextStyle(color: AppColors.redText),
                 ),
               ],
             ),
             SizedBox(height: 10),
             Divider(),
-            SizedBox(height: 30),
+            SizedBox(height: 10),
             Text("Items:", style: TextStyle(fontWeight: FontWeight.w600)),
             SizedBox(height: 10),
             SingleChildScrollView(
@@ -701,7 +703,7 @@ class _OrderItemState extends State<OrderItem> {
                             child: Icon(Icons.check, color: Colors.white),
                             onPressed: () {
                               OrderServices()
-                                  .pickup(item.id, "accepted")
+                                  .pickup(item.id, "accepted", auth)
                                   .then((value) {
                                 getOrderData();
                                 widget.scaffoldKey.currentState
@@ -725,7 +727,7 @@ class _OrderItemState extends State<OrderItem> {
                             elevation: 0,
                             onPressed: () {
                               OrderServices()
-                                  .pickup(item.id, "rejected")
+                                  .pickup(item.id, "rejected", auth)
                                   .then((value) {
                                 getOrderData();
                                 widget.scaffoldKey.currentState
@@ -768,7 +770,8 @@ class _OrderItemState extends State<OrderItem> {
                               item.timePicker = await _selectTime(context);
 
                               OrderServices()
-                                  .updatepickupDate(item.id, item.timePicker)
+                                  .updatepickupDate(
+                                      item.id, item.timePicker, auth)
                                   .then((value) {
                                 getOrderData();
                                 widget.scaffoldKey.currentState
@@ -802,7 +805,7 @@ class _OrderItemState extends State<OrderItem> {
                         ),
                         onPressed: () {
                           OrderServices()
-                              .pickup(item.id, "pickedUp")
+                              .pickup(item.id, "pickedUp", auth)
                               .then((value) {
                             getOrderData();
                             widget.scaffoldKey.currentState
@@ -846,6 +849,7 @@ class DishItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("food ${model.sendMap()}");
     return Container(
       height: 40,
       child: SingleChildScrollView(
@@ -868,6 +872,7 @@ class DishItem extends StatelessWidget {
               ),
               onPressed: () {
                 int _isRadioSelected = 1;
+
                 showDialog(
                     context: context,
                     builder: (context) {
@@ -878,36 +883,40 @@ class DishItem extends StatelessWidget {
                           child: Theme(
                               data: Theme.of(context).copyWith(
                                   toggleableActiveColor: AppColors.green),
-                              child: SimpleDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                title: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        "Add On List",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
-                                        textAlign: TextAlign.center,
+                              child: BackdropFilter(
+                                filter:
+                                    ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                child: SimpleDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  title: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          "Add On List",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        icon: Icon(Icons.close))
+                                      IconButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          icon: Icon(Icons.close))
+                                    ],
+                                  ),
+                                  titlePadding: EdgeInsets.only(top: 15),
+                                  children: [
+                                    Divider(),
+                                    getAddonList(model.addOn, context)
                                   ],
+                                  // children:  [
+
+                                  // ],
                                 ),
-                                titlePadding: EdgeInsets.only(top: 15),
-                                children: [
-                                  Divider(),
-                                  getAddonList(model.addOn, context)
-                                ],
-                                // children: Column(
-                                //   children: [],
-                                // ),
                               )),
                         );
                       });
@@ -938,57 +947,63 @@ class DishItem extends StatelessWidget {
                           child: Theme(
                             data: Theme.of(context).copyWith(
                                 toggleableActiveColor: AppColors.green),
-                            child: SimpleDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                              child: SimpleDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                title: Text(
+                                  "Order Note",
+                                  style: Theme.of(context).textTheme.headline5,
+                                  textAlign: TextAlign.center,
+                                ),
+                                titlePadding: EdgeInsets.only(top: 15),
+                                contentPadding: EdgeInsets.all(15),
+                                children: [
+                                  Divider(),
+                                  Container(
+                                    height: getDeviceHeightSize(context) - 500,
+                                    width: getDeviceWidthSize(context),
+                                    child: ListView.builder(
+                                      itemCount: model.orderNote.length,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, i) {
+                                        return new Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 10,
+                                                bottom: 5,
+                                              ),
+                                              child: new Text(
+                                                "${NumToTxt.numToOrdinal(i + 1)} dish",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6,
+                                              ),
+                                            ),
+                                            Container(
+                                              width: double.infinity,
+                                              padding: EdgeInsets.all(10),
+                                              color: Colors.grey[100],
+                                              child: new Text(
+                                                model.orderNote[i] == ""
+                                                    ? "No Instruction"
+                                                    : model.orderNote[i],
+                                                style: new TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                            Divider()
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
                               ),
-                              title: Text(
-                                "Order Note",
-                                style: Theme.of(context).textTheme.headline5,
-                                textAlign: TextAlign.center,
-                              ),
-                              titlePadding: EdgeInsets.only(top: 15),
-                              contentPadding: EdgeInsets.all(15),
-                              children: [
-                                Divider(),
-                                Container(
-                                  height: getHelfDeviceHeightSize(context),
-                                  width: 200,
-                                  child: ListView.builder(
-                                    itemCount: model.orderNote.length,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, i) {
-                                      return new Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 10,
-                                              bottom: 5,
-                                            ),
-                                            child: new Text(
-                                              "${NumberToWords.convert(i + 1, "en")} dish",
-                                            ),
-                                          ),
-                                          Container(
-                                            width: double.infinity,
-                                            padding: EdgeInsets.all(10),
-                                            color: Colors.grey[100],
-                                            child: new Text(
-                                              model.orderNote[i] == ""
-                                                  ? "No Instrucation"
-                                                  : model.orderNote[i],
-                                              style:
-                                                  new TextStyle(fontSize: 14.0),
-                                            ),
-                                          ),
-                                          Divider()
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                )
-                              ],
                             ),
                           ),
                         );
@@ -1009,7 +1024,7 @@ class DishItem extends StatelessWidget {
 
   Widget getAddonList(List<List<AddonItems>> addOn, context) {
     return Container(
-      height: getDeviceHeightSize(context),
+      height: getDeviceHeightSize(context) - 500,
       width: getDeviceWidthSize(context),
       child: SingleChildScrollView(
         physics: ScrollPhysics(),
@@ -1021,7 +1036,7 @@ class DishItem extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (context, i) {
                 return new ExpansionTile(
-                  title: new Text("${NumberToWords.convert(i + 1, "en")} dish",
+                  title: new Text("${NumToTxt.numToOrdinal(i + 1)} dish",
                       style: Theme.of(context).textTheme.headline6),
                   children: <Widget>[
                     addOn[i].length > 0

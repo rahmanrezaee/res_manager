@@ -114,7 +114,12 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                           color: Colors.white,
                         ),
                         child: catProvider.getRestaurant == null
-                            ? Center(child: Text("Loading restaurants..."))
+                            ? FutureBuilder(
+                                future: catProvider.fetchRes(),
+                                builder: (context, snapshot) {
+                                  return Center(
+                                      child: Text("Loading restaurants..."));
+                                })
                             : DropDownFormField(
                                 hintText: "Select Restaurants ",
                                 value: catProvider.resturantId,
