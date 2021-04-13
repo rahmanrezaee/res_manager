@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:admin/modules/notifications/notification_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/appbar_widget.dart';
@@ -97,55 +99,57 @@ class _CustomersPageState extends State<CustomersPage> {
                 ],
               ),
             ),
-            Expanded(
-              child: RefreshIndicator(
-                  onRefresh: () {},
-                  child: Consumer<CustomersProvider>(
-                      builder: (BuildContext context, value, Widget child) {
-                    return value.getCustomers == null
-                        ? FutureBuilder(
-                            future: value.fetchCustomers(),
-                            builder: (context, snapshot) {
-                              return Center(child: CircularProgressIndicator());
-                            })
-                        : IncrementallyLoadingListView(
-                            shrinkWrap: true,
-                            // physics: NeverScrollableScrollPhysics(),
-                            hasMore: () => value.hasMoreItems,
-                            itemCount: () => value.getCustomers.length,
-                            loadMore: () async {
-                              await value.fetchCustomers();
-                            },
-                            onLoadMore: () {
-                              value.showLoadingBottom(true);
-                            },
-                            onLoadMoreFinished: () {
-                              value.showLoadingBottom(false);
-                            },
-                            loadMoreOffsetFromBottom: 0,
-                            itemBuilder: (context, index) {
-                              if ((value.loadingMore ?? false) &&
-                                  index == value.getCustomers.length - 1) {
-                                return Column(
-                                  children: <Widget>[
-                                    _customerItemBuilder(
-                                      context,
-                                      value.getCustomers[index],
-                                      customersProvider,
-                                    ),
-                                    PlaceholderItemCard()
-                                  ],
-                                );
-                              }
-                              return _customerItemBuilder(
-                                context,
-                                value.getCustomers[index],
-                                customersProvider,
-                              );
-                            },
+            Expanded(child: Consumer<CustomersProvider>(
+                builder: (BuildContext context, value, Widget child) {
+              return RefreshIndicator(
+                onRefresh: () {
+                  return value.fetchCustomers(pageInit: 1);
+                },
+                child: value.getCustomers == null
+                    ? FutureBuilder(
+                        future: value.fetchCustomers(pageInit: 1),
+                        builder: (context, snapshot) {
+                          return Center(child: CircularProgressIndicator());
+                        })
+                    : IncrementallyLoadingListView(
+                        shrinkWrap: true,
+                        // physics: NeverScrollableScrollPhysics(),
+                        hasMore: () => value.hasMoreItems,
+                        itemCount: () => value.getCustomers.length,
+                        loadMore: () async {
+                          await value.fetchCustomers();
+                        },
+                        onLoadMore: () {
+                          value.showLoadingBottom(true);
+                        },
+                        onLoadMoreFinished: () {
+                          value.showLoadingBottom(false);
+                        },
+                        loadMoreOffsetFromBottom: 0,
+                        itemBuilder: (context, index) {
+                          if ((value.loadingMore ?? false) &&
+                              index == value.getCustomers.length - 1) {
+                            log(value.getCustomers[index].username);
+                            return Column(
+                              children: <Widget>[
+                                _customerItemBuilder(
+                                  context,
+                                  value.getCustomers[index],
+                                  customersProvider,
+                                ),
+                                PlaceholderItemCard()
+                              ],
+                            );
+                          }
+                          return _customerItemBuilder(
+                            context,
+                            value.getCustomers[index],
+                            customersProvider,
                           );
-                  })),
-            ),
+                        },
+                      ),
+              );
+            })),
           ],
         ),
       ),
@@ -168,7 +172,7 @@ class _CustomersPageState extends State<CustomersPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                customer.username,
+                "${customer.username}",
                 style: Theme.of(context).textTheme.headline4,
               ),
               Text("${customer.activeOrders} Active Orders",

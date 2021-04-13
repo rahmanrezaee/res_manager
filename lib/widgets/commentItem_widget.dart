@@ -21,7 +21,7 @@ class CommentItem extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   leading: CircleAvatar(
                     backgroundImage:
-                        NetworkImage(review.userId.avatar['uriPath']),
+                        NetworkImage("${review.userId.avatar['uriPath']}"),
                   ),
                   title: Text(
                     review.userId.username,
@@ -48,7 +48,7 @@ class CommentItem extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  review.message,
+                  "${review.message}",
                   style: TextStyle(height: 1.3),
                 ),
               ],
