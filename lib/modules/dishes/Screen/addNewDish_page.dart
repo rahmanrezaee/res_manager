@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 //packages
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:admin/themes/colors.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 //widgets
 import 'package:admin/widgets/commentItem_widget.dart';
@@ -51,8 +52,11 @@ class _AddNewDishState extends State<AddNewDish> {
   String dishId;
   String catId;
   String resturantId;
+  AuthProvider auth;
   @override
   void initState() {
+    
+    auth = Provider.of<AuthProvider>(context, listen: false);
     dishId = widget.params['dishId'];
     catId = widget.params['catId'];
     resturantId = widget.params['resturantId'];
@@ -62,7 +66,7 @@ class _AddNewDishState extends State<AddNewDish> {
         _isUpdateDish = true;
       });
 
-      getSingleDish(dishId).then((value) {
+      getSingleDish(dishId, auth).then((value) {
         setState(() {
           dishModel = value;
           imgList = dishModel.images;
@@ -189,10 +193,8 @@ class _AddNewDishState extends State<AddNewDish> {
                                             setState(() {
                                               _isUploadingImage = true;
                                             });
-                                            await uploadFile(
-                                                    value,
-                                                    "profile-photo",
-                                                    await AuthProvider().token)
+                                            await uploadFile(value,
+                                                    "profile-photo", auth.token)
                                                 .then((value) => imgList.add(
                                                     ImageModel.toJson(value)));
 
@@ -715,8 +717,9 @@ class _AddNewDishState extends State<AddNewDish> {
       dishModel.images = imgList;
       dishModel.categoryId = catId;
       dishModel.restaurantId = resturantId;
+
       if (dishId != null) {
-        editDishService(dishModel.sendMap(), dishId).then((result) {
+        editDishService(dishModel.sendMap(), dishId, auth).then((result) {
           setState(() {
             _isLoading = false;
           });
@@ -757,7 +760,7 @@ class _AddNewDishState extends State<AddNewDish> {
           ));
         });
       } else {
-        addDishService(dishModel.sendMap()).then((result) {
+        addDishService(dishModel.sendMap(),auth).then((result) {
           setState(() {
             _isLoading = false;
           });

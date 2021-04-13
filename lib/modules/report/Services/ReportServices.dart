@@ -3,13 +3,12 @@ import 'package:admin/constants/UrlConstants.dart';
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
 
-Future getReport({fromDate, toDate, type, coupenCode, restaurantId}) async {
+Future getReport({fromDate, toDate, type, coupenCode, restaurantId,AuthProvider auth}) async {
   try {
     String url =
         "$baseUrl/admin/report/orders?type=$type${coupenCode != null && coupenCode != "" ? "&couponCode=" + coupenCode : ""}${restaurantId != null && restaurantId != "" && restaurantId == "none" ? "&restaurantId=" + restaurantId : ""}${fromDate != null ? "&fromDate=" + fromDate : ""}${toDate != null ? "&toDate=" + toDate : ""}";
 
-    final result =
-        await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+    final result = await APIRequest().get(myUrl: url, token: auth.token);
 
     print("result $result");
     if (type == "earnings") {
@@ -26,7 +25,7 @@ Future getReport({fromDate, toDate, type, coupenCode, restaurantId}) async {
   }
 }
 
-Future getSendReportEmil({fromDate, toDate, coupenCode}) async {
+Future getSendReportEmil({fromDate, toDate, coupenCode,AuthProvider auth}) async {
   try {
     String url = "$baseUrl/restaurant/report/email-report-orders";
 
@@ -49,10 +48,8 @@ Future getSendReportEmil({fromDate, toDate, coupenCode}) async {
     }
 
     print(data);
-    final result = await APIRequest().post(
-        myUrl: url,
-        myHeaders: {"token": await AuthProvider().token},
-        myBody: data);
+    final result = await APIRequest()
+        .post(myUrl: url, myHeaders: {"token": auth.token}, myBody: data);
 
     print("result $result");
 
@@ -67,7 +64,7 @@ Future getSendReportEmil({fromDate, toDate, coupenCode}) async {
   }
 }
 
-Future getSendReportEmailEarnings({fromDate, toDate}) async {
+Future getSendReportEmailEarnings({fromDate, toDate,AuthProvider auth}) async {
   try {
     String url = "$baseUrl/restaurant/report/email-report-earnings";
 
@@ -85,10 +82,8 @@ Future getSendReportEmailEarnings({fromDate, toDate}) async {
     }
 
     print(data);
-    final result = await APIRequest().post(
-        myUrl: url,
-        myHeaders: {"token": await AuthProvider().token},
-        myBody: data);
+    final result = await APIRequest()
+        .post(myUrl: url, myHeaders: {"token": auth.token}, myBody: data);
 
     print("result $result");
 

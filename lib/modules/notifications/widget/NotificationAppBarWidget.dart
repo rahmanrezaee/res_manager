@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class NotificationAppBarWidget extends StatelessWidget {
+  static final routeName = "notificationappbarwidget";
   @override
   Widget build(BuildContext context) {
     return Consumer<NotificationProvider>(builder: (context, data, snapshot) {

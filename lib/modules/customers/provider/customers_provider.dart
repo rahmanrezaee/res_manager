@@ -13,6 +13,10 @@ import '../models/review_model.dart';
 class CustomersProvider with ChangeNotifier {
   ///
   List<Customer> _customers;
+
+  AuthProvider auth;
+
+  CustomersProvider(this.auth);
   List<Customer> get getCustomers => _customers;
   bool loadingMore;
   bool hasMoreItems;
@@ -43,8 +47,7 @@ class CustomersProvider with ChangeNotifier {
         _customers = null;
       }
       String url = "$baseUrl/admin/user/customer?page=$currrentPage";
-      final result =
-          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       print("result $result");
 
@@ -82,7 +85,7 @@ class CustomersProvider with ChangeNotifier {
     }
 
     // var res =
-    //     await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+    //     await APIRequest().get(myUrl: url, token: auth.token);
     // if (this._customers == null) {
     //   this._customers = [];
     // }
@@ -103,8 +106,7 @@ class CustomersProvider with ChangeNotifier {
   Future<Map> fetchCustomer(String customerId) async {
     //getting data
     String url = "$baseUrl/admin/user/customer/$customerId";
-    var res =
-        await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+    var res = await APIRequest().get(myUrl: url, token: auth.token);
     //getting user data
     var userJson = res.data['data'];
 
@@ -131,10 +133,8 @@ class CustomersProvider with ChangeNotifier {
   deleteCustomer(customerId) async {
     try {
       String url = "$baseUrl/admin/user/customer/$customerId";
-      var res = await APIRequest().delete(
-          myUrl: url,
-          myBody: null,
-          myHeaders: {'token': await AuthProvider().token});
+      var res = await APIRequest()
+          .delete(myUrl: url, myBody: null, myHeaders: {'token': auth.token});
 
       print("res $res");
       _customers = null;

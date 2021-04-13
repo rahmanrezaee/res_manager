@@ -7,6 +7,7 @@ import 'package:admin/modules/Resturant/Models/Resturant.dart';
 import 'package:admin/modules/Resturant/Models/location.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/modules/report/widget/TextfieldResturant.dart';
 import 'package:admin/modules/report/widget/buttonResturant.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
@@ -67,8 +68,10 @@ class _ResturantFormState extends State<ResturantForm> {
     if (picked_s != null) return "${picked_s.hour}:${picked_s.minute}";
   }
 
+  AuthProvider auth;
   @override
   void initState() {
+    auth = Provider.of<AuthProvider>(context, listen: false);
     if (widget.resId != null) {
       setState(() {
         _loadUpdate = false;
@@ -105,6 +108,7 @@ class _ResturantFormState extends State<ResturantForm> {
           title: Text(
             widget.resId != null ? "Update Restaurants" : "Add Restaurants",
           ),
+          actions: [NotificationAppBarWidget()],
         ),
         body: _loadUpdate
             ? SingleChildScrollView(
@@ -132,8 +136,8 @@ class _ResturantFormState extends State<ResturantForm> {
                                     setState(() {
                                       _isUploadingImage = true;
                                     });
-                                    await uploadFile(value, "profile-photo",
-                                            await AuthProvider().token)
+                                    await uploadFile(
+                                            value, "profile-photo", auth.token)
                                         .then((value) => resturantModel.avatar =
                                             value['uriPath']);
 
@@ -441,9 +445,11 @@ class _ResturantFormState extends State<ResturantForm> {
                                         color: Colors.white,
                                       ),
                                     ),
-                              onPress: () {
-                                addResturant();
-                              },
+                              onPress: _isLoading == true
+                                  ? null
+                                  : () {
+                                      addResturant();
+                                    },
                             ),
                           ),
                         ),
@@ -478,7 +484,9 @@ class _ResturantFormState extends State<ResturantForm> {
             _isLoading = false;
           });
 
-          if (result == true) {
+          print("resutl $result");
+
+          if (result['status'] == true) {
             print("Mahdi: Executed 2");
             _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text("Successfuly Updated."),
@@ -491,7 +499,7 @@ class _ResturantFormState extends State<ResturantForm> {
             print("Mahdi: Executed 3");
 
             _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Something went wrong!! Please try again later."),
+              content: Text("${result['message']}"),
               duration: Duration(seconds: 4),
             ));
           }

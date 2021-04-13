@@ -1,10 +1,12 @@
 //core
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/dishes/DishServics/dishServices.dart';
 import 'package:admin/modules/dishes/Models/dishModels.dart';
 import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/fancy_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 //packages
 import 'package:responsive_grid/responsive_grid.dart';
@@ -38,11 +40,13 @@ class _DishHomeState extends State<DishPage> {
   String resturantId;
 
   Future getDish;
+  AuthProvider auth;
   @override
   void initState() {
+    auth = Provider.of<AuthProvider>(context, listen: false);
     catId = widget.params['catId'];
     resturantId = widget.params['resturantId'];
-    getDish = getFootListWithoutPro(catId).then((value) {
+    getDish = getFootListWithoutPro(catId, auth).then((value) {
       dishList = value;
     });
 
@@ -100,7 +104,7 @@ class _DishHomeState extends State<DishPage> {
                           "resturantId": resturantId,
                         }).then((value) {
                           print("Done Adding");
-                          getFootListWithoutPro(catId).then((value) {
+                          getFootListWithoutPro(catId, auth).then((value) {
                             setState(() {
                               dishList = value;
                             });
@@ -170,7 +174,7 @@ class _DishHomeState extends State<DishPage> {
                       setState(() {
                         isLoading = true;
                       });
-                      deleteDish(element.foodId).then((res) {
+                      deleteDish(element.foodId, auth).then((res) {
                         setState(() {
                           isLoading = false;
                         });
@@ -215,6 +219,12 @@ class DishItem extends StatefulWidget {
 class _DishItemState extends State<DishItem> {
   int visible = 0;
   int quantity = 0;
+  AuthProvider auth;
+  @override
+  void initState() {
+    auth = Provider.of<AuthProvider>(context, listen: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -266,7 +276,7 @@ class _DishItemState extends State<DishItem> {
                             !widget.dishItem.visibility;
                       });
                       changeVisiablity(widget.dishItem.foodId,
-                              !widget.dishItem.visibility)
+                              !widget.dishItem.visibility, auth)
                           .then((value) {
                         if (!value) {
                           setState(() {

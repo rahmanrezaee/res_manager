@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
+import 'package:admin/modules/orders/orders_page_notification.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/appbar_widget.dart';
 import 'package:admin/widgets/fancy_dialog.dart';
@@ -54,6 +56,8 @@ class _CustomersPageState extends State<CustomersPage> {
       routes: {
         CustomerProfile.routeName: (context) =>
             CustomerProfile(ModalRoute.of(context).settings.arguments),
+        OrdersPageNotification.routeName: (context) => OrdersPageNotification(),
+        NotificationPage.routeName: (context) => NotificationPage(),
       },
       debugShowCheckedModeBanner: false,
       theme: restaurantTheme,
@@ -70,14 +74,7 @@ class _CustomersPageState extends State<CustomersPage> {
                   },
                 )
               : null,
-          actions: [
-            IconButton(
-              icon: Image.asset("assets/images/notification.png"),
-              onPressed: () {
-                Navigator.pushNamed(context, NotificationPage.routeName);
-              },
-            )
-          ],
+          actions: [NotificationAppBarWidget()],
           bottom: isLoading
               ? PreferredSize(
                   preferredSize: Size(10, 10),

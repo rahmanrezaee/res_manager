@@ -2,6 +2,7 @@ import 'package:admin/modules/coupons/Widgets/form_coupon.dart';
 import 'package:admin/modules/coupons/model/CouponModel.dart';
 import 'package:admin/modules/coupons/statement/couponProvider.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
 import 'package:admin/widgets/appbar_widget.dart';
@@ -41,14 +42,7 @@ class _CouponsPageState extends State<CouponsPage> {
                     Scaffold.of(context).openDrawer();
                   },
                 ),
-                actions: [
-                  IconButton(
-                    icon: Image.asset("assets/images/notification.png"),
-                    onPressed: () {
-                      Navigator.pushNamed(context, NotificationPage.routeName);
-                    },
-                  )
-                ],
+                actions: [NotificationAppBarWidget()],
                 bottom: isLoading
                     ? PreferredSize(
                         preferredSize: Size(10, 10),

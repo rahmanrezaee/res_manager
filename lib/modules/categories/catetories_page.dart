@@ -3,6 +3,7 @@ import 'package:admin/modules/dishes/Screen/addNewDish_page.dart';
 import 'package:admin/modules/categories/provider/categories_provider.dart';
 import 'package:admin/modules/dishes/Screen/dishes_page.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/themes/style.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
@@ -64,14 +65,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                 title: Text("Manage Category"),
                 automaticallyImplyLeading: false,
                 centerTitle: true,
-                actions: [
-                  IconButton(
-                    icon: Image.asset("assets/images/notification.png"),
-                    onPressed: () {
-                      Navigator.pushNamed(context, NotificationPage.routeName);
-                    },
-                  )
-                ],
+                actions: [NotificationAppBarWidget()],
                 leading: IconButton(
                   icon: Icon(Icons.menu),
                   onPressed: () {
@@ -114,7 +108,12 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                           color: Colors.white,
                         ),
                         child: catProvider.getRestaurant == null
-                            ? Center(child: Text("Loading restaurants..."))
+                            ? FutureBuilder(
+                                future: catProvider.fetchRes(),
+                                builder: (context, snapshot) {
+                                  return Center(
+                                      child: Text("Loading restaurants..."));
+                                })
                             : DropDownFormField(
                                 hintText: "Select Restaurants ",
                                 value: catProvider.resturantId,

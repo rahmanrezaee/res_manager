@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/modules/coupons/model/CouponModel.dart';
 import 'package:admin/modules/coupons/statement/couponProvider.dart';
@@ -28,9 +29,11 @@ class _FormCoupenState extends State<FormCoupen> {
 
   bool _submitted = false;
   var scoffeldKey = GlobalKey<ScaffoldState>();
+  AuthProvider auth;
   @override
   void initState() {
-    ResturantProvider().getResturantListWithoutPro().then((value) {
+    auth = Provider.of<AuthProvider>(context, listen: false);
+    ResturantProvider(auth).getResturantListWithoutPro().then((value) {
       resturnat = value;
       setState(() {
         isLoadResturant = true;

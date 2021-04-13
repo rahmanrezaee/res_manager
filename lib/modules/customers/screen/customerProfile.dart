@@ -4,6 +4,7 @@ import 'package:admin/modules/customers/models/review_model.dart';
 import 'package:admin/modules/customers/provider/customers_provider.dart';
 import 'package:admin/modules/customers/widget/orderItem_widget.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,14 +45,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
           ),
           title: Text("Customer Name"),
           centerTitle: true,
-          actions: [
-            IconButton(
-              icon: Image.asset("assets/images/notification.png"),
-              onPressed: () {
-                Navigator.pushNamed(context, NotificationPage.routeName);
-              },
-            )
-          ],
+          actions: [NotificationAppBarWidget()],
         ),
         body: SingleChildScrollView(
           child: FutureBuilder(

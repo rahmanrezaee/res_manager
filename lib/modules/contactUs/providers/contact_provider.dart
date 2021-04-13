@@ -7,6 +7,9 @@ import 'package:flutter/cupertino.dart';
 
 class ContactProvider with ChangeNotifier {
   List<ContactModel> contacts;
+  AuthProvider auth;
+
+  ContactProvider(this.auth);
   List<ContactModel> get getContacts => this.contacts;
   bool loadingMore;
   bool hasMoreItems;
@@ -23,8 +26,7 @@ class ContactProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/contact?page=$page";
       print(url);
-      final result =
-          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
       print("result $result");
 
       maxItems = result.data['data']['totalDocs'];

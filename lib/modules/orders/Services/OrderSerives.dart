@@ -3,15 +3,16 @@ import 'package:admin/constants/UrlConstants.dart';
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/orders/Models/OrderModels.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 class OrderServices {
-  Future<List<OrderModels>> getAllOrder({state}) async {
+  Future<List<OrderModels>> getAllOrder(
+      {state, @required AuthProvider auth}) async {
     List<OrderModels> listOrder;
     try {
       String url = "$baseUrl/admin/order?status=$state";
 
-      final result =
-          await APIRequest().get(myUrl: url, token:  await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       final extractedData = result.data["data"]['docs'];
 
@@ -42,13 +43,13 @@ class OrderServices {
     }
   }
 
-  Future<List<OrderModels>> getSingleOrder({state, resturantId}) async {
+  Future<List<OrderModels>> getSingleOrder(
+      {state, resturantId, @required AuthProvider auth}) async {
     List<OrderModels> listOrder;
     try {
       String url = "$baseUrl/admin/order/${resturantId}?status=$state";
 
-      final result =
-          await APIRequest().get(myUrl: url, token:  await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       print("result $result");
 
@@ -77,13 +78,13 @@ class OrderServices {
     }
   }
 
-  Future<bool> pickup(orderId, statue) async {
+  Future<bool> pickup(orderId, statue, @required AuthProvider auth) async {
     try {
       String url = "$baseUrl/admin/order/$orderId";
 
       final result = await APIRequest().post(
           myUrl: url,
-          myHeaders: {"token":  await AuthProvider().token},
+          myHeaders: {"token": auth.token},
           myBody: {"status": statue});
 
       print("result $result");
@@ -97,13 +98,14 @@ class OrderServices {
     }
   }
 
-  Future<bool> updatepickupDate(orderId, pickUpTime) async {
+  Future<bool> updatepickupDate(
+      orderId, pickUpTime, @required AuthProvider auth) async {
     try {
       String url = "$baseUrl/admin/order/pickuptime/$orderId";
 
       final result = await APIRequest().post(
           myUrl: url,
-          myHeaders: {"token":  await AuthProvider().token},
+          myHeaders: {"token": auth.token},
           myBody: {"pickUpTime": pickUpTime});
 
       print("result $result");
