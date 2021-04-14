@@ -1,6 +1,7 @@
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/modules/report/Services/ReportServices.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
@@ -62,14 +63,7 @@ class _ReportPageState extends State<ReportPage> {
           AppBar(
             title: Text("Reports"),
             centerTitle: true,
-            actions: [
-              IconButton(
-                icon: Image.asset("assets/images/notification.png"),
-                onPressed: () {
-                  Navigator.pushNamed(context, NotificationPage.routeName);
-                },
-              )
-            ],
+            actions: [NotificationAppBarWidget()],
             elevation: 0,
             leading: showAppBarNodepad(context)
                 ? IconButton(

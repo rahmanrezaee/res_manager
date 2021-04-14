@@ -39,11 +39,14 @@ class CustomersProvider with ChangeNotifier {
   //
   // int page = 1;
   // int limit = 10;
-  Future<bool> fetchCustomers() async {
+  Future<bool> fetchCustomers({pageInit}) async {
     try {
-      String url = "$baseUrl/admin/user/customer?page=$page";
-
-      print("url $url");
+      int currrentPage = page;
+      if (pageInit != null) {
+        currrentPage = pageInit;
+        _customers = null;
+      }
+      String url = "$baseUrl/admin/user/customer?page=$currrentPage";
       final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       print("result $result");
@@ -100,29 +103,31 @@ class CustomersProvider with ChangeNotifier {
     // return _customers;
   }
 
-  fetchCustomer(String customerId) async {
+  Future<Map> fetchCustomer(String customerId) async {
     //getting data
     String url = "$baseUrl/admin/user/customer/$customerId";
     var res = await APIRequest().get(myUrl: url, token: auth.token);
     //getting user data
-    var userJson = res.data['data']['userData'];
-    userJson['totalOrder'] = (res.data['data']['orders'] as List).length;
-    this._customer = new Customer.fromJson(userJson);
-    //getting user orders
-    print(res.data['data']['orders']);
-    this._orders = [];
-    (res.data['data']['orders'] as List).forEach((order) {
-      order['customerName'] = res.data['data']['userData']['username'];
-      this._orders.add(new OrderModel.fromJson(order));
+    var userJson = res.data['data'];
+
+    Customer customerData = new Customer.fromComplateJson(userJson);
+
+    List<OrderModel> _ordersCustomer = [];
+    (userJson['orders'] as List).forEach((order) {
+      order['customerName'] = userJson['userData']['username'];
+      _ordersCustomer.add(new OrderModel.fromJson(order));
     });
     //getting user review
-    this._reviews = [];
-    (res.data['data']['review'] as List).forEach((review) {
-      // order['customerName'] = res.data['data']['userData']['username'];
-      this._reviews.add(new ReviewModel.fromJson(review));
+    List<ReviewModel> _reviewsCustomer = [];
+    (userJson['review'] as List).forEach((review) {
+      _reviewsCustomer.add(new ReviewModel.fromJson(review));
     });
 
-    notifyListeners();
+    return {
+      "customer": customerData,
+      "ordersCustomer": _ordersCustomer,
+      "reviewsCustomer": _reviewsCustomer
+    };
   }
 
   deleteCustomer(customerId) async {
@@ -147,6 +152,7 @@ class CustomersProvider with ChangeNotifier {
 
   void nullList() {
     _customers = null;
+    page = 1;
     notifyListeners();
   }
 

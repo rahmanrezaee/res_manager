@@ -4,6 +4,8 @@ import 'package:admin/modules/Resturant/Screen/viewRestaurants.dart';
 import 'package:admin/modules/Resturant/Widget/ResturantItemBuilder.dart';
 import 'package:admin/modules/dishes/Screen/addNewDish_page.dart';
 import 'package:admin/modules/dishes/Screen/dishes_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
+import 'package:admin/modules/orders/orders_page_notification.dart';
 import 'package:admin/themes/style.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +22,20 @@ class ResturantScreen extends StatefulWidget {
 class _ResturantScreenState extends State<ResturantScreen> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(routes: {
-      ResturantForm.routeName: (context) => ResturantForm(
-            resId: ModalRoute.of(context).settings.arguments,
-          ),
-      ViewRestaurant.routeName: (context) => ViewRestaurant(
-            resId: ModalRoute.of(context).settings.arguments,
-          ),
-    }, theme: restaurantTheme, home: ListResturantScreen());
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        routes: {
+          ResturantForm.routeName: (context) => ResturantForm(
+                resId: ModalRoute.of(context).settings.arguments,
+              ),
+          ViewRestaurant.routeName: (context) => ViewRestaurant(
+                resId: ModalRoute.of(context).settings.arguments,
+              ),
+          OrdersPageNotification.routeName: (context) =>
+              OrdersPageNotification(),
+          NotificationPage.routeName: (context) => NotificationPage(),
+        },
+        theme: restaurantTheme,
+        home: ListResturantScreen());
   }
 }
