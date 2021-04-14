@@ -856,6 +856,8 @@ _textFieldBuilder(String hintText) {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
         borderSide: BorderSide(color: Colors.grey),
+
+        
       ),
     ),
   );
