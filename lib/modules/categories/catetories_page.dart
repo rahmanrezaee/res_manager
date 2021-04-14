@@ -525,17 +525,15 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                     .deleteCategoy(category.id)
                                     .then((res) {
                                   if (res['status']) {
-                                    // ScaffoldMessenger.of(context)
-                                    //     .showSnackBar(SnackBar(
-                                    //   content: Text(
-                                    //       "The Category Deleted Successfully"),
-                                    // ));
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text(
+                                          "The Category Deleted Successfully"),
+                                    ));
                                     Navigator.of(context).pop();
                                   } else {
-                                    // ScaffoldMessenger.of(context)
-                                    //     .showSnackBar(SnackBar(
-                                    //   content: Text(res['message']),
-                                    // ));
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text(res['message']),
+                                    ));
                                     Navigator.of(context).pop();
                                   }
                                 });
