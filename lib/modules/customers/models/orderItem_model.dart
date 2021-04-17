@@ -14,18 +14,22 @@ class OrderItem {
     this.orderNote,
   });
   factory OrderItem.fromJson(Map json) {
-    List<AddOn> addOns = [];
-    (json['addOn'] as List).forEach((element) {
-      addOns.add(new AddOn.fromJson(element));
-    });
-    return OrderItem(
-      foodId: json['foodId'],
-      foodName: json['foodName'],
-      quantity: json['quantity'],
-      addOn: addOns,
-      price: double.parse(json['price'].toString()),
-      orderNote: json['orderNote'],
-    );
+    try {
+      List<AddOn> addOns = [];
+      (json['addOn'] as List).forEach((element) {
+        addOns.add(new AddOn.fromJson(element));
+      });
+      return OrderItem(
+        foodId: json['foodId'],
+        foodName: json['foodName'],
+        quantity: json['quantity'],
+        addOn: addOns,
+        price: double.parse(json['price'].toString()),
+        orderNote: json['orderNote'],
+      );
+    } catch (e) {
+      print("error in items orders $e");
+    }
   }
 }
 

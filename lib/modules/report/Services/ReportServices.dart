@@ -3,10 +3,18 @@ import 'package:admin/constants/UrlConstants.dart';
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
 
-Future getReport({fromDate, toDate, type, coupenCode, restaurantId,AuthProvider auth}) async {
+Future getReport(
+    {fromDate,
+    toDate,
+    type,
+    coupenCode,
+    restaurantId,
+    AuthProvider auth}) async {
   try {
+    print(
+        "params fromDate $fromDate toDate $toDate coupenCode $coupenCode restaurantId $restaurantId");
     String url =
-        "$baseUrl/admin/report/orders?type=$type${coupenCode != null && coupenCode != "" ? "&couponCode=" + coupenCode : ""}${restaurantId != null && restaurantId != "" && restaurantId == "none" ? "&restaurantId=" + restaurantId : ""}${fromDate != null ? "&fromDate=" + fromDate : ""}${toDate != null ? "&toDate=" + toDate : ""}";
+        "$baseUrl/admin/report/orders?type=$type${coupenCode != null && coupenCode != "" ? "&couponCode=" + coupenCode : ""}${restaurantId == null || restaurantId == "" || restaurantId == "none" ? "" : "&restaurantId=" + restaurantId}${fromDate != null ? "&fromDate=" + fromDate : ""}${toDate != null ? "&toDate=" + toDate : ""}";
 
     final result = await APIRequest().get(myUrl: url, token: auth.token);
 
@@ -25,7 +33,8 @@ Future getReport({fromDate, toDate, type, coupenCode, restaurantId,AuthProvider 
   }
 }
 
-Future getSendReportEmil({fromDate, toDate, coupenCode,AuthProvider auth}) async {
+Future getSendReportEmil(
+    {fromDate, toDate, coupenCode, AuthProvider auth}) async {
   try {
     String url = "$baseUrl/restaurant/report/email-report-orders";
 
@@ -64,7 +73,7 @@ Future getSendReportEmil({fromDate, toDate, coupenCode,AuthProvider auth}) async
   }
 }
 
-Future getSendReportEmailEarnings({fromDate, toDate,AuthProvider auth}) async {
+Future getSendReportEmailEarnings({fromDate, toDate, AuthProvider auth}) async {
   try {
     String url = "$baseUrl/restaurant/report/email-report-earnings";
 

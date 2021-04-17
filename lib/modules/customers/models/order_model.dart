@@ -9,8 +9,8 @@ class OrderModel {
   int totalItems;
   List<OrderItem> items;
   double totalPrice;
-  int restaurantCharges;
-  int grandTotal;
+  double restaurantCharges;
+  double grandTotal;
   String cardName;
   String createdAt;
   String updatedAt;
@@ -33,26 +33,32 @@ class OrderModel {
   });
 
   factory OrderModel.fromJson(json) {
-    List<OrderItem> items = [];
-    (json['items'] as List).forEach((order) {
-      items.add(OrderItem.fromJson(order));
-    });
+    try {
+      print("order json $json");
 
-    return new OrderModel(
-      id: json['_id'],
-      status: json['status'],
-      restaurantId: json['restaurantId'],
-      userId: json['userId'],
-      totalItems: json['totalItems'],
-      items: items,
-      totalPrice: double.parse(json['totalPrice'].toString()),
-      restaurantCharges: json['restaurantCharges'],
-      grandTotal: json['grandTotal'],
-      cardName: json['cardName'],
-      createdAt: json['createdAt'],
-      customerName: json['customerName'],
-      updatedAt: json['updatedAt'],
-      pickUpTime: json['pickUpTime'],
-    );
+      List<OrderItem> items = [];
+      (json['items'] as List).forEach((order) {
+        items.add(OrderItem.fromJson(order));
+      });
+
+      return new OrderModel(
+        id: json['_id'],
+        status: json['status'],
+        restaurantId: json['restaurantId'],
+        userId: json['userId'],
+        totalItems: json['totalItems'],
+        items: items,
+        totalPrice: double.parse(json['totalPrice'].toString()),
+        restaurantCharges: double.parse(json['restaurantCharges'].toString()),
+        grandTotal: double.parse(json['grandTotal'].toString()),
+        cardName: json['cardName'],
+        createdAt: json['createdAt'],
+        customerName: json['customerName'],
+        updatedAt: json['updatedAt'],
+        pickUpTime: json['pickUpTime'],
+      );
+    } catch (e) {
+      print("error order $e");
+    }
   }
 }

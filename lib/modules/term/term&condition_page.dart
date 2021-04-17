@@ -4,15 +4,30 @@ import 'package:admin/widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 import './services/term&condition_service.dart';
 
-class TermCondition extends StatelessWidget {
+class TermCondition extends StatefulWidget {
   static String routeName = "TermCondition";
+
+  @override
+  _TermConditionState createState() => _TermConditionState();
+}
+
+class _TermConditionState extends State<TermCondition> {
   TermConditionService termConditionService = new TermConditionService();
+
+  Future getData;
+
+  @override
+  void initState() {
+    super.initState();
+    getData = termConditionService.getTerm();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: Text("Terms and Conditions")),
       body: FutureBuilder(
-          future: termConditionService.getTerm(),
+          future: getData,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return SingleChildScrollView(

@@ -64,7 +64,7 @@ class _ReportPageState extends State<ReportPage> {
             title: Text("Reports"),
             centerTitle: true,
             actions: [NotificationAppBarWidget()],
-            elevation: 0,
+            elevation: 2,
             leading: showAppBarNodepad(context)
                 ? IconButton(
                     icon: Icon(Icons.menu),

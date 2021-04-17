@@ -405,6 +405,9 @@ class _ResturantFormState extends State<ResturantForm> {
                                   if (value.isEmpty) {
                                     return "Your Password is Empty";
                                   }
+                                  if (value.length < 6) {
+                                    return "Your Password is Week";
+                                  }
                                 },
                                 onSave: (value) {
                                   if (widget.resId != null) {
