@@ -12,8 +12,8 @@ class DishModel {
   String restaurantId;
   String categoryId;
   double price;
+  double tax;
   List<List<AddonItems>> addOn = [];
-
 
   List<AddonItems> addOnDishAdmin = [];
   List orderNote = [];
@@ -27,10 +27,11 @@ class DishModel {
 
   DishModel.toJson(element) {
     try {
-      this.foodId = element['foodId'];
-      this.foodName = element['foodName'];
+      this.foodId = element['_id'];
+      this.foodName = element['name'];
       this.quantity = element['quantity'];
       this.price = double.parse("${element['price']}");
+
       List addonLi = element['addOn'];
       orderNote = element['orderNote'];
 
@@ -45,7 +46,7 @@ class DishModel {
         });
       }
     } catch (e) {
-      print("Error In dish $e");
+      print("Error In dish one $e");
     }
   }
   DishModel.toCatJson(element) {
@@ -54,6 +55,7 @@ class DishModel {
       this.foodName = element['name'];
       this.visibility = element['visibility'];
       this.price = double.parse("${element['price']}");
+      this.tax = double.parse("${element['tax']}");
 
       List photosRest = element['photos'];
 
@@ -63,7 +65,7 @@ class DishModel {
         });
       }
     } catch (e) {
-      print("Error In dish $e");
+      print("Error In dish two $e");
     }
   }
 
@@ -73,6 +75,7 @@ class DishModel {
       "categoryId": this.categoryId,
       "name": this.foodName,
       "price": this.price,
+      "tax": this.tax,
       "addOn": this
           .addOnDishAdmin
           .map((data) => {"name": data.name, "price": data.price})
@@ -97,6 +100,7 @@ class DishModel {
       this.description = extractedData['food']['description'];
       this.preparationTime = extractedData['food']['preparationTime'];
       this.price = double.parse("${extractedData['food']['price']}");
+      this.tax = double.parse("${extractedData['food']['tax']}");
 
       List photosRest = extractedData['food']['photos'];
 
@@ -113,7 +117,38 @@ class DishModel {
         });
       }
     } catch (e) {
-      print("Error In dish $e");
+      print("Error In dish thrie $e");
+    }
+  }
+  DishModel.toOrderJson(extractedData) {
+    try {
+      this.foodId = extractedData['foodId'];
+      this.foodName = extractedData['name'];
+      this.price = double.parse("${extractedData['price']}");
+      this.averageRating = extractedData['food']['averageRating'];
+      this.restaurantId = extractedData['food']['restaurantId'];
+      this.categoryId = extractedData['food']['categoryId'];
+      this.description = extractedData['food']['description'];
+      this.preparationTime = extractedData['food']['preparationTime'];
+      this.price = double.parse("${extractedData['food']['price']}");
+      this.tax = double.parse("${extractedData['food']['tax']}");
+
+      List photosRest = extractedData['food']['photos'];
+
+      if (photosRest != null && photosRest.isNotEmpty) {
+        photosRest.forEach((element) {
+          images.add(ImageModel.toJson(element));
+        });
+      }
+      List addOnList = extractedData['food']['addOn'];
+
+      if (addOnList != null && addOnList.isNotEmpty) {
+        addOnList.forEach((element) {
+          addOnDishAdmin.add(AddonItems.toJson(element));
+        });
+      }
+    } catch (e) {
+      print("Error In dish 4 $e");
     }
   }
 }

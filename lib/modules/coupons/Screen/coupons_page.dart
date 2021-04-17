@@ -2,6 +2,7 @@ import 'package:admin/modules/coupons/Widgets/form_coupon.dart';
 import 'package:admin/modules/coupons/model/CouponModel.dart';
 import 'package:admin/modules/coupons/statement/couponProvider.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
 import 'package:admin/widgets/appbar_widget.dart';
@@ -9,6 +10,7 @@ import 'package:admin/widgets/fancy_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/constants/assest_path.dart';
 import 'package:admin/themes/colors.dart';
+import 'package:incrementally_loading_listview/incrementally_loading_listview.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -33,21 +35,14 @@ class _CouponsPageState extends State<CouponsPage> {
               context,
               AppBar(
                 title: Text("Manage Coupons"),
-                elevation: 0,
+                centerTitle: true,
                 leading: IconButton(
                   icon: Icon(Icons.menu),
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
                 ),
-                actions: [
-                  IconButton(
-                    icon: Image.asset("assets/images/notification.png"),
-                    onPressed: () {
-                      Navigator.pushNamed(context, NotificationPage.routeName);
-                    },
-                  )
-                ],
+                actions: [NotificationAppBarWidget()],
                 bottom: isLoading
                     ? PreferredSize(
                         preferredSize: Size(10, 10),
@@ -95,8 +90,7 @@ class _CouponsPageState extends State<CouponsPage> {
                               onTap: () {
                                 Navigator.of(context).pop();
                               },
-                              child: FormCoupen(
-                                  formKey: _formKey, scoffeldKey: _scaffoldKey),
+                              child: FormCoupen(formKey: _formKey),
                             );
                           },
                         );
@@ -114,43 +108,90 @@ class _CouponsPageState extends State<CouponsPage> {
               builder: (BuildContext context, value, Widget child) {
                 return RefreshIndicator(
                   onRefresh: () async {
-                    value.getCoupenList();
-                    return true;
+                    value.setPage(1);
                   },
-                  child: value.list != null
-                      ? value.list.isEmpty
-                          ? Center(child: Text("No Coupen"))
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: value.list.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return _couponsItemBuilder(context,
-                                    value.list[index], _formKey, _scaffoldKey);
-                                ;
-                              },
-                            )
-                      : FutureBuilder(
+                  child: value.list == null
+                      ? FutureBuilder(
                           future: value.getCoupenList(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<dynamic> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(
-                                child: CircularProgressIndicator(),
+                          builder: (context, snapshot) {
+                            return Center(child: CircularProgressIndicator());
+                          })
+                      : IncrementallyLoadingListView(
+                          shrinkWrap: true,
+                          hasMore: () => value.hasMoreItems,
+                          itemCount: () => value.list.length,
+                          loadMore: () async {
+                            await value.getCoupenList();
+                          },
+                          onLoadMore: () {
+                            value.showLoadingBottom(true);
+                          },
+                          onLoadMoreFinished: () {
+                            value.showLoadingBottom(false);
+                          },
+                          loadMoreOffsetFromBottom: 0,
+                          itemBuilder: (context, index) {
+                            if ((value.loadingMore ?? false) &&
+                                index == value.list.length - 1) {
+                              return Column(
+                                children: <Widget>[
+                                  _couponsItemBuilder(
+                                      context,
+                                      value.list[index],
+                                      _formKey,
+                                      _scaffoldKey),
+                                  PlaceholderItemCard()
+                                ],
                               );
-                            } else {
-                              if (snapshot.hasData) {
-                                return Center(
-                                  child: Text("Error In Fetch Data"),
-                                );
-                              }
                             }
+                            return _couponsItemBuilder(context,
+                                value.list[index], _formKey, _scaffoldKey);
                           },
                         ),
                 );
               },
             ),
+            //  Consumer<CoupenProvider>(
+            //         builder: (BuildContext context, value, Widget child) {
+            //           return RefreshIndicator(
+            //             onRefresh: () async {
+            //               value.getCoupenList();
+            //               return true;
+            //             },
+            //             child: value.list != null
+            //                 ? value.list.isEmpty
+            //                     ? Center(child: Text("No Coupen"))
+            //                     : ListView.builder(
+            //                         shrinkWrap: true,
+            //                         physics: NeverScrollableScrollPhysics(),
+            //                         itemCount: value.list.length,
+            //                         itemBuilder: (BuildContext context, int index) {
+            //                           return _couponsItemBuilder(context,
+            //                               value.list[index], _formKey, _scaffoldKey);
+            //                           ;
+            //                         },
+            //                       )
+            //                 : FutureBuilder(
+            //                     future: value.getCoupenList(),
+            //                     builder: (BuildContext context,
+            //                         AsyncSnapshot<dynamic> snapshot) {
+            //                       if (snapshot.connectionState ==
+            //                           ConnectionState.waiting) {
+            //                         return Center(
+            //                           child: CircularProgressIndicator(),
+            //                         );
+            //                       } else {
+            //                         if (snapshot.hasData) {
+            //                           return Center(
+            //                             child: Text("Error In Fetch Data"),
+            //                           );
+            //                         }
+            //                       }
+            //                     },
+            //                   ),
+            //           );
+            //         },
+            //       ),
           ),
         ],
       ),
@@ -171,7 +212,7 @@ class _CouponsPageState extends State<CouponsPage> {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.edit, color: AppColors.green),
+                  icon: Image.asset("assets/images/edit.png"),
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -182,7 +223,6 @@ class _CouponsPageState extends State<CouponsPage> {
                           },
                           child: FormCoupen(
                             formKey: _formKey,
-                            scoffeldKey: _scaffoldKey,
                             coupenId: coupen.id,
                           ),
                         );
@@ -192,7 +232,7 @@ class _CouponsPageState extends State<CouponsPage> {
                 ),
                 SizedBox(width: 5),
                 IconButton(
-                  icon: Icon(Icons.delete, color: AppColors.green),
+                  icon: Image.asset("assets/images/delete.png"),
                   onPressed: () {
                     showDialog(
                         context: context,
@@ -211,6 +251,11 @@ class _CouponsPageState extends State<CouponsPage> {
                                     isLoading = false;
                                   });
                                   if (res) {
+                                    _scaffoldKey.currentState
+                                        .showSnackBar(SnackBar(
+                                      content: Text("Deleted Successfully"),
+                                      duration: Duration(seconds: 1),
+                                    ));
                                     // ScaffoldMessenger.of(context)
                                     //     .showSnackBar(SnackBar(
                                     //   content: Text(
@@ -218,11 +263,11 @@ class _CouponsPageState extends State<CouponsPage> {
                                     // // ));
                                     // Navigator.of(context).pop();
                                   } else {
-                                    // ScaffoldMessenger.of(context)
-                                    //     .showSnackBar(SnackBar(
-                                    //   content: Text(res['message']),
-                                    // ));
-                                    // Navigator.of(context).pop();
+                                    _scaffoldKey.currentState
+                                        .showSnackBar(SnackBar(
+                                      content: Text("You can not delete"),
+                                      duration: Duration(seconds: 1),
+                                    ));
                                   }
                                 });
                               },

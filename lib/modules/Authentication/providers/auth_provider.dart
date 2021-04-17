@@ -13,7 +13,9 @@ import 'package:provider/provider.dart';
 import '../validators/formFieldsValidators.dart';
 
 class AuthProvider with ChangeNotifier {
-  Future login(String username, String password,String fcm) async {
+  String _token;
+
+  Future login(String username, String password, String fcm) async {
     try {
       print("Loging in");
       print({"email": username, "password": password});
@@ -21,7 +23,7 @@ class AuthProvider with ChangeNotifier {
       String url = "$baseUrl/admin/user/login";
       var res = await APIRequest().post(
         myUrl: url,
-        myBody: {"email": username, "password": password,"fcmToken":fcm},
+        myBody: {"email": username, "password": password, "fcmToken": fcm},
       );
       //getting user data
       var user = {
@@ -85,24 +87,28 @@ class AuthProvider with ChangeNotifier {
   }
 
   get token {
-    return checkLoginStatus();
+    return _token;
   }
 
-  Future checkLoginStatus() async {
+  Future checkLoginStatus() async {}
+
+  refreshToken() {}
+
+  Future<bool> autoLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user') == null) {
-      return '';
+      _token = null;
     } else {
       //Checking expiery date
       DateTime expireDate =
           DateTime.parse(json.decode(prefs.getString('user'))['expierDate']);
       if (DateTime.now().isAfter(expireDate.add(Duration(days: 1)))) {
-        return refreshToken();
+        _token = null;
       } else {
-        return json.decode(prefs.getString('user'))['token'];
+        _token = json.decode(prefs.getString('user'))['token'];
       }
     }
+    notifyListeners();
+    return true;
   }
-
-  refreshToken() {}
 }

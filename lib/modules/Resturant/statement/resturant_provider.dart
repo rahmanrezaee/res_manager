@@ -9,6 +9,9 @@ import 'dart:convert';
 
 class ResturantProvider with ChangeNotifier {
   List<ResturantModel> listResturant;
+  AuthProvider auth;
+
+  ResturantProvider(this.auth);
 
   Future<bool> deleteResturant(resturantId) async {
     try {
@@ -19,7 +22,7 @@ class ResturantProvider with ChangeNotifier {
       String url = "$baseUrl/admin/restaurant/$resturantId";
       var res = await APIRequest()
           .delete(myUrl: url, myBody: null, myHeaders: {'token': token});
-
+      print("res $res");
       listResturant = null;
       notifyListeners();
       return true;
@@ -37,8 +40,7 @@ class ResturantProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/restaurant/profile/$id";
 
-      final result =
-          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       print("result $result");
 
@@ -62,8 +64,7 @@ class ResturantProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/restaurant";
 
-      final result =
-          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       print("result $result");
 
@@ -100,8 +101,7 @@ class ResturantProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/restaurant";
 
-      final result =
-          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
 
       print("result $result");
 
@@ -128,7 +128,7 @@ class ResturantProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> addResturant(data) async {
+  Future addResturant(data) async {
     print("da $data");
     try {
       final StringBuffer url = new StringBuffer("$baseUrl/admin/restaurant");
@@ -137,29 +137,30 @@ class ResturantProvider with ChangeNotifier {
       final response = await APIRequest().post(
         myBody: data,
         myHeaders: {
-          "token": await AuthProvider().token,
+          "token": auth.token,
         },
         myUrl: url.toString(),
       );
 
-      final extractedData = response.data["data"];
+      final extractedData = response.data;
       print("franch data 1 $extractedData ");
 
       listResturant = null;
       // listResturant.add(ResturantModel.toJson(extractedData));
 
       notifyListeners();
-      return true;
+      return extractedData;
     } on DioError catch (e) {
       print("error In Response");
       print(e.response);
       print(e.error);
       print(e.request);
       print(e.type);
+      return e.response.data;
     }
   }
 
-  Future<bool> editResturant(data, id) async {
+  Future editResturant(data, id) async {
     print("da $data");
     try {
       final StringBuffer url =
@@ -169,18 +170,18 @@ class ResturantProvider with ChangeNotifier {
       final response = await APIRequest().put(
         myBody: data,
         myHeaders: {
-          "token": await AuthProvider().token,
+          "token": auth.token,
         },
         myUrl: url.toString(),
       );
 
-      final extractedData = response.data["data"];
+      final extractedData = response.data;
       print("franch data 1 ${response.data}");
 
       listResturant = null;
 
       notifyListeners();
-      return true;
+      return extractedData;
     } on DioError catch (e, s) {
       print("error In Response");
       print(s);
@@ -188,6 +189,8 @@ class ResturantProvider with ChangeNotifier {
       print(e.error);
       print(e.request);
       print(e.type);
+
+      return e.response.data;
     }
   }
 }

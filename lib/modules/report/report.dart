@@ -1,5 +1,7 @@
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/modules/report/Services/ReportServices.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
@@ -24,8 +26,10 @@ class _ReportPageState extends State<ReportPage> {
   List<Map> listRest = [
     {"display": "All Resturant", "value": "none"}
   ];
+  AuthProvider auth;
   @override
   void initState() {
+    auth = Provider.of<AuthProvider>(context, listen: false);
     snapshot = Provider.of<ResturantProvider>(context, listen: false);
 
     getResturantList = snapshot.getResturantList().then((value) {
@@ -59,14 +63,7 @@ class _ReportPageState extends State<ReportPage> {
           AppBar(
             title: Text("Reports"),
             centerTitle: true,
-            actions: [
-              IconButton(
-                icon: Image.asset("assets/images/notification.png"),
-                onPressed: () {
-                  Navigator.pushNamed(context, NotificationPage.routeName);
-                },
-              )
-            ],
+            actions: [NotificationAppBarWidget()],
             elevation: 0,
             leading: showAppBarNodepad(context)
                 ? IconButton(
@@ -126,7 +123,7 @@ class _ReportPageState extends State<ReportPage> {
                                         height: 5,
                                       ),
                                       DropDownFormField(
-                                        hintText: "Interested Industry",
+                                        hintText: "Select Restaurant",
                                         value: orderResturantId,
                                         onSaved: (value) {},
                                         onChanged: (value) {
@@ -142,7 +139,7 @@ class _ReportPageState extends State<ReportPage> {
                                         height: 5,
                                       ),
                                       TextFormFieldResturant(
-                                        hintText: "By Coupen",
+                                        hintText: "By Coupon",
                                         controller: couponController,
                                       ),
                                       SizedBox(
@@ -163,7 +160,7 @@ class _ReportPageState extends State<ReportPage> {
                                                     Expanded(
                                                       child: Text(
                                                         startDateOrder ??
-                                                            "To Date",
+                                                            "From Date",
                                                       ),
                                                     ),
                                                     IconButton(
@@ -196,7 +193,7 @@ class _ReportPageState extends State<ReportPage> {
                                                     Expanded(
                                                       child: Text(
                                                         endDateOrder ??
-                                                            "From Date",
+                                                            "To Date",
                                                       ),
                                                     ),
                                                     IconButton(
@@ -249,6 +246,7 @@ class _ReportPageState extends State<ReportPage> {
                                                 getSendReportEmil(
                                                   fromDate: startDateOrder,
                                                   toDate: endDateOrder,
+                                                  auth: auth,
                                                   coupenCode:
                                                       couponController.text,
                                                 ).then((value) {
@@ -287,14 +285,17 @@ class _ReportPageState extends State<ReportPage> {
                                                   earning = "";
                                                 });
                                                 getReport(
-                                                  type: "orders",
-                                                  fromDate: startDateOrder,
-                                                  toDate: endDateOrder,
-                                                  restaurantId:
-                                                      this.orderResturantId,
-                                                  coupenCode:
-                                                      couponController.text,
-                                                ).then((value) {
+                                                        type: "orders",
+                                                        fromDate:
+                                                            startDateOrder,
+                                                        toDate: endDateOrder,
+                                                        restaurantId: this
+                                                            .orderResturantId,
+                                                        coupenCode:
+                                                            couponController
+                                                                .text,
+                                                        auth: auth)
+                                                    .then((value) {
                                                   setState(() {
                                                     earning = "${value}";
 
@@ -334,11 +335,11 @@ class _ReportPageState extends State<ReportPage> {
                                         height: 5,
                                       ),
                                       DropDownFormField(
-                                        hintText: "Interested Industry",
+                                        hintText: "Select Restaurant",
                                         value: earingResturantId,
                                         validator: (value) {
                                           if (value == null) {
-                                            return "Please select an industry";
+                                            return "Please select an Restaurant";
                                           }
                                           return null;
                                         },
@@ -459,9 +460,10 @@ class _ReportPageState extends State<ReportPage> {
                                                   isLoading = true;
                                                 });
                                                 getSendReportEmailEarnings(
-                                                  fromDate: startDateEarn,
-                                                  toDate: endDateEarn,
-                                                ).then((value) {
+                                                        fromDate: startDateEarn,
+                                                        toDate: endDateEarn,
+                                                        auth: auth)
+                                                    .then((value) {
                                                   setState(() {
                                                     isLoading = false;
                                                   });
@@ -498,10 +500,11 @@ class _ReportPageState extends State<ReportPage> {
                                                   income = "";
                                                 });
                                                 getReport(
-                                                  type: "earnings",
-                                                  fromDate: startDateEarn,
-                                                  toDate: endDateEarn,
-                                                ).then((value) {
+                                                        type: "earnings",
+                                                        fromDate: startDateEarn,
+                                                        toDate: endDateEarn,
+                                                        auth: auth)
+                                                    .then((value) {
                                                   setState(() {
                                                     income = "${value}";
 

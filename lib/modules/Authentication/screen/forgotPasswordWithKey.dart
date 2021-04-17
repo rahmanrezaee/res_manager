@@ -53,86 +53,92 @@ class _ForgotPasswordWithKeyState extends State<ForgotPasswordWithKey> {
               child: SizedBox(
                 width: contentSize,
                 height: MediaQuery.of(context).size.height,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 20),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Forgotten your Password? Don't worry just choose a new password.",
-                          textAlign: TextAlign.center,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 20),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Forgotten your Password? Don't worry just choose a new password.",
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Enter New Password",
-                                style: Theme.of(context).textTheme.headline4),
-                          ),
-                          SizedBox(height: 15),
-                          Form(
-                            key: _formKey,
-                            child: Column(
-                              children: [
-                                _loginFieldBuilder(
-                                    "New Password", _passwordController, (v) {
-                                  print(v);
-                                  if (v == '') {
-                                    return "Please add more character!";
-                                  }
-                                }),
-                                SizedBox(height: 10),
-                                _loginFieldBuilder("Repeat Password",
-                                    _repeadPasswordController, (v) {
-                                  if (v == '' ||
-                                      v != _passwordController.text) {
-                                    return "Its not match with new password!";
-                                  }
-                                }),
-                              ],
+                      SizedBox(height: 10),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Enter New Password",
+                                  style: Theme.of(context).textTheme.headline4),
                             ),
-                          ),
-                          SizedBox(height: 15),
-                          SizedBox(
-                            width: contentSize - 100,
-                            child: RaisedButton(
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                              color: Theme.of(context).primaryColor,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                            SizedBox(height: 15),
+                            Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  _loginFieldBuilder(
+                                      "New Password", _passwordController, (v) {
+                                    print(v);
+                                    if (v == '') {
+                                      return "Please add more character!";
+                                    }
+                                  }),
+                                  SizedBox(height: 10),
+                                  _loginFieldBuilder("Repeat Password",
+                                      _repeadPasswordController, (v) {
+                                    if (v == '' ||
+                                        v != _passwordController.text) {
+                                      return "Its not match with new password!";
+                                    }
+                                  }),
+                                ],
                               ),
-                              child: loading == true
-                                  ? CircularProgressIndicator()
-                                  : Text(
-                                      "Submit",
-                                      style: Theme.of(context).textTheme.button,
-                                    ),
-                              onPressed: () {
-                                forgotPasswordWithKey();
-                              },
                             ),
-                          ),
-                          SizedBox(height: 100),
-                        ],
+                            SizedBox(height: 15),
+                            SizedBox(
+                              width: contentSize - 100,
+                              child: RaisedButton(
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                                color: Theme.of(context).primaryColor,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: loading == true
+                                    ? CircularProgressIndicator()
+                                    : Text(
+                                        "Submit",
+                                        style:
+                                            Theme.of(context).textTheme.button,
+                                      ),
+                                onPressed: () {
+                                  forgotPasswordWithKey();
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 100),
+                          ],
+                        ),
                       ),
-                    ),
-                    error != null
-                        ? Text(
-                            error,
-                            style: TextStyle(color: AppColors.redText),
-                          )
-                        : Container(),
-                    SizedBox(height: 15),
-                  ],
+                      error != null
+                          ? Text(
+                              error,
+                              style: TextStyle(color: AppColors.redText),
+                            )
+                          : Container(),
+                      SizedBox(height: 15),
+                    ],
+                  ),
                 ),
               ),
             ),

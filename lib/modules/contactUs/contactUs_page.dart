@@ -1,9 +1,11 @@
 import 'package:admin/modules/contactUs/model/contact_model.dart';
 import 'package:admin/modules/contactUs/providers/contact_provider.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:incrementally_loading_listview/incrementally_loading_listview.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:provider/provider.dart';
@@ -14,51 +16,7 @@ class ContactUsPage extends StatefulWidget {
 }
 
 class _ContactUsPageState extends State<ContactUsPage> {
-  static const _pageSize = 33;
-
-  final PagingController<int, ContactModel> _pagingController =
-      PagingController(firstPageKey: 0);
-
-  @override
-  void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
-  }
-
   ContactProvider contactProvider;
-  Future<void> _fetchPage(int pageKey) async {
-    try {
-      contactProvider = Provider.of<ContactProvider>(context, listen: false);
-      final newItems = await contactProvider.fetchContacts(pageKey, 10);
-      print(
-          "newItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems");
-      print(newItems.length);
-      print(_pageSize);
-      print(
-          "_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize");
-      final isLastPage = newItems.length >= _pageSize;
-      if (isLastPage) {
-        print("Its last page");
-        _pagingController.appendLastPage(newItems);
-      } else {
-        print("ITs not last page");
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
-      }
-    } catch (error, s) {
-      print(s);
-      print(error);
-      _pagingController.error = error;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +24,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
       appBar: AppBar(
         title: Text("Contact Us Request"),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Image.asset("assets/images/notification.png"),
-            onPressed: () {
-              Navigator.pushNamed(context, NotificationPage.routeName);
-            },
-          )
-        ],
+        actions: [NotificationAppBarWidget()],
         leading: showAppBarNodepad(context)
             ? IconButton(
                 icon: Icon(Icons.menu),
@@ -83,20 +34,50 @@ class _ContactUsPageState extends State<ContactUsPage> {
               )
             : null,
       ),
-      body: RefreshIndicator(
-        onRefresh: () => Future.sync(
-          () => _pagingController.refresh(),
-        ),
-        child: PagedListView<int, ContactModel>(
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<ContactModel>(
-            itemBuilder: (context, item, index) => _contactItemBuilder(
-              context,
-              item,
-            ),
-          ),
-        ),
+      body: Consumer<ContactProvider>(
+        builder: (BuildContext context, value, Widget child) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              value.setPage(1);
+            },
+            child: value.contacts == null
+                ? FutureBuilder(
+                    future: value.fetchContacts(),
+                    builder: (context, snapshot) {
+                      return Center(child: CircularProgressIndicator());
+                    })
+                : IncrementallyLoadingListView(
+                    shrinkWrap: true,
+                    hasMore: () => value.hasMoreItems,
+                    itemCount: () => value.contacts.length,
+                    loadMore: () async {
+                      await value.fetchContacts();
+                    },
+                    onLoadMore: () {
+                      value.showLoadingBottom(true);
+                    },
+                    onLoadMoreFinished: () {
+                      value.showLoadingBottom(false);
+                    },
+                    loadMoreOffsetFromBottom: 0,
+                    itemBuilder: (context, index) {
+                      if ((value.loadingMore ?? false) &&
+                          index == value.contacts.length - 1) {
+                        return Column(
+                          children: <Widget>[
+                            _contactItemBuilder(context, value.contacts[index]),
+                            PlaceholderItemCard()
+                          ],
+                        );
+                      }
+                      return _contactItemBuilder(
+                          context, value.contacts[index]);
+                    },
+                  ),
+          );
+        },
       ),
+
       // body: Consumer<ContactProvider>(
       //   builder: (context, contactProvider, child) {
       //     return contactProvider.getContacts == null
@@ -131,15 +112,15 @@ _contactItemBuilder(context, ContactModel contact) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${contact.username}",
+                  "${contact.username ?? "User Was Deleted"}",
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 SizedBox(height: 5),
                 Text(
-                  "${contact.email}",
+                  "${contact.email ?? "User Was Deleted"}",
                 ),
                 SizedBox(height: 5),
-                Text("${contact.restaurant ?? "All resturant"}"),
+                Text("${contact.restaurant ?? "Resturant Was Deleted"}"),
                 SizedBox(height: 5),
                 Text("${contact.subject ?? "no Subject"}"),
                 SizedBox(height: 5),

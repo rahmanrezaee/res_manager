@@ -2,7 +2,7 @@ import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/contactUs/contactUs_page.dart';
-import 'package:admin/modules/coupons/coupons_page.dart';
+import 'package:admin/modules/coupons/Screen/coupons_page.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/scaffold/templates/layout/scaffold.dart';
@@ -54,7 +54,7 @@ class _LayoutExampleState extends State<LayoutExample> {
       page: CustomersPage(),
     ),
     PageModel(
-      title: "Resturants",
+      title: "Restaurants",
       icon: SizedBox(
         width: 25,
         height: 25,
@@ -69,7 +69,7 @@ class _LayoutExampleState extends State<LayoutExample> {
     ),
     PageModel(
       title: "Contact Us Requests",
-      icon: Icon(Icons.account_circle_outlined, color: Colors.yellow),
+      icon: Icon(Icons.call, color: Colors.blue),
       page: ContactUsPage(),
     ),
     PageModel(
@@ -97,7 +97,7 @@ class _LayoutExampleState extends State<LayoutExample> {
     // ),
     PageModel(
       title: "Report",
-      icon: Icon(Icons.report, color: Colors.yellow),
+      icon: Icon(Icons.library_books, color: Colors.yellow),
       page: ReportPage(),
     ),
   ];
@@ -112,11 +112,9 @@ class _LayoutExampleState extends State<LayoutExample> {
 
   @override
   Widget build(BuildContext context) {
-  
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
 
-        
     return ResponsiveScaffold(
       kDesktopBreakpoint: 768,
       body: pages[pageIndex].page,

@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
+import 'package:admin/modules/orders/orders_page_notification.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/appbar_widget.dart';
 import 'package:admin/widgets/fancy_dialog.dart';
 import 'package:flutter/services.dart';
+import 'package:incrementally_loading_listview/incrementally_loading_listview.dart';
 
 import './customerProfile.dart';
 import 'package:admin/modules/customers/provider/customers_provider.dart';
@@ -32,50 +37,15 @@ class CustomersPage extends StatefulWidget {
 }
 
 class _CustomersPageState extends State<CustomersPage> {
-  static const _pageSize = 19;
-
-  final PagingController<int, Customer> _pagingController =
-      PagingController(firstPageKey: 0);
-
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
     super.initState();
   }
 
   CustomersProvider customersProvider;
-  Future<void> _fetchPage(int pageKey) async {
-    try {
-      customersProvider =
-          Provider.of<CustomersProvider>(context, listen: false);
-      final newItems = await customersProvider.fetchCustomers(pageKey);
-      print(
-          "newItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems.lengthnewItems");
-      print(newItems.length);
-      print(_pageSize);
-      print(
-          "_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize_pageSize");
-      final isLastPage = newItems.length >= _pageSize;
-      if (isLastPage) {
-        print("Its last page");
-        _pagingController.appendLastPage(newItems);
-      } else {
-        print("ITs not last page");
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
-      }
-    } catch (error, s) {
-      print(s);
-      print(error);
-      _pagingController.error = error;
-    }
-  }
 
   @override
   void dispose() {
-    _pagingController.dispose();
     super.dispose();
   }
 
@@ -86,6 +56,8 @@ class _CustomersPageState extends State<CustomersPage> {
       routes: {
         CustomerProfile.routeName: (context) =>
             CustomerProfile(ModalRoute.of(context).settings.arguments),
+        OrdersPageNotification.routeName: (context) => OrdersPageNotification(),
+        NotificationPage.routeName: (context) => NotificationPage(),
       },
       debugShowCheckedModeBanner: false,
       theme: restaurantTheme,
@@ -102,14 +74,7 @@ class _CustomersPageState extends State<CustomersPage> {
                   },
                 )
               : null,
-          actions: [
-            IconButton(
-              icon: Image.asset("assets/images/notification.png"),
-              onPressed: () {
-                Navigator.pushNamed(context, NotificationPage.routeName);
-              },
-            )
-          ],
+          actions: [NotificationAppBarWidget()],
           bottom: isLoading
               ? PreferredSize(
                   preferredSize: Size(10, 10),
@@ -117,118 +82,73 @@ class _CustomersPageState extends State<CustomersPage> {
                 )
               : null,
         ),
-        body: RefreshIndicator(
-          onRefresh: () => Future.sync(
-            () => _pagingController.refresh(),
-          ),
-          child: PagedListView<int, Customer>(
-            pagingController: _pagingController,
-            builderDelegate: PagedChildBuilderDelegate<Customer>(
-              itemBuilder: (context, item, index) => _customerItemBuilder(
-                context,
-                item,
-                customersProvider,
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Customers",
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                ],
               ),
             ),
-          ),
+            Expanded(child: Consumer<CustomersProvider>(
+                builder: (BuildContext context, value, Widget child) {
+              return RefreshIndicator(
+                onRefresh: () {
+                  return value.fetchCustomers(pageInit: 1);
+                },
+                child: value.getCustomers == null
+                    ? FutureBuilder(
+                        future: value.fetchCustomers(pageInit: 1),
+                        builder: (context, snapshot) {
+                          return Center(child: CircularProgressIndicator());
+                        })
+                    : IncrementallyLoadingListView(
+                        shrinkWrap: true,
+                        // physics: NeverScrollableScrollPhysics(),
+                        hasMore: () => value.hasMoreItems,
+                        itemCount: () => value.getCustomers.length,
+                        loadMore: () async {
+                          await value.fetchCustomers();
+                        },
+                        onLoadMore: () {
+                          value.showLoadingBottom(true);
+                        },
+                        onLoadMoreFinished: () {
+                          value.showLoadingBottom(false);
+                        },
+                        loadMoreOffsetFromBottom: 0,
+                        itemBuilder: (context, index) {
+                          if ((value.loadingMore ?? false) &&
+                              index == value.getCustomers.length - 1) {
+                            log(value.getCustomers[index].username);
+                            return Column(
+                              children: <Widget>[
+                                _customerItemBuilder(
+                                  context,
+                                  value.getCustomers[index],
+                                  customersProvider,
+                                ),
+                                PlaceholderItemCard()
+                              ],
+                            );
+                          }
+                          return _customerItemBuilder(
+                            context,
+                            value.getCustomers[index],
+                            customersProvider,
+                          );
+                        },
+                      ),
+              );
+            })),
+          ],
         ),
-        // body: Consumer<CustomersProvider>(
-        //     builder: (context, customersProvider, child) {
-        //   if (customersProvider.getCustomers == null) {
-        //     customersProvider.fetchCustomers(0);
-        //     return Center(child: CircularProgressIndicator());
-        //   } else if (customersProvider.getCustomers.length < 1) {
-        //     return Center(
-        //       child: Text(
-        //         "The customer list is empty",
-        //         style: TextStyle(color: Colors.black),
-        //       ),
-        //     );
-        //   } else {
-        //     try {
-        //       return PaginationView(
-        //         preloadedItems: customersProvider.getCustomers.map((e) {
-        //           return _customerItemBuilder(
-        //             context,
-        //             e,
-        //             customersProvider,
-        //           );
-        //         }).toList(),
-        //         // preloadedItems: [
-        //         //   Column(
-        //         //       crossAxisAlignment: CrossAxisAlignment.start,
-        //         //       children: [
-        //         //         SizedBox(height: 10),
-        //         //         Expanded(
-        //         //           child: ListView.builder(
-        //         //             itemCount: customersProvider.getCustomers.length,
-        //         //             itemBuilder: (context, i) {
-        //         //               return _customerItemBuilder(
-        //         //                 context,
-        //         //                 customersProvider.getCustomers[i],
-        //         //                 customersProvider,
-        //         //               );
-        //         //             },
-        //         //           ),
-        //         //         ),
-        //         //       ],
-        //         //     ),
-        //         //   ],
-        //         itemBuilder: (BuildContext context, user, int index) {
-        //           print("Index");
-        //           print(index);
-        //           if ((customersProvider.getCustomers.length - 1) >= index) {
-        //             return _customerItemBuilder(
-        //               context,
-        //               customersProvider.getCustomers[index],
-        //               customersProvider,
-        //             );
-        //           } else {
-        //             return Container();
-        //           }
-        //         },
-        //         paginationViewType: PaginationViewType.listView,
-        //         pageFetch: customersProvider.fetchCustomers,
-        //         pullToRefresh: true,
-        //         onError: (dynamic error) => Center(
-        //           child: Text('Some error occured'),
-        //         ),
-        //         onEmpty: Center(
-        //           child: Text('Sorry! This is empty'),
-        //         ),
-        //         bottomLoader: Center(
-        //           // optional
-        //           child: CircularProgressIndicator(),
-        //         ),
-        //         initialLoader: Center(
-        //           // optional
-        //           child: CircularProgressIndicator(),
-        //         ),
-        //       );
-        //       // return Column(
-        //       //   crossAxisAlignment: CrossAxisAlignment.start,
-        //       //   children: [
-        //       //     SizedBox(height: 10),
-        //       //     Expanded(
-        //       //       child: ListView.builder(
-        //       //         itemCount: customersProvider.getCustomers.length,
-        //       //         itemBuilder: (context, i) {
-        //       //           return _customerItemBuilder(
-        //       //             context,
-        //       //             customersProvider.getCustomers[i],
-        //       //             customersProvider,
-        //       //           );
-        //       //         },
-        //       //       ),
-        //       //     ),
-        //       //   ],
-        //       // );
-        //     } catch (e, s) {
-        //       print(e);
-        //       print(s);
-        //     }
-        //   }
-        // }),
       ),
     );
   }
@@ -237,7 +157,7 @@ class _CustomersPageState extends State<CustomersPage> {
       context, Customer customer, CustomersProvider customersProvider) {
     return InkWell(
       onTap: () {
-        print("this is the customer: ${customer.id}");
+        print("this is the customer: ${customer.username}");
         Navigator.of(context)
             .pushNamed(CustomerProfile.routeName, arguments: customer.id);
       },
@@ -249,82 +169,14 @@ class _CustomersPageState extends State<CustomersPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                customer.username,
+                "${customer.username}",
                 style: Theme.of(context).textTheme.headline4,
               ),
               Text("${customer.activeOrders} Active Orders",
                   style: TextStyle(color: Colors.grey)),
               Row(
                 children: [
-                  // IconButton(
-                  //   icon: Icon(Icons.room_service, color: AppColors.green),
-                  //   onPressed: () {},
-                  // ),
                   SizedBox(width: 5),
-                  // IconButton(
-                  //   icon: Icon(Icons.edit, color: AppColors.green),
-                  //   onPressed: () {
-                  //     showDialog(
-                  //       context: context,
-                  //       builder: (context) {
-                  //         return SimpleDialog(
-                  //           shape: RoundedRectangleBorder(
-                  //             borderRadius: BorderRadius.circular(10),
-                  //           ),
-                  //           title: Text("Add/Edit Category",
-                  //               style: TextStyle(
-                  //                   fontSize: 14, fontWeight: FontWeight.bold),
-                  //               textAlign: TextAlign.center),
-                  //           contentPadding: EdgeInsets.symmetric(
-                  //               horizontal: 35, vertical: 25),
-                  //           children: [
-                  //             Divider(),
-                  //             TextField(
-                  //               // minLines: 6,
-                  //               // maxLines: 6,
-                  //               decoration: InputDecoration(
-                  //                 hintText: "Enter here",
-                  //                 hintStyle: TextStyle(color: Colors.grey),
-                  //                 contentPadding:
-                  //                     EdgeInsets.only(left: 10, top: 15),
-                  //                 enabledBorder: OutlineInputBorder(
-                  //                   borderRadius:
-                  //                       BorderRadius.all(Radius.circular(10.0)),
-                  //                   borderSide: BorderSide(color: Colors.grey),
-                  //                 ),
-                  //                 focusedBorder: OutlineInputBorder(
-                  //                   borderRadius:
-                  //                       BorderRadius.all(Radius.circular(10.0)),
-                  //                   borderSide: BorderSide(color: Colors.grey),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             SizedBox(height: 10),
-                  //             SizedBox(
-                  //               width: MediaQuery.of(context).size.width,
-                  //               child: RaisedButton(
-                  //                 padding: EdgeInsets.symmetric(vertical: 10),
-                  //                 color: Theme.of(context).primaryColor,
-                  //                 elevation: 0,
-                  //                 shape: RoundedRectangleBorder(
-                  //                   borderRadius: BorderRadius.circular(8),
-                  //                 ),
-                  //                 child: Text(
-                  //                   "Save",
-                  //                   style: Theme.of(context).textTheme.button,
-                  //                 ),
-                  //                 onPressed: () {
-                  //                   Navigator.of(context).pop();
-                  //                 },
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         );
-                  //       },
-                  //     );
-                  //   },
-                  // ),
-                  // SizedBox(width: 5),
                   IconButton(
                     icon: Image.asset("assets/images/delete.png"),
                     onPressed: () {
@@ -336,6 +188,8 @@ class _CustomersPageState extends State<CustomersPage> {
                                   setState(() {
                                     isLoading = true;
                                   });
+
+                                  print("customer ${customer.id}");
                                   Provider.of<CustomersProvider>(context,
                                           listen: false)
                                       .deleteCustomer(customer.id)

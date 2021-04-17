@@ -7,6 +7,7 @@ import 'package:admin/modules/Resturant/Models/Resturant.dart';
 import 'package:admin/modules/Resturant/Models/location.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/modules/report/widget/TextfieldResturant.dart';
 import 'package:admin/modules/report/widget/buttonResturant.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
@@ -67,8 +68,10 @@ class _ResturantFormState extends State<ResturantForm> {
     if (picked_s != null) return "${picked_s.hour}:${picked_s.minute}";
   }
 
+  AuthProvider auth;
   @override
   void initState() {
+    auth = Provider.of<AuthProvider>(context, listen: false);
     if (widget.resId != null) {
       setState(() {
         _loadUpdate = false;
@@ -93,6 +96,7 @@ class _ResturantFormState extends State<ResturantForm> {
     });
   }
 
+  bool _isSubmit = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,8 +104,11 @@ class _ResturantFormState extends State<ResturantForm> {
         resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
-              widget.resId != null ? "Update Resturants" : "Add Resturants"),
+            widget.resId != null ? "Update Restaurants" : "Add Restaurants",
+          ),
+          actions: [NotificationAppBarWidget()],
         ),
         body: _loadUpdate
             ? SingleChildScrollView(
@@ -129,8 +136,8 @@ class _ResturantFormState extends State<ResturantForm> {
                                     setState(() {
                                       _isUploadingImage = true;
                                     });
-                                    await uploadFile(value, "profile-photo",
-                                            await AuthProvider().token)
+                                    await uploadFile(
+                                            value, "profile-photo", auth.token)
                                         .then((value) => resturantModel.avatar =
                                             value['uriPath']);
 
@@ -183,7 +190,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                   Expanded(
                                     child: TextFormFieldResturant(
                                       initValue: resturantModel.resturantName,
-                                      hintText: "Resturant Name",
+                                      hintText: "Restaurant Name",
                                       onChange: (value) {
                                         setState(() {
                                           resturantModel.resturantName = value;
@@ -191,7 +198,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                       },
                                       valide: (String value) {
                                         if (value.isEmpty) {
-                                          return "Your Resturant Name is Empty";
+                                          return "Your Restaurant Name is Empty";
                                         }
                                       },
                                       onSave: (value) {
@@ -212,7 +219,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                   Expanded(
                                     child: TextFormFieldResturant(
                                       icon: Icons.location_on_outlined,
-                                      hintText: "Resturant Location",
+                                      hintText: "Restaurant Location",
 
                                       onChange: (value) {},
                                       onTap: () {
@@ -221,6 +228,15 @@ class _ResturantFormState extends State<ResturantForm> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => PlacePicker(
+                                              enableMapTypeButton: true,
+                                              enableMyLocationButton: true,
+                                              autocompleteOnTrailingWhitespace:
+                                                  true,
+                                              forceSearchOnZoomChanged: true,
+                                              selectInitialPosition: true,
+                                              automaticallyImplyAppBarLeading:
+                                                  true,
+                                              forceAndroidLocationManager: true,
                                               apiKey:
                                                   "AIzaSyBY1nLDcGY1NNgV89rnDR8jg_eBsQBJ39E", // Put YOUR OWN KEY here.
                                               onPlacePicked: (result) {
@@ -252,7 +268,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                       // enable: false,
                                       valide: (String value) {
                                         if (value.isEmpty) {
-                                          return "Your Resturant Name is Empty";
+                                          return "Your Restaurant Name is Empty";
                                         }
                                       },
                                       onSave: (value) {
@@ -269,6 +285,22 @@ class _ResturantFormState extends State<ResturantForm> {
                         ),
                         SizedBox(width: 10),
                       ]),
+
+                      _isSubmit == true && resturantModel.avatar == null ||
+                              resturantModel.avatar == ""
+                          ? Container(
+                              padding: EdgeInsets.only(left: 10, top: 10),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Please select Avatar",
+                                style: TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 13,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            )
+                          : Container(),
                       // Row(
                       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       //   children: [
@@ -336,10 +368,10 @@ class _ResturantFormState extends State<ResturantForm> {
                                 },
                                 valide: (String value) {
                                   if (value.isEmpty) {
-                                    return "Your Resturant Name is Empty";
+                                    return "Your Restaurant Name is Empty";
                                   }
                                   if (!isEmail(value)) {
-                                    return "Your Email envalid";
+                                    return "Your Email Invalid";
                                   }
                                 },
                                 onSave: (value) {
@@ -413,9 +445,11 @@ class _ResturantFormState extends State<ResturantForm> {
                                         color: Colors.white,
                                       ),
                                     ),
-                              onPress: () {
-                                addResturant();
-                              },
+                              onPress: _isLoading == true
+                                  ? null
+                                  : () {
+                                      addResturant();
+                                    },
                             ),
                           ),
                         ),
@@ -428,7 +462,13 @@ class _ResturantFormState extends State<ResturantForm> {
   }
 
   addResturant() {
-    if (_formKey.currentState.validate()) {
+    setState(() {
+      _isSubmit = true;
+    });
+
+    if (_formKey.currentState.validate() &&
+        resturantModel.avatar != null &&
+        resturantModel.avatar != "") {
       setState(() {
         _isLoading = true;
       });
@@ -444,7 +484,9 @@ class _ResturantFormState extends State<ResturantForm> {
             _isLoading = false;
           });
 
-          if (result == true) {
+          print("resutl $result");
+
+          if (result['status'] == true) {
             print("Mahdi: Executed 2");
             _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text("Successfuly Updated."),
@@ -457,7 +499,7 @@ class _ResturantFormState extends State<ResturantForm> {
             print("Mahdi: Executed 3");
 
             _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Something went wrong!! Please try again later."),
+              content: Text("${result['message']}"),
               duration: Duration(seconds: 4),
             ));
           }
@@ -479,7 +521,7 @@ class _ResturantFormState extends State<ResturantForm> {
             _isLoading = false;
           });
 
-          if (result == true) {
+          if (result['status'] == true) {
             print("Mahdi: Executed 2");
             _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text("Successfuly added."),
@@ -492,7 +534,7 @@ class _ResturantFormState extends State<ResturantForm> {
             print("Mahdi: Executed 3");
 
             _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Something went wrong!! Please try again later."),
+              content: Text("${result['message']}"),
               duration: Duration(seconds: 4),
             ));
           }

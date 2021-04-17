@@ -7,31 +7,53 @@ import 'package:flutter/cupertino.dart';
 
 class ContactProvider with ChangeNotifier {
   List<ContactModel> contacts;
-  List<ContactModel> get getContacts => this.contacts;
+  AuthProvider auth;
 
-  Future<List<ContactModel>> fetchContacts(int pageKey, pageSize) async {
-    print("pageKey");
-    int page = (pageKey / 10).round();
+  ContactProvider(this.auth);
+  List<ContactModel> get getContacts => this.contacts;
+  bool loadingMore;
+  bool hasMoreItems;
+  int maxItems;
+  int page = 1;
+  int lastPage;
+
+  showLoadingBottom(bool state) {
+    loadingMore = state;
+    notifyListeners();
+  }
+
+  Future<bool> fetchContacts() async {
     try {
-      String url = "$baseUrl/admin/contact?page=$page&limit=10";
+      String url = "$baseUrl/admin/contact?page=$page";
       print(url);
-      final result =
-          await APIRequest().get(myUrl: url, token: await AuthProvider().token);
+      final result = await APIRequest().get(myUrl: url, token: auth.token);
       print("result $result");
-      final extractedData = result.data["data"]['docs'];
+
+      maxItems = result.data['data']['totalDocs'];
+      page = result.data['data']['page'];
+      lastPage = result.data['data']['totalPages'];
+      print("result $lastPage");
+
+      if (page == lastPage) {
+        hasMoreItems = false;
+      } else {
+        hasMoreItems = true;
+      }
+
+      List<ContactModel> loadedProducts = [];
+
+      (result.data['data']['docs'] as List).forEach((notify) {
+        loadedProducts.add(ContactModel.fromJson(notify));
+      });
+
       if (contacts == null) {
         contacts = [];
       }
-      print("result $result");
-      final List<ContactModel> loadedProducts = [];
-      if (extractedData.length > 0) {
-        extractedData.forEach((tableData) {
-          contacts.add(ContactModel.fromJson(tableData));
-        });
-      }
-      // contacts = loadedProducts;
+      contacts.addAll(loadedProducts);
+      page++;
+
       notifyListeners();
-      return this.contacts;
+      return true;
     } on DioError catch (e, s) {
       print(s);
       print(e.response);
@@ -42,5 +64,11 @@ class ContactProvider with ChangeNotifier {
       //   {"status": false, "message": e.response}
       // ];
     }
+  }
+
+  void setPage(int i) {
+    page = i;
+    contacts = null;
+    notifyListeners();
   }
 }

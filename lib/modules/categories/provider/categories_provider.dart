@@ -11,7 +11,11 @@ import '../models/restaurant_model.dart';
 
 class CategoryProvider with ChangeNotifier {
   ///cat List
+
+  AuthProvider auth;
   List<CategoryModel> _categories;
+
+  CategoryProvider(this.auth);
   get getCategories => _categories;
   String resturantId;
 
@@ -35,7 +39,7 @@ class CategoryProvider with ChangeNotifier {
       String url = "$baseUrl/admin/food/$resturantId";
       var res = await APIRequest().get(
         myUrl: url,
-        token: await AuthProvider().token,
+        token: auth.token,
       );
       this._categories = [];
       (res.data['data'] as List).forEach((category) {
@@ -57,7 +61,7 @@ class CategoryProvider with ChangeNotifier {
         myUrl: url,
         myBody: {"restaurantId": resId, "categoryName": newCategory},
         myHeaders: {
-          "token": await AuthProvider().token,
+          "token": auth.token,
         },
       );
 
@@ -79,10 +83,10 @@ class CategoryProvider with ChangeNotifier {
         "categoryName": category,
       },
       myHeaders: {
-        "token": await AuthProvider().token,
+        "token": auth.token,
       },
     );
-
+    this._categories = null;
     print(res.data);
     notifyListeners();
     return res.data;
@@ -92,7 +96,7 @@ class CategoryProvider with ChangeNotifier {
     String url = "$baseUrl/admin/restaurant";
     var res = await APIRequest().get(
       myUrl: url,
-      token: await AuthProvider().token,
+      token: auth.token,
     );
     this._restaurants = [];
     (res.data['data'] as List).forEach((res) {
@@ -108,7 +112,7 @@ class CategoryProvider with ChangeNotifier {
     //getting data
     String url = "$baseUrl/public/category/$categryId";
     var res = await APIRequest().delete(myUrl: url, myBody: null, myHeaders: {
-      'token': await AuthProvider().token,
+      'token': auth.token,
     });
     this._categories = null;
     notifyListeners();

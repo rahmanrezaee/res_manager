@@ -44,11 +44,11 @@ dependencies:
   intl: ^0.16.0
   firebase_messaging: "^8.0.0-dev.15" 
   flutter_local_notifications: ^3.0.2
-  numbers_to_words: ^0.1.2
   scroll_to_index: 
   cached_network_image: ^2.5.1
   incrementally_loading_listview: ^0.3.0
   infinite_scroll_pagination: ^2.2.0
+  num_to_txt: ^0.0.3
   # responsive_scaffold:
   #   git:
   #     url: https://github.com/AzadCoder/responsive_scaffold
@@ -105,6 +105,8 @@ flutter:
     - assets/images/edit.png
     - assets/images/delete.png
     - assets/images/desk-bell.png
+    - assets/images/no-image.png
+    - assets/images/loader.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

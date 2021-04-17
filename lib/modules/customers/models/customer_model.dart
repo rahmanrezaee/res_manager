@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 part 'customer_model.g.dart';
 
 // @JsonSerializable(explicitToJson: true)
@@ -17,16 +19,33 @@ class Customer {
     this.totalOrder,
   });
   factory Customer.fromJson(json) {
-    print("ID: ${json['id']}");
-    return Customer(
-      id: json['id'],
-      username: json['username'],
-      activeOrders: json['activeOrders'],
-      avatar: json['avatar'],
-      email: json['email'],
-      totalOrder: json['totalOrder'],
-    );
+    log("ID: ${json}");
+    try {
+      return Customer(
+        id: json["user"]['_id'],
+        username: json["user"]['username'],
+        activeOrders: json['activeOrders'],
+        // avatar: json['avatar'],
+        // email: json['email'],
+        totalOrder: json['totalOrder'],
+      );
+    } catch (e) {
+      log("error $e");
+    }
   }
-  // factory Customer.fromJson(Map json) => _$CustomerFromJson(json);
+
+  Customer.fromComplateJson(json) {
+    log("ID: ${json}");
+    try {
+      this.id = json["userData"]['_id'];
+      username = json["userData"]['username'];
+
+      avatar = json["userData"]['avatar'];
+      email = json["userData"]['email'];
+    } catch (e) {
+      log("error $e");
+    }
+  }
+
   Map<String, dynamic> toJson() => _$CustomerToJson(this);
 }

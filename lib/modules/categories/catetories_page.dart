@@ -3,6 +3,7 @@ import 'package:admin/modules/dishes/Screen/addNewDish_page.dart';
 import 'package:admin/modules/categories/provider/categories_provider.dart';
 import 'package:admin/modules/dishes/Screen/dishes_page.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
+import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/themes/style.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
@@ -24,15 +25,20 @@ class CatetoriesPage extends StatefulWidget {
 class _CatetoriesPageState extends State<CatetoriesPage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(routes: {
-      CatetoriesListPage.routeName: (context) => CatetoriesListPage(),
-      DishPage.routeName: (context) => DishPage(
-            ModalRoute.of(context).settings.arguments,
-          ),
-      AddNewDish.routeName: (context) => AddNewDish(
-            ModalRoute.of(context).settings.arguments,
-          ),
-    }, theme: restaurantTheme, home: CatetoriesListPage());
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        routes: {
+          NotificationPage.routeName: (context) => NotificationPage(),
+          CatetoriesListPage.routeName: (context) => CatetoriesListPage(),
+          DishPage.routeName: (context) => DishPage(
+                ModalRoute.of(context).settings.arguments,
+              ),
+          AddNewDish.routeName: (context) => AddNewDish(
+                ModalRoute.of(context).settings.arguments,
+              ),
+        },
+        theme: restaurantTheme,
+        home: CatetoriesListPage());
   }
 }
 
@@ -59,14 +65,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                 title: Text("Manage Category"),
                 automaticallyImplyLeading: false,
                 centerTitle: true,
-                actions: [
-                  IconButton(
-                    icon: Image.asset("assets/images/notification.png"),
-                    onPressed: () {
-                      Navigator.pushNamed(context, NotificationPage.routeName);
-                    },
-                  )
-                ],
+                actions: [NotificationAppBarWidget()],
                 leading: IconButton(
                   icon: Icon(Icons.menu),
                   onPressed: () {
@@ -109,13 +108,18 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                           color: Colors.white,
                         ),
                         child: catProvider.getRestaurant == null
-                            ? Center(child: Text("Loading restaurants..."))
+                            ? FutureBuilder(
+                                future: catProvider.fetchRes(),
+                                builder: (context, snapshot) {
+                                  return Center(
+                                      child: Text("Loading restaurants..."));
+                                })
                             : DropDownFormField(
-                                hintText: "Select Resturants",
+                                hintText: "Select Restaurants ",
                                 value: catProvider.resturantId,
                                 validator: (value) {
                                   if (value == null) {
-                                    return "Please select an Resturants";
+                                    return "Please select an Restaurants";
                                   }
                                   return null;
                                 },
@@ -126,7 +130,6 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                   // });
                                 },
                                 onChanged: (value) {
-
                                   catProvider.setResturantId(value);
                                   print(value);
                                   // setState(() {
@@ -153,7 +156,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-               Visibility(
+            Visibility(
               visible: showAppBarNodepad(context),
               child: Padding(
                 padding: new EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -179,7 +182,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                               return Center(child: CircularProgressIndicator());
                             })
                         : DropDownFormField(
-                            hintText: "Select Resturant",
+                            hintText: "Select Restaurant",
                             value: catProvider.resturantId,
                             onChanged: (value) {
                               catProvider.setResturantId(value);
@@ -200,8 +203,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                 ),
               ),
             ),
-          
-           Card(
+            Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Padding(
@@ -354,7 +356,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
             catProvider.resturantId == null
                 ? Expanded(
                     child: Center(
-                      child: Text("Please Select A Resturants"),
+                      child: Text("Please Select A Restaurants"),
                     ),
                   )
                 : catProvider.getCategories == null
@@ -486,12 +488,12 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                         .then((re) {
                                       Navigator.of(context).pop();
                                       if (re['status'] == true) {
-                                        // ScaffoldMessenger.of(context)
-                                        //     .showSnackBar(
-                                        //   SnackBar(
-                                        //       content: Text(
-                                        //           "The Category Edited Successfully")),
-                                        // );
+                                        Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'The Category Edited Successfully'),
+                                          ),
+                                        );
                                       } else {}
                                     });
                                   } else {}
@@ -517,17 +519,15 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                     .deleteCategoy(category.id)
                                     .then((res) {
                                   if (res['status']) {
-                                    // ScaffoldMessenger.of(context)
-                                    //     .showSnackBar(SnackBar(
-                                    //   content: Text(
-                                    //       "The Category Deleted Successfully"),
-                                    // ));
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text(
+                                          "The Category Deleted Successfully"),
+                                    ));
                                     Navigator.of(context).pop();
                                   } else {
-                                    // ScaffoldMessenger.of(context)
-                                    //     .showSnackBar(SnackBar(
-                                    //   content: Text(res['message']),
-                                    // ));
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text(res['message']),
+                                    ));
                                     Navigator.of(context).pop();
                                   }
                                 });

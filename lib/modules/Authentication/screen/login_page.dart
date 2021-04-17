@@ -136,6 +136,12 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 50),
+                Text(
+                  "Login",
+                  style: Theme.of(context).textTheme.headline5.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                SizedBox(height: 20),
                 Image.asset("${AssestPath.logo}", width: 150),
                 SizedBox(height: 50),
                 Form(
@@ -143,8 +149,11 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("Login with your account",
-                          style: Theme.of(context).textTheme.headline4),
+                      Text(
+                        "Login with Your Account",
+                        style: Theme.of(context).textTheme.headline4,
+                        textAlign: TextAlign.start,
+                      ),
                       SizedBox(height: 15),
                       Container(
                         width: getHelfIpadAndFullMobWidth(context),
@@ -160,11 +169,12 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextFormField(
                           obscureText: obscureText,
                           controller: _passwordController,
-                          // validator: (v) {
-                          //   return validator(v);
-                          // },
+                          validator: (v) {
+                            return passwordValidator(v);
+                          },
                           decoration: InputDecoration(
                             hintText: "Password",
+                            errorStyle: TextStyle(color: Colors.red),
                             suffix: InkWell(
                               onTap: () {
                                 setState(() {
@@ -215,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 15),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: showAppBarNodepad(context) ? MainAxisAlignment.end : MainAxisAlignment.center,
                         children: [
                           InkWell(
                             onTap: () {
@@ -224,8 +234,10 @@ class _LoginPageState extends State<LoginPage> {
                                   .pushNamed(ForgotPassword.routeName);
                             },
                             child: Text(
-                              "Forgot Password",
-                              style: Theme.of(context).textTheme.subtitle2,
+                              "Forgot Password?",
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.green),
                             ),
                           ),
                         ],
@@ -299,35 +311,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                RichText(
-                  text: TextSpan(
-                      style: TextStyle(color: Colors.black),
-                      text: "By clicking on Log In you are accepting our ",
-                      children: [
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.of(context)
-                                  .pushNamed(TermCondition.routeName);
-                            },
-                          text: "Terms and Conditions",
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                        TextSpan(
-                          text: " and ",
-                        ),
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              print('privacy policy');
-                              Navigator.of(context)
-                                  .pushNamed(PrivacyPolicy.routeName);
-                            },
-                          text: "Privacy Policy",
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ]),
-                ),
               ],
             ),
           ),
@@ -371,8 +354,10 @@ _loginFieldBuilder(
     validator: (v) {
       return validator(v);
     },
+    keyboardType: TextInputType.emailAddress,
     decoration: InputDecoration(
       hintText: hintText,
+      errorStyle: TextStyle(color: Colors.red),
       hintStyle: TextStyle(color: Colors.grey),
       contentPadding: EdgeInsets.only(left: 10),
       enabledBorder: OutlineInputBorder(
