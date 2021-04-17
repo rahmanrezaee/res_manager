@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                 Form(
                   key: _formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         "Login with Your Account",
@@ -225,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 15),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: showAppBarNodepad(context) ? MainAxisAlignment.end : MainAxisAlignment.center,
                         children: [
                           InkWell(
                             onTap: () {

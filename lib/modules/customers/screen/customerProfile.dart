@@ -84,7 +84,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                 Text(getCustomer.email ?? "",
                                     style: TextStyle(color: Colors.black45)),
                                 SizedBox(height: 5),
-                                Text("Total Orders :${getOrders.length}",
+                                Text("Total Orders :",
                                     style: TextStyle(color: Colors.black45)),
                               ],
                             ),

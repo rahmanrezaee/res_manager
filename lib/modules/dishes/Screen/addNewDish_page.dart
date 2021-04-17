@@ -750,7 +750,7 @@ class _AddNewDishState extends State<AddNewDish> {
 
           print("Mahdi: Executed 4");
         }).catchError((error) {
-          print("Mahdi Error: $error");
+          print("Mahdi Error: $error"); 
           setState(() {
             _isLoading = false;
           });
