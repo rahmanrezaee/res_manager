@@ -255,7 +255,7 @@ class MainWidget extends StatelessWidget {
   }) : super(key: key);
 
   final Widget page;
-  // checkInternet(context) async {
+// checkInternet(context) async {
   //   print("checkInternet");
   //   ConnectivityWrapper
   //   if (!await ConnectivityWrapper.instance.isConnected) {
