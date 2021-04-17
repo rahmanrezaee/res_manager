@@ -32,8 +32,6 @@ class NotificationPage extends StatelessWidget {
                     return Center(child: CircularProgressIndicator());
                   })
               : IncrementallyLoadingListView(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
                   hasMore: () => value.hasMoreItems,
                   itemCount: () => value.notificatins.length,
                   loadMore: () async {

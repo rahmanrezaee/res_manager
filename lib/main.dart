@@ -124,10 +124,10 @@ class _MyAppState extends State<MyApp> {
           create: (context) => ContactProvider(null),
         ),
         ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(
-          update: (context, auth, previousMessages) => NotificationProvider(auth),
+          update: (context, auth, previousMessages) =>
+              NotificationProvider(auth),
           create: (context) => NotificationProvider(null),
         ),
-     
       ],
       child: Consumer<AuthProvider>(builder: (context, snapshot, b) {
         return MaterialApp(
@@ -160,8 +160,6 @@ class Application extends StatefulWidget {
 }
 
 class _Application extends State<Application> {
-  String status = 'checkingSharedPrefs';
-
   Future selectNotification(String payload) async {
     print("payload $payload");
     if (payload != null) {
@@ -177,8 +175,6 @@ class _Application extends State<Application> {
       carPlay: true,
       criticalAlert: true,
     );
-
-  
   }
 
   @override
@@ -237,14 +233,13 @@ class _Application extends State<Application> {
     });
   }
 
-  Widget page = LoginPage();
+  Widget page = LayoutExample();
 
   @override
   Widget build(BuildContext context) {
-  
     return ConnectivityAppWrapper(
-            app: Scaffold(body: MainWidget(page: page)),
-          );
+      app: Scaffold(body: MainWidget(page: page)),
+    );
   }
 }
 

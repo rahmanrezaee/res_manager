@@ -3,18 +3,22 @@ import 'package:admin/modules/customers/models/customer_model.dart';
 class ReviewModel {
   String id;
   Customer userId;
-  int rate;
+  double rate;
   String date;
   String message;
   ReviewModel({this.id, this.userId, this.rate, this.message, this.date});
 
   factory ReviewModel.fromJson(Map json) {
-    return ReviewModel(
-      id: json['_id'],
-      userId: new Customer.fromJson(json['userId']),
-      rate: json['rate'],
-      message: json['message'],
-      date: json['createdAt'],
-    );
+    try {
+      return ReviewModel(
+        id: json['_id'],
+        userId: new Customer.fromJson(json['userId']),
+        rate: double.parse(json['rate'].toString()),
+        message: json['message'],
+        date: json['createdAt'],
+      );
+    } catch (e) {
+      print("error review: $e");
+    }
   }
 }

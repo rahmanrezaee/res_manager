@@ -225,7 +225,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 15),
                       Row(
-                        mainAxisAlignment: showAppBarNodepad(context) ? MainAxisAlignment.end : MainAxisAlignment.center,
+                        mainAxisAlignment: showAppBarNodepad(context)
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.center,
                         children: [
                           InkWell(
                             onTap: () {
@@ -328,21 +330,28 @@ class _LoginPageState extends State<LoginPage> {
       });
       String email = _emailController.text;
       String password = _passwordController.text;
-      authProvider.login(email, password, this.fcmToken).then((res) {
+      try {
+        authProvider.login(email, password, this.fcmToken).then((res) {
+          setState(() {
+            loading = false;
+          });
+          if (res['status'] == true) {
+            setState(() {
+              error = null;
+            });
+            Navigator.pushReplacementNamed(context, LayoutExample.routeName);
+          } else {
+            setState(() {
+              error = res['message'];
+            });
+          }
+        });
+      } catch (e) {
         setState(() {
           loading = false;
+          error = "Error: please try again.";
         });
-        if (res['status'] == true) {
-          setState(() {
-            error = null;
-          });
-          Navigator.pushReplacementNamed(context, LayoutExample.routeName);
-        } else {
-          setState(() {
-            error = res['message'];
-          });
-        }
-      });
+      }
     }
   }
 }

@@ -108,19 +108,28 @@ class AuthProvider with ChangeNotifier {
   refreshToken() {}
 
   Future<bool> autoLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('user') == null) {
-      _token = null;
-    } else {
-      DateTime expireDate =
-          DateTime.parse(json.decode(prefs.getString('user'))['expierDate']);
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      log("data user:  ${prefs.getString('user')}");
+      if (prefs.getString('user') == null) {
+        _token = null;
+      } else {
+        DateTime expireDate =
+            DateTime.parse(json.decode(prefs.getString('user'))['expierDate']);
 
-      if (expireDate != null && expireDate.isAfter(DateTime.now())) {
-        _token = json.decode(prefs.getString('user'))['token'];
-        _expiryDate = json.decode(prefs.getString('user'))['expierDate'];
+        if (expireDate != null && expireDate.isAfter(DateTime.now())) {
+          log("data user: User Valided}");
+
+          _token = json.decode(prefs.getString('user'))['token'];
+          _expiryDate = expireDate;
+        }
       }
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+
+      return true;
     }
-    notifyListeners();
-    return true;
   }
 }

@@ -55,7 +55,6 @@ class _AddNewDishState extends State<AddNewDish> {
   AuthProvider auth;
   @override
   void initState() {
-    
     auth = Provider.of<AuthProvider>(context, listen: false);
     dishId = widget.params['dishId'];
     catId = widget.params['catId'];
@@ -233,6 +232,20 @@ class _AddNewDishState extends State<AddNewDish> {
                           ),
                         ],
                       ),
+                      isSubmiting == true && imgList.isEmpty
+                          ? Container(
+                              padding: EdgeInsets.only(left: 10, top: 10),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Please Add at least a Image",
+                                style: TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 13,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            )
+                          : Container(),
                       SizedBox(height: 15),
                       ResponsiveGridRow(children: [
                         ResponsiveGridCol(
@@ -346,8 +359,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                   BorderRadius.all(Radius.circular(10.0)),
                               borderSide: BorderSide(color: Colors.grey),
                             ),
-                            focusedErrorBorder
-                            : OutlineInputBorder(
+                            focusedErrorBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
                               borderSide: BorderSide(color: Colors.grey),
@@ -708,7 +720,11 @@ class _AddNewDishState extends State<AddNewDish> {
     );
   }
 
+  bool isSubmiting = false;
   addDish() {
+    setState(() {
+      isSubmiting = true;
+    });
     if (_formKey.currentState.validate()) {
       setState(() {
         _isLoading = true;
@@ -750,7 +766,7 @@ class _AddNewDishState extends State<AddNewDish> {
 
           print("Mahdi: Executed 4");
         }).catchError((error) {
-          print("Mahdi Error: $error"); 
+          print("Mahdi Error: $error");
           setState(() {
             _isLoading = false;
           });
@@ -760,7 +776,7 @@ class _AddNewDishState extends State<AddNewDish> {
           ));
         });
       } else {
-        addDishService(dishModel.sendMap(),auth).then((result) {
+        addDishService(dishModel.sendMap(), auth).then((result) {
           setState(() {
             _isLoading = false;
           });
@@ -856,8 +872,6 @@ _textFieldBuilder(String hintText) {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
         borderSide: BorderSide(color: Colors.grey),
-
-        
       ),
     ),
   );
