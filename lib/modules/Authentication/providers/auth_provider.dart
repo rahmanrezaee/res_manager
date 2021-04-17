@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/api_path.dart';
 import 'package:admin/modules/Authentication/screen/login_page.dart';
@@ -14,6 +17,8 @@ import '../validators/formFieldsValidators.dart';
 
 class AuthProvider with ChangeNotifier {
   String _token;
+
+  DateTime _expiryDate;
 
   Future login(String username, String password, String fcm) async {
     try {
@@ -34,8 +39,14 @@ class AuthProvider with ChangeNotifier {
       //saving user data to sharedpreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       print(json.encode(user));
+
       await prefs.setString('user', json.encode(user));
       //return message
+      //
+
+      this._token = res.data['data']['token'];
+      this._expiryDate = DateTime.now().add(Duration(days: 1));
+
       return {"status": true, "message": "logedIn"};
     } on DioError catch (e) {
       print(e.response.data);
@@ -83,14 +94,16 @@ class AuthProvider with ChangeNotifier {
   logOut(context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('user');
-    // Navigator.of(context).pushNamed(LoginPage.routeName);
   }
 
   get token {
-    return _token;
+    if (_expiryDate != null &&
+        _expiryDate.isAfter(DateTime.now()) &&
+        _token != null) {
+      return _token;
+    }
+    return null;
   }
-
-  Future checkLoginStatus() async {}
 
   refreshToken() {}
 
@@ -99,13 +112,12 @@ class AuthProvider with ChangeNotifier {
     if (prefs.getString('user') == null) {
       _token = null;
     } else {
-      //Checking expiery date
       DateTime expireDate =
           DateTime.parse(json.decode(prefs.getString('user'))['expierDate']);
-      if (DateTime.now().isAfter(expireDate.add(Duration(days: 1)))) {
-        _token = null;
-      } else {
+
+      if (expireDate != null && expireDate.isAfter(DateTime.now())) {
         _token = json.decode(prefs.getString('user'))['token'];
+        _expiryDate = json.decode(prefs.getString('user'))['expierDate'];
       }
     }
     notifyListeners();

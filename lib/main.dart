@@ -178,16 +178,7 @@ class _Application extends State<Application> {
       criticalAlert: true,
     );
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('user') == null) {
-      setState(() {
-        status = 'userNotLogedIn';
-      });
-    } else {
-      setState(() {
-        status = 'userLogedIn';
-      });
-    }
+  
   }
 
   @override
@@ -250,12 +241,8 @@ class _Application extends State<Application> {
 
   @override
   Widget build(BuildContext context) {
-    if (status == "userLogedIn") {
-      page = LayoutExample();
-    }
-    return status == "checkingSharedPrefs"
-        ? Center(child: CircularProgressIndicator())
-        : ConnectivityAppWrapper(
+  
+    return ConnectivityAppWrapper(
             app: Scaffold(body: MainWidget(page: page)),
           );
   }

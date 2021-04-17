@@ -4,6 +4,7 @@ import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:string_validator/string_validator.dart';
 import '../validators/formFieldsValidators.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -60,9 +61,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     SizedBox(height: 20),
                     Card(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Text(
-                          "Forgotten your Password ? \nDon't worry just type in your Registered Email address and we will take it from there",
+                          "Forgotten your Password ?\nDon't worry just type in your Registered Email address and we will take it from there",
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -80,8 +81,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           SizedBox(height: 15),
                           Form(
                             key: _formKey,
-                            child: _loginFieldBuilder("Email Address",
-                                _emailController, emailValidator, () {}),
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            child: _loginFieldBuilder(
+                                "Forgot Password", _emailController, (value) {
+                              if (value == null) {
+                                return "Please fill Your email";
+                              }
+
+                              if (!isEmail(value)) {
+                                return "Please Fill correct email";
+                              }
+                            }),
                           ),
                           SizedBox(height: 15),
                           SizedBox(
@@ -100,7 +111,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                       style: Theme.of(context).textTheme.button,
                                     ),
                               onPressed: () {
-                                forgotPassword();
+                                if (_formKey.currentState.validate()) {
+                                  forgotPassword();
+                                }
                               },
                             ),
                           ),
@@ -141,10 +154,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               context: context,
               builder: (context) {
                 return LayoutBuilder(builder: (context, constraints) {
-                  return SizedBox(
-                    width: 400,
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  return BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: SizedBox(
+                      width: 400,
                       child: SimpleDialog(
                         elevation: 5,
                         shape: RoundedRectangleBorder(
@@ -173,6 +186,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               ),
                               onPressed: () {
                                 Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                                 // Navigator.pushNamed(context, )
                               },
                             ),
@@ -197,16 +211,17 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 }
 
-_loginFieldBuilder(String hintText, TextEditingController controller,
-    Function validator, Null Function() param3) {
+_loginFieldBuilder(
+    String hintText, TextEditingController controller, Function validator) {
   return TextFormField(
     controller: controller,
     validator: (e) {
       return validator(e);
     },
+    keyboardType: TextInputType.emailAddress,
     decoration: InputDecoration(
-      errorStyle: TextStyle(color: Colors.red),
       hintText: hintText,
+      errorStyle: TextStyle(color: Colors.red),
       hintStyle: TextStyle(color: Colors.grey),
       contentPadding: EdgeInsets.only(left: 10),
       enabledBorder: OutlineInputBorder(
