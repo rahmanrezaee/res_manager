@@ -168,9 +168,12 @@ class _CustomersPageState extends State<CustomersPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "${customer.username}",
-                style: Theme.of(context).textTheme.headline4,
+              Container(
+                width: getDeviceWidthSize(context)/2,
+                child: Text(
+                  "${customer.username}",
+                  style: Theme.of(context).textTheme.headline4,
+                ),
               ),
               Text("${customer.activeOrders} Active Orders",
                   style: TextStyle(color: Colors.grey)),

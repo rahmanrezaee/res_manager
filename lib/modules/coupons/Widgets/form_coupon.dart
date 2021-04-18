@@ -158,7 +158,7 @@ class _FormCoupenState extends State<FormCoupen> {
                               hintText: "Valid on Restaurants",
                             ),
                       _submitted == true && couponModel.resturant == "" ||
-                              couponModel.resturant == "none"
+                              couponModel.resturant == null  
                           ? Container(
                               padding: EdgeInsets.only(left: 10, top: 10),
                               alignment: Alignment.centerLeft,
