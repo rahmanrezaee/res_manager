@@ -18,6 +18,9 @@ class ResturantModel {
   String email;
   String password;
   int activeOrder;
+  int totalOrder;
+  int totalDishies;
+
 
   ResturantModel();
 
@@ -79,5 +82,7 @@ class ResturantModel {
     this.id = tableData['_id'];
     this.email = tableData['email'];
     this.avatar = tableData['avatar'];
+    this.totalDishies = tableData['totalDish'] ?? 0;
+    this.totalOrder = tableData['totalOrders'] ?? 0;
   }
 }

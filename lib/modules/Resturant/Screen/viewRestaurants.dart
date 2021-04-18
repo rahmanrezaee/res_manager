@@ -264,7 +264,7 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
                                 ),
                                 onPressed: () {},
                                 child: Text(
-                                  "Total Dishes: ",
+                                  "Total Dishes: ${resturantModel.totalDishies}",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal),
@@ -281,7 +281,7 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
                                 ),
                                 onPressed: () {},
                                 child: Text(
-                                  "Total Orders: ",
+                                  "Total Orders: ${resturantModel.totalOrder}",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal),
