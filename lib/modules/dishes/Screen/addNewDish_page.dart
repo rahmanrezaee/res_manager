@@ -1,6 +1,5 @@
 //Core
 import 'dart:async';
-
 import 'package:admin/Services/UploadFile.dart';
 import 'package:admin/constants/UrlConstants.dart';
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
@@ -287,7 +286,7 @@ class _AddNewDishState extends State<AddNewDish> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormFieldResturant(
                               initValue: "${dishModel.price ?? ""}",
-                              typetext: TextInputType.number,
+                              typetext: TextInputType.numberWithOptions(decimal: true),
                               hintText: "Price",
                               onChange: (value) {
                                 setState(() {
@@ -313,7 +312,7 @@ class _AddNewDishState extends State<AddNewDish> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: TextFormFieldResturant(
                           initValue: "${dishModel.tax ?? ""}",
-                          typetext: TextInputType.number,
+                          typetext: TextInputType.numberWithOptions(decimal: true),
                           hintText: "Tax",
                           onChange: (value) {
                             setState(() {
@@ -550,7 +549,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                                                   "Add On Price",
                                                               typetext:
                                                                   TextInputType
-                                                                      .number,
+                                                                      .numberWithOptions(decimal: true),
                                                               onChange:
                                                                   (value) {
                                                                 setState(() {

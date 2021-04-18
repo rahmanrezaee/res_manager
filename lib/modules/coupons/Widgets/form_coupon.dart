@@ -220,7 +220,7 @@ class _FormCoupenState extends State<FormCoupen> {
                           : Container(),
                       SizedBox(height: 10),
                       TextFormFieldResturant(
-                        typetext: TextInputType.number,
+                        typetext: TextInputType.numberWithOptions(decimal: true),
                         initValue: couponModel.mount != null
                             ? "${couponModel.mount}"
                             : null,

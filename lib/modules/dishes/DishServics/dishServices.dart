@@ -111,22 +111,22 @@ Future editDishService(data, id,AuthProvider auth) async {
   }
 }
 
-Future<bool> deleteDish(foodId,AuthProvider auth) async {
+Future deleteDish(foodId,AuthProvider auth) async {
   try {
     //getting token
 
-    String url = "$baseUrl/admin/food/$foodId";
+    String url = "$baseUrl/admin/food/food/$foodId";
     var res = await APIRequest()
         .delete(myUrl: url, myBody: null, myHeaders: {'token': auth.token});
 
-    return true;
+    return res.data;
   } on DioError catch (e) {
     print("error In Response");
     print(e.response);
     print(e.error);
     print(e.request);
     print(e.type);
-    return false;
+    return e.response.data;
   }
 }
 

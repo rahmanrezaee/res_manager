@@ -1,4 +1,6 @@
 //core
+import 'dart:async';
+
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/dishes/DishServics/dishServices.dart';
 import 'package:admin/modules/dishes/Models/dishModels.dart';
@@ -38,7 +40,7 @@ class _DishHomeState extends State<DishPage> {
   List<DishModel> dishList;
   String catId;
   String resturantId;
-
+  final _scoffoldKey = GlobalKey<ScaffoldState>();
   Future getDish;
   AuthProvider auth;
   @override
@@ -59,6 +61,7 @@ class _DishHomeState extends State<DishPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
+      key: _scoffoldKey,
       appBar: AppBar(
         elevation: .2,
         shape: RoundedRectangleBorder(
@@ -178,19 +181,20 @@ class _DishHomeState extends State<DishPage> {
                         setState(() {
                           isLoading = false;
                         });
-                        if (res) {
-                          // ScaffoldMessenger.of(context)
-                          //     .showSnackBar(SnackBar(
-                          //   content: Text(
-                          //       "The Category Deleted Successfully"),
-                          // ));
+                        if (res["status"]) {
+                          _scoffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text("The Dish Deleted Successfully"),
+                          ));
 
+                          getFootListWithoutPro(catId, auth).then((value) {
+                            setState(() {
+                              dishList = value;
+                            });
+                          });
                         } else {
-                          // ScaffoldMessenger.of(context)
-                          //     .showSnackBar(SnackBar(
-                          //   content: Text(res['message']),
-                          // ));
-
+                          _scoffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text("${res["message"]}"),
+                          ));
                         }
                       });
                     },
