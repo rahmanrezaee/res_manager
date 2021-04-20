@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
+import 'package:admin/modules/orders/Models/OrderModels.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -104,30 +107,46 @@ class CustomersProvider with ChangeNotifier {
   }
 
   Future<Map> fetchCustomer(String customerId) async {
-    //getting data
-    String url = "$baseUrl/admin/user/customer/$customerId";
-    var res = await APIRequest().get(myUrl: url, token: auth.token);
-    //getting user data
-    var userJson = res.data['data'];
+    try {
+      //getting data
+      String url = "$baseUrl/admin/user/customer/$customerId";
 
-    Customer customerData = new Customer.fromComplateJson(userJson);
+      log("urls $url");
+      var res = await APIRequest().get(myUrl: url, token: auth.token);
+      //getting user data
+      var userJson = res.data['data'];
 
-    List<OrderModel> _ordersCustomer = [];
-    (userJson['orders'] as List).forEach((order) {
-      order['customerName'] = userJson['userData']['username'];
-      _ordersCustomer.add(new OrderModel.fromJson(order));
-    });
-    //getting user review
-    List<ReviewModel> _reviewsCustomer = [];
-    (userJson['review'] as List).forEach((review) {
-      _reviewsCustomer.add(new ReviewModel.fromJson(review));
-    });
+      Customer customerData = new Customer.fromComplateJson(userJson);
 
-    return {
-      "customer": customerData,
-      "ordersCustomer": _ordersCustomer,
-      "reviewsCustomer": _reviewsCustomer
-    };
+      List<OrderModels> _ordersCustomer = [];
+      (userJson['orders'] as List).forEach((order) {
+        order['customerName'] = userJson['userData']['username'];
+        _ordersCustomer.add(new OrderModels.toCustomerJson(order));
+      });
+      //getting user review
+      List<ReviewModel> _reviewsCustomer = [];
+      (userJson['review'] as List).forEach((review) {
+        _reviewsCustomer.add(new ReviewModel.fromJson(review));
+      });
+      Map data = {
+        "customer": customerData,
+        "ordersCustomer": _ordersCustomer,
+        "reviewsCustomer": _reviewsCustomer
+      };
+
+      log("data $data");
+      return {
+        "customer": customerData,
+        "ordersCustomer": _ordersCustomer,
+        "reviewsCustomer": _reviewsCustomer
+      };
+    } on DioError catch (e) {
+      print("error In Response");
+      print(e.response);
+      print(e.error);
+      print(e.request);
+      print(e.type);
+    }
   }
 
   deleteCustomer(customerId) async {

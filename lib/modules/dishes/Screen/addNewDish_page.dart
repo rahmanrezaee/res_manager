@@ -1,6 +1,5 @@
 //Core
 import 'dart:async';
-
 import 'package:admin/Services/UploadFile.dart';
 import 'package:admin/constants/UrlConstants.dart';
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
@@ -55,7 +54,6 @@ class _AddNewDishState extends State<AddNewDish> {
   AuthProvider auth;
   @override
   void initState() {
-    
     auth = Provider.of<AuthProvider>(context, listen: false);
     dishId = widget.params['dishId'];
     catId = widget.params['catId'];
@@ -233,6 +231,20 @@ class _AddNewDishState extends State<AddNewDish> {
                           ),
                         ],
                       ),
+                      isSubmiting == true && imgList.isEmpty
+                          ? Container(
+                              padding: EdgeInsets.only(left: 10, top: 10),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Please Add at least a Image",
+                                style: TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 13,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            )
+                          : Container(),
                       SizedBox(height: 15),
                       ResponsiveGridRow(children: [
                         ResponsiveGridCol(
@@ -274,7 +286,7 @@ class _AddNewDishState extends State<AddNewDish> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormFieldResturant(
                               initValue: "${dishModel.price ?? ""}",
-                              typetext: TextInputType.number,
+                              typetext: TextInputType.numberWithOptions(decimal: true),
                               hintText: "Price",
                               onChange: (value) {
                                 setState(() {
@@ -300,7 +312,7 @@ class _AddNewDishState extends State<AddNewDish> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: TextFormFieldResturant(
                           initValue: "${dishModel.tax ?? ""}",
-                          typetext: TextInputType.number,
+                          typetext: TextInputType.numberWithOptions(decimal: true),
                           hintText: "Tax",
                           onChange: (value) {
                             setState(() {
@@ -346,8 +358,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                   BorderRadius.all(Radius.circular(10.0)),
                               borderSide: BorderSide(color: Colors.grey),
                             ),
-                            focusedErrorBorder
-                            : OutlineInputBorder(
+                            focusedErrorBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
                               borderSide: BorderSide(color: Colors.grey),
@@ -538,7 +549,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                                                   "Add On Price",
                                                               typetext:
                                                                   TextInputType
-                                                                      .number,
+                                                                      .numberWithOptions(decimal: true),
                                                               onChange:
                                                                   (value) {
                                                                 setState(() {
@@ -708,7 +719,11 @@ class _AddNewDishState extends State<AddNewDish> {
     );
   }
 
+  bool isSubmiting = false;
   addDish() {
+    setState(() {
+      isSubmiting = true;
+    });
     if (_formKey.currentState.validate()) {
       setState(() {
         _isLoading = true;
@@ -760,7 +775,7 @@ class _AddNewDishState extends State<AddNewDish> {
           ));
         });
       } else {
-        addDishService(dishModel.sendMap(),auth).then((result) {
+        addDishService(dishModel.sendMap(), auth).then((result) {
           setState(() {
             _isLoading = false;
           });

@@ -148,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                 Form(
                   key: _formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         "Login with Your Account",
@@ -226,7 +226,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 15),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: showAppBarNodepad(context)
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.center,
                         children: [
                           InkWell(
                             onTap: () {
@@ -329,21 +331,28 @@ class _LoginPageState extends State<LoginPage> {
       });
       String email = _emailController.text;
       String password = _passwordController.text;
-      authProvider.login(email, password, this.fcmToken).then((res) {
+      try {
+        authProvider.login(email, password, this.fcmToken).then((res) {
+          setState(() {
+            loading = false;
+          });
+          if (res['status'] == true) {
+            setState(() {
+              error = null;
+            });
+            Navigator.pushReplacementNamed(context, LayoutExample.routeName);
+          } else {
+            setState(() {
+              error = res['message'];
+            });
+          }
+        });
+      } catch (e) {
         setState(() {
           loading = false;
+          error = "Error: please try again.";
         });
-        if (res['status'] == true) {
-          setState(() {
-            error = null;
-          });
-          Navigator.pushReplacementNamed(context, LayoutExample.routeName);
-        } else {
-          setState(() {
-            error = res['message'];
-          });
-        }
-      });
+      }
     }
   }
 }

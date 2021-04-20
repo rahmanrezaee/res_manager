@@ -124,10 +124,10 @@ class _MyAppState extends State<MyApp> {
           create: (context) => ContactProvider(null),
         ),
         ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(
-          update: (context, auth, previousMessages) => NotificationProvider(auth),
+          update: (context, auth, previousMessages) =>
+              NotificationProvider(auth),
           create: (context) => NotificationProvider(null),
         ),
-     
       ],
       child: Consumer<AuthProvider>(builder: (context, snapshot, b) {
         return MaterialApp(
@@ -160,8 +160,6 @@ class Application extends StatefulWidget {
 }
 
 class _Application extends State<Application> {
-  String status = 'checkingSharedPrefs';
-
   Future selectNotification(String payload) async {
     print("payload $payload");
     if (payload != null) {
@@ -177,17 +175,6 @@ class _Application extends State<Application> {
       carPlay: true,
       criticalAlert: true,
     );
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('user') == null) {
-      setState(() {
-        status = 'userNotLogedIn';
-      });
-    } else {
-      setState(() {
-        status = 'userLogedIn';
-      });
-    }
   }
 
   @override
@@ -246,18 +233,13 @@ class _Application extends State<Application> {
     });
   }
 
-  Widget page = LoginPage();
+  Widget page = LayoutExample();
 
   @override
   Widget build(BuildContext context) {
-    if (status == "userLogedIn") {
-      page = LayoutExample();
-    }
-    return status == "checkingSharedPrefs"
-        ? Center(child: CircularProgressIndicator())
-        : ConnectivityAppWrapper(
-            app: Scaffold(body: MainWidget(page: page)),
-          );
+    return ConnectivityAppWrapper(
+      app: Scaffold(body: MainWidget(page: page)),
+    );
   }
 }
 
@@ -268,7 +250,7 @@ class MainWidget extends StatelessWidget {
   }) : super(key: key);
 
   final Widget page;
-  // checkInternet(context) async {
+// checkInternet(context) async {
   //   print("checkInternet");
   //   ConnectivityWrapper
   //   if (!await ConnectivityWrapper.instance.isConnected) {

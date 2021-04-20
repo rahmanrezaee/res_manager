@@ -1,12 +1,19 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/customers/models/customer_model.dart';
 import 'package:admin/modules/customers/models/order_model.dart';
 import 'package:admin/modules/customers/models/review_model.dart';
 import 'package:admin/modules/customers/provider/customers_provider.dart';
-import 'package:admin/modules/customers/widget/orderItem_widget.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
 import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
+import 'package:admin/modules/orders/Models/OrderModels.dart';
+import 'package:admin/modules/orders/Services/OrderSerives.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
+import 'package:admin/themes/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 //packages
@@ -25,10 +32,33 @@ class CustomerProfile extends StatefulWidget {
 
 class _CustomerProfileState extends State<CustomerProfile> {
   Future getData;
+
+  AuthProvider auth;
+
+  var _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
+    auth = Provider.of<AuthProvider>(context, listen: false);
     getData = Provider.of<CustomersProvider>(context, listen: false)
         .fetchCustomer(widget.id);
+  }
+
+  TimeOfDay selectedTime = TimeOfDay.now();
+
+  Future<String> _selectTime(BuildContext context) async {
+    FocusScope.of(context).requestFocus(new FocusNode());
+
+    final TimeOfDay picked_s = await showTimePicker(
+        context: context,
+        initialTime: selectedTime,
+        builder: (BuildContext context, Widget child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child,
+          );
+        });
+
+    if (picked_s != null) return "${picked_s.hour}:${picked_s.minute}";
   }
 
   @override
@@ -36,6 +66,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
     print("cust");
     print(widget.id);
     return Scaffold(
+        key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
@@ -53,7 +84,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   Customer getCustomer = snapshot.data['customer'];
-                  List<OrderModel> getOrders = snapshot.data['ordersCustomer'];
+                  List<OrderModels> getOrders = snapshot.data['ordersCustomer'];
                   List<ReviewModel> getReview =
                       snapshot.data['reviewsCustomer'];
 
@@ -84,7 +115,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                 Text(getCustomer.email ?? "",
                                     style: TextStyle(color: Colors.black45)),
                                 SizedBox(height: 5),
-                                Text("Total Orders :${getOrders.length}",
+                                Text("Total Orders : ${getOrders.length}",
                                     style: TextStyle(color: Colors.black45)),
                               ],
                             ),
@@ -124,17 +155,12 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                 children: [
                                   ...List.generate(getOrders.length, (i) {
                                     return ResponsiveGridCol(
-                                      xs: 12,
-                                      sm: 12,
-                                      md: 12,
-                                      lg: 12,
-                                      xl: 6,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: OrderCardItem(
-                                            getOrders[i], 'customeProfile'),
-                                      ),
-                                    );
+                                        xs: 12,
+                                        sm: 12,
+                                        md: 12,
+                                        lg: 12,
+                                        xl: 6,
+                                        child: getItem(getOrders[i]));
                                   }),
                                 ],
                               ),
@@ -168,7 +194,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                       xl: 6,
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: CommentItem(getReview[i]),
+                                        child: CommentItem(
+                                            getReview[i],
+                                            getCustomer.username,
+                                            getCustomer.avatar),
                                       ),
                                     );
                                   }),
@@ -184,5 +213,241 @@ class _CustomerProfileState extends State<CustomerProfile> {
                 }
               }),
         ));
+  }
+
+  Widget getItem(OrderModels item) {
+    log("status ${item.status}");
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: EdgeInsets.all(15),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.accentLighter,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Customer Name: ${item.user}",
+              style: TextStyle(color: AppColors.redText),
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Order ID: ${item.cardName} ",
+                  style: TextStyle(color: AppColors.redText),
+                ),
+                Text(
+                  "${Jiffy(item.date).format(" h:mm a, MMMM do yyyy")}",
+                  style: TextStyle(color: AppColors.redText),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Divider(),
+            SizedBox(height: 10),
+            Text("Items:", style: TextStyle(fontWeight: FontWeight.w600)),
+            SizedBox(height: 10),
+            SingleChildScrollView(
+              physics: ScrollPhysics(),
+              child: Column(
+                children: <Widget>[
+                  ListView.builder(
+                      itemCount: item.items.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return DishItem(
+                          model: item.items[index],
+                        );
+                      }),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Paid By: ${item.cardName}",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                color: AppColors.green,
+              ),
+            ),
+            SizedBox(height: 10),
+            Visibility(
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Visibility(
+                      visible: item.status == "active",
+                      child: Row(children: [
+                        SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: RaisedButton(
+                            padding: EdgeInsets.all(0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 0,
+                            color: AppColors.green,
+                            child: Icon(Icons.check, color: Colors.white),
+                            onPressed: () {
+                              OrderServices()
+                                  .pickup(item.id, "accepted", auth)
+                                  .then((value) {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          CustomerProfile(widget.id),
+                                    ));
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text("Succecfully Done"),
+                                  duration: Duration(seconds: 4),
+                                ));
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                        SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: RaisedButton(
+                            padding: EdgeInsets.all(0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 0,
+                            onPressed: () {
+                              OrderServices()
+                                  .pickup(item.id, "rejected", auth)
+                                  .then((value) {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text("Succecfully Done"),
+                                  duration: Duration(seconds: 4),
+                                ));
+
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          CustomerProfile(widget.id),
+                                    ));
+                              });
+                            },
+                            color: AppColors.redText,
+                            child: Icon(Icons.close, color: Colors.white),
+                          ),
+                        ),
+                      ]),
+                    ),
+                    Visibility(
+                      visible: item.status == "accepted",
+                      child: Row(children: [
+                        Text(
+                          "Pick Up at: ${item.timePicker ?? "00:00"} ",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.green,
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: RaisedButton(
+                            padding: EdgeInsets.all(0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 0,
+                            color: AppColors.green,
+                            child: Icon(Icons.edit, color: Colors.white),
+                            onPressed: () async {
+                              item.timePicker = await _selectTime(context);
+
+                              OrderServices()
+                                  .updatepickupDate(
+                                      item.id, item.timePicker, auth)
+                                  .then((value) {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text("Succecfully Done"),
+                                  duration: Duration(seconds: 2),
+                                ));
+                              });
+                            },
+                          ),
+                        ),
+                      ]),
+                    ),
+                    Visibility(
+                      visible: item.status == "accepted",
+                      child: RaisedButton(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        elevation: 0,
+                        color: Colors.white,
+                        textColor: Theme.of(context).primaryColor,
+                        child: Text("Mark Picked Up",
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal, fontSize: 14)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(
+                              width: 1, color: Theme.of(context).primaryColor),
+                        ),
+                        onPressed: () {
+                          OrderServices()
+                              .pickup(item.id, "pickedUp", auth)
+                              .then((value) {
+                            // getOrderData();
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text("Succecfully Done"),
+                              duration: Duration(seconds: 4),
+                            ));
+                            Timer(Duration(seconds: 3), () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustomerProfile(widget.id),
+                                  ));
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+                visible: item.status == "pickedUp" || item.status == "rejected",
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text("Status :",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal, fontSize: 14)),
+                    Text("${item.status}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal, fontSize: 14)),
+                  ],
+                )),
+          ],
+        ),
+      ),
+    );
   }
 }

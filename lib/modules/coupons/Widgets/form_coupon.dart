@@ -158,7 +158,7 @@ class _FormCoupenState extends State<FormCoupen> {
                               hintText: "Valid on Restaurants",
                             ),
                       _submitted == true && couponModel.resturant == "" ||
-                              couponModel.resturant == "none"
+                              couponModel.resturant == null  
                           ? Container(
                               padding: EdgeInsets.only(left: 10, top: 10),
                               alignment: Alignment.centerLeft,
@@ -220,7 +220,7 @@ class _FormCoupenState extends State<FormCoupen> {
                           : Container(),
                       SizedBox(height: 10),
                       TextFormFieldResturant(
-                        typetext: TextInputType.number,
+                        typetext: TextInputType.numberWithOptions(decimal: true),
                         initValue: couponModel.mount != null
                             ? "${couponModel.mount}"
                             : null,

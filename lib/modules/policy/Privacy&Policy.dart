@@ -4,15 +4,29 @@ import 'package:admin/widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 import './service/privacyPolicy_service.dart';
 
-class PrivacyPolicy extends StatelessWidget {
+class PrivacyPolicy extends StatefulWidget {
   static String routeName = "PrivacyPolicy";
+
+  @override
+  _PrivacyPolicyState createState() => _PrivacyPolicyState();
+}
+
+class _PrivacyPolicyState extends State<PrivacyPolicy> {
   PrivacyPolicyService privacyPolicyService = new PrivacyPolicyService();
+  Future getData;
+  @override
+  void initState() {
+    super.initState();
+
+    getData = privacyPolicyService.getPrivacy();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: Text("Privacy Policy")),
       body: FutureBuilder(
-          future: privacyPolicyService.getPrivacy(),
+          future: getData,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return SingleChildScrollView(
