@@ -120,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   bool obscureText = true;
+  
 
   @override
   Widget build(BuildContext context) {
