@@ -118,10 +118,12 @@ class AuthProvider with ChangeNotifier {
             DateTime.parse(json.decode(prefs.getString('user'))['expierDate']);
 
         if (expireDate != null && expireDate.isAfter(DateTime.now())) {
-          log("data user: User Valided}");
-
+          log("data user: User Valided} ${json.decode(prefs.getString('user'))['token']}");
           _token = json.decode(prefs.getString('user'))['token'];
           _expiryDate = expireDate;
+
+          log("data user: User Valided}$_token $_expiryDate");
+          log("data user: User Valieded done");
         }
       }
       notifyListeners();

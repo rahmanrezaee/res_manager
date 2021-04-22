@@ -90,18 +90,18 @@ class _ForgotPasswordWithKeyState extends State<ForgotPasswordWithKey> {
                                     (String v) {
                                   print(v);
                                   if (v == '') {
-                                    return "Please Enter Password!";
+                                    return "Please Enter New Password";
                                   }
                                   if (v.length < 6) {
-                                    return "Please add more character!";
+                                    return "The Password Must be at Least 6 Character";
                                   }
                                 }),
                                 SizedBox(height: 10),
-                                _loginFieldBuilder("Repead Password",
+                                _loginFieldBuilder("Confirm Password",
                                     _repeadPasswordController, (v) {
                                   if (v == '' ||
                                       v != _passwordController.text) {
-                                    return "Its not match with new password!";
+                                    return "The Passwords Don't Match";
                                   }
                                 }),
                               ],
@@ -194,6 +194,7 @@ _loginFieldBuilder(
     decoration: InputDecoration(
       hintText: hintText,
       hintStyle: TextStyle(color: Colors.grey),
+      errorStyle: TextStyle(color: Colors.red),
       contentPadding: EdgeInsets.only(left: 10),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),

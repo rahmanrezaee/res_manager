@@ -36,6 +36,8 @@ class _LoginPageState extends State<LoginPage> {
   String _latestLink = 'Unknown';
   Uri _latestUri;
 
+  Function get autovalidate => null;
+
   /// An implementation using a [String] link
   initPlatformStateForStringUniLinks() async {
     // Attach a listener to the links stream
@@ -161,12 +163,14 @@ class _LoginPageState extends State<LoginPage> {
                           "Email Address",
                           emailValidator,
                           _emailController,
+                          autovalidate,
                         ),
                       ),
                       SizedBox(height: 15),
                       Container(
                         width: getHelfIpadAndFullMobWidth(context),
                         child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: obscureText,
                           controller: _passwordController,
                           validator: (v) {
@@ -356,13 +360,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-_loginFieldBuilder(
-    String hintText, Function validator, TextEditingController controller) {
+_loginFieldBuilder(String hintText, Function validator,
+    TextEditingController controller, Function autovalidate) {
   return TextFormField(
     controller: controller,
     validator: (v) {
       return validator(v);
     },
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     keyboardType: TextInputType.emailAddress,
     decoration: InputDecoration(
       hintText: hintText,

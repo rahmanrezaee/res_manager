@@ -23,6 +23,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   AuthProvider authProvider;
 
+  Function get autovalidate => null;
+
   @override
   Widget build(BuildContext context) {
     authProvider = Provider.of<AuthProvider>(context);
@@ -84,15 +86,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             child: _loginFieldBuilder(
-                                "Forgot Password", _emailController, (value) {
-                              if (value == null) {
-                                return "Please fill Your email";
-                              }
+                              "Email Address",
+                              _emailController,
+                              (value) {
+                                if (value == null) {
+                                  return "Please Enter Your Correct Email";
+                                }
 
-                              if (!isEmail(value)) {
-                                return "Please Fill correct email";
-                              }
-                            }),
+                                if (!isEmail(value)) {
+                                  return "Please Enter Your Correct Email";
+                                }
+                              },
+                              autovalidate,
+                            ),
                           ),
                           SizedBox(height: 15),
                           SizedBox(
@@ -211,13 +217,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 }
 
-_loginFieldBuilder(
-    String hintText, TextEditingController controller, Function validator) {
+_loginFieldBuilder(String hintText, TextEditingController controller,
+    Function validator, Function autovalidate) {
   return TextFormField(
     controller: controller,
     validator: (e) {
       return validator(e);
     },
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     keyboardType: TextInputType.emailAddress,
     decoration: InputDecoration(
       hintText: hintText,
