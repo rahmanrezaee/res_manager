@@ -258,7 +258,7 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
                             Expanded(
                               child: OutlineButton(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 20),
+                                    horizontal: 25, vertical: 20),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -275,7 +275,7 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
                             Expanded(
                               child: OutlineButton(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 20),
+                                    horizontal: 25, vertical: 20),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
