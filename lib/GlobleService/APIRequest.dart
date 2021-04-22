@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class APIRequest {
   Dio dio = new Dio();
@@ -14,8 +16,21 @@ class APIRequest {
       if (token == null) {
         return dio.get(myUrl);
       } else {
-        return dio.get(myUrl,
-            options: new Options(headers: {'token': '$token'}));
+        Future<Response> res =
+            dio.get(myUrl, options: new Options(headers: {'token': '$token'}));
+        res.then((value) async {
+          log("token header ${value.headers['token'][0]}");
+          var user = {
+            'token': value.headers['token'][0],
+            'expierDate': DateTime.now().add(Duration(days: 1)).toString(),
+          };
+          //saving user data to sharedpreferences
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          print(json.encode(user));
+
+          await prefs.setString('user', json.encode(user));
+        });
+        return res;
       }
     } on DioError catch (e) {
       print("error In Response");
@@ -33,8 +48,24 @@ class APIRequest {
   }) {
     if (myHeaders != null) {
       dio.options.headers = myHeaders;
+
+      Future<Response> res = dio.post(myUrl, data: myBody);
+      res.then((value) async {
+        log("token header $value");
+        var user = {
+          'token': value.headers['token'][0],
+          'expierDate': DateTime.now().add(Duration(days: 1)).toString(),
+        };
+        //saving user data to sharedpreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        print(json.encode(user));
+
+        await prefs.setString('user', json.encode(user));
+      });
+      return res;
+    } else {
+      return dio.post(myUrl, data: myBody);
     }
-    return dio.post(myUrl, data: myBody);
   }
 
   Future put({
@@ -43,7 +74,19 @@ class APIRequest {
     @required Map<String, dynamic> myHeaders,
   }) {
     dio.options.headers = myHeaders;
-    return dio.put(myUrl, data: myBody);
+    Future<Response> res = dio.put(myUrl, data: myBody);
+    res.then((value) async {
+      var user = {
+        'token': value.headers['token'][0],
+        'expierDate': DateTime.now().add(Duration(days: 1)).toString(),
+      };
+      //saving user data to sharedpreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      print(json.encode(user));
+
+      await prefs.setString('user', json.encode(user));
+    });
+    return res;
   }
 
   Future delete({
@@ -52,6 +95,19 @@ class APIRequest {
     @required Map<String, dynamic> myHeaders,
   }) {
     dio.options.headers = myHeaders;
-    return dio.delete(myUrl, data: myBody);
+    Future<Response> res = dio.delete(myUrl, data: myBody);
+
+    res.then((value) async {
+      var user = {
+        'token': value.headers['token'][0],
+        'expierDate': DateTime.now().add(Duration(days: 1)).toString(),
+      };
+      //saving user data to sharedpreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      print(json.encode(user));
+
+      await prefs.setString('user', json.encode(user));
+    });
+    return res;
   }
 }

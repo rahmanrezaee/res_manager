@@ -13,6 +13,7 @@ import 'package:admin/modules/report/widget/buttonResturant.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:provider/provider.dart';
 //packages
@@ -89,8 +90,16 @@ class _ResturantFormState extends State<ResturantForm> {
       setState(() {
         resturantModel = value;
         _loadUpdate = true;
-        locationPickerController.text =
-            "(${resturantModel.location.lat.toStringAsFixed(2)}, ${resturantModel.location.log.toStringAsFixed(2)})";
+        locationPickerController.text = "loading...";
+        final coordinates = new Coordinates(
+            resturantModel.location.lat, resturantModel.location.log);
+        Geocoder.local.findAddressesFromCoordinates(coordinates).then((value) {
+          List<Address> addresses = value;
+
+          Address first = addresses[0];
+
+          locationPickerController.text = "(${first.addressLine})";
+        });
       });
       print("resturant : ${resturantModel.location.lat}");
     });
@@ -239,7 +248,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                               forceAndroidLocationManager: true,
                                               apiKey:
                                                   "AIzaSyBY1nLDcGY1NNgV89rnDR8jg_eBsQBJ39E", // Put YOUR OWN KEY here.
-                                              onPlacePicked: (result) {
+                                              onPlacePicked: (result) async {
                                                 locationMo.lat = result
                                                     .geometry.location.lat;
                                                 locationMo.log = result
@@ -248,10 +257,21 @@ class _ResturantFormState extends State<ResturantForm> {
                                                 locationMo.type = "Point";
                                                 print(
                                                     "locationMo.log ${locationMo.log}");
+                                                final coordinates =
+                                                    new Coordinates(
+                                                        result.geometry.location
+                                                            .lat,
+                                                        result.geometry.location
+                                                            .lng);
+                                                List<Address> addresses =
+                                                    await Geocoder.local
+                                                        .findAddressesFromCoordinates(
+                                                            coordinates);
+                                                Address first = addresses[0];
                                                 setState(() {
                                                   locationPickerController
                                                           .text =
-                                                      "(${result.geometry.location.lat.toStringAsFixed(2)}, ${result.geometry.location.lng.toStringAsFixed(2)})";
+                                                      "${first.addressLine}";
                                                 });
 
                                                 resturantModel.location =

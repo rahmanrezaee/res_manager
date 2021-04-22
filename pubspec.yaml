@@ -49,6 +49,7 @@ dependencies:
   incrementally_loading_listview: ^0.3.0
   infinite_scroll_pagination: ^2.2.0
   num_to_txt: ^0.0.3
+  geocoder: ^0.2.1
   # responsive_scaffold:
   #   git:
   #     url: https://github.com/AzadCoder/responsive_scaffold
