@@ -244,6 +244,7 @@ class _ResturantFormState extends State<ResturantForm> {
                                                     .geometry.location.lat;
                                                 locationMo.log = result
                                                     .geometry.location.lng;
+                                                // var address  =result.formattedAddress;
                                                 locationMo.type = "Point";
                                                 print(
                                                     "locationMo.log ${locationMo.log}");

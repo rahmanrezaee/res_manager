@@ -370,7 +370,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                     : catProvider.getCategories.length < 1
                         ? Expanded(
                             child: Center(
-                              child: Text("The No Category"),
+                              child: Text("No Category"),
                             ),
                           )
                         : Expanded(

@@ -72,7 +72,7 @@ class _CouponsPageState extends State<CouponsPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Coupen", style: Theme.of(context).textTheme.headline4),
+                  Text("Coupon", style: Theme.of(context).textTheme.headline4),
                   SizedBox(
                     width: 35,
                     height: 35,

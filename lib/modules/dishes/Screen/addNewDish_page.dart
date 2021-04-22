@@ -236,7 +236,7 @@ class _AddNewDishState extends State<AddNewDish> {
                               padding: EdgeInsets.only(left: 10, top: 10),
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "Please Add at least a Image",
+                                "Please Add an Image",
                                 style: TextStyle(
                                   color: Colors.redAccent,
                                   fontSize: 13,
@@ -265,7 +265,7 @@ class _AddNewDishState extends State<AddNewDish> {
                               },
                               valide: (String value) {
                                 if (value.isEmpty) {
-                                  return "Your Dish  Name is Empty";
+                                  return "Please Enter The Dish Name";
                                 }
                               },
                               onSave: (value) {
@@ -286,7 +286,8 @@ class _AddNewDishState extends State<AddNewDish> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormFieldResturant(
                               initValue: "${dishModel.price ?? ""}",
-                              typetext: TextInputType.numberWithOptions(decimal: true),
+                              typetext: TextInputType.numberWithOptions(
+                                  decimal: true),
                               hintText: "Price",
                               onChange: (value) {
                                 setState(() {
@@ -295,7 +296,7 @@ class _AddNewDishState extends State<AddNewDish> {
                               },
                               valide: (String value) {
                                 if (value.isEmpty) {
-                                  return "Your Price  is Empty";
+                                  return "Please Enter The Dish Price";
                                 }
                               },
                               onSave: (value) {
@@ -312,7 +313,8 @@ class _AddNewDishState extends State<AddNewDish> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: TextFormFieldResturant(
                           initValue: "${dishModel.tax ?? ""}",
-                          typetext: TextInputType.numberWithOptions(decimal: true),
+                          typetext:
+                              TextInputType.numberWithOptions(decimal: true),
                           hintText: "Tax",
                           onChange: (value) {
                             setState(() {
@@ -321,7 +323,7 @@ class _AddNewDishState extends State<AddNewDish> {
                           },
                           valide: (String value) {
                             if (value.isEmpty) {
-                              return "Your tax  is Empty";
+                              return "Please Enter The Tax Amount For The Dish";
                             }
                           },
                           onSave: (value) {
@@ -371,7 +373,7 @@ class _AddNewDishState extends State<AddNewDish> {
                           },
                           validator: (String value) {
                             if (value.isEmpty) {
-                              return "Your description  is Empty";
+                              return "Please Enter The Dish Description";
                             }
                           },
                           onSaved: (value) {
@@ -418,7 +420,7 @@ class _AddNewDishState extends State<AddNewDish> {
                               padding: EdgeInsets.only(left: 10, top: 10),
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "Please select Preparation Time",
+                                "Please Select Preparation Time",
                                 style: TextStyle(
                                   color: Colors.redAccent,
                                   fontSize: 13,
@@ -436,7 +438,7 @@ class _AddNewDishState extends State<AddNewDish> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Addon:",
+                              Text("Add On:",
                                   style: Theme.of(context).textTheme.headline3),
                               SizedBox(
                                 width: 35,
@@ -520,7 +522,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                                                   value) {
                                                                 if (value
                                                                     .isEmpty) {
-                                                                  return "Your Dish  Name is Empty";
+                                                                  return "Please Enter The Name";
                                                                 }
                                                               },
                                                               onSave: (value) {
@@ -547,9 +549,10 @@ class _AddNewDishState extends State<AddNewDish> {
                                                                 TextFormFieldResturant(
                                                               hintText:
                                                                   "Add On Price",
-                                                              typetext:
-                                                                  TextInputType
-                                                                      .numberWithOptions(decimal: true),
+                                                              typetext: TextInputType
+                                                                  .numberWithOptions(
+                                                                      decimal:
+                                                                          true),
                                                               onChange:
                                                                   (value) {
                                                                 setState(() {
@@ -563,7 +566,7 @@ class _AddNewDishState extends State<AddNewDish> {
                                                                   value) {
                                                                 if (value
                                                                     .isEmpty) {
-                                                                  return "Your Add On Price is Empty";
+                                                                  return "Please Enter The Price";
                                                                 }
                                                               },
                                                               onSave: (value) {
