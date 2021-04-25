@@ -499,6 +499,8 @@ class _ReportPageState extends State<ReportPage> {
 
                                                   income = "";
                                                 });
+
+                                                print("hello world");
                                                 getReport(
                                                         type: "earnings",
                                                         fromDate: startDateEarn,
