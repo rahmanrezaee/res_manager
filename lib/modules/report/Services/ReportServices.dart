@@ -55,7 +55,7 @@ Future getSendReportEmil(
         "couponCode": coupenCode,
       };
     }
-
+    print("this is email report");
     print(data);
     final result = await APIRequest()
         .post(myUrl: url, myHeaders: {"token": auth.token}, myBody: data);
