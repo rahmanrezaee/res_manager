@@ -4,7 +4,7 @@ import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/dishes/Models/dishModels.dart';
 import 'package:dio/dio.dart';
 
-Future<DishModel> getSingleDish(id,AuthProvider auth) async {
+Future<DishModel> getSingleDish(id, AuthProvider auth) async {
   try {
     String url = "$baseUrl/admin/food/view/$id";
 
@@ -28,7 +28,7 @@ Future<DishModel> getSingleDish(id,AuthProvider auth) async {
   }
 }
 
-Future<List<DishModel>> getFootListWithoutPro(catId,AuthProvider auth) async {
+Future<List<DishModel>> getFootListWithoutPro(catId, AuthProvider auth) async {
   try {
     String url = "$baseUrl/admin/food/category/$catId";
 
@@ -54,7 +54,7 @@ Future<List<DishModel>> getFootListWithoutPro(catId,AuthProvider auth) async {
   }
 }
 
-Future addDishService(data,AuthProvider auth) async {
+Future addDishService(data, AuthProvider auth) async {
   print("da $data");
   try {
     final StringBuffer url = new StringBuffer("$baseUrl/admin/food");
@@ -83,7 +83,7 @@ Future addDishService(data,AuthProvider auth) async {
   }
 }
 
-Future editDishService(data, id,AuthProvider auth) async {
+Future editDishService(data, id, AuthProvider auth) async {
   print("da $data");
   try {
     final StringBuffer url = new StringBuffer("$baseUrl/admin/food/$id");
@@ -111,14 +111,14 @@ Future editDishService(data, id,AuthProvider auth) async {
   }
 }
 
-Future deleteDish(foodId,AuthProvider auth) async {
+Future deleteDish(foodId, AuthProvider auth) async {
   try {
     //getting token
 
     String url = "$baseUrl/admin/food/food/$foodId";
     var res = await APIRequest()
         .delete(myUrl: url, myBody: null, myHeaders: {'token': auth.token});
-
+    print("delete of dish ${res.data}");
     return res.data;
   } on DioError catch (e) {
     print("error In Response");
