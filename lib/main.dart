@@ -250,16 +250,7 @@ class MainWidget extends StatelessWidget {
   }) : super(key: key);
 
   final Widget page;
-// checkInternet(context) async {
-  //   print("checkInternet");
-  //   ConnectivityWrapper
-  //   if (!await ConnectivityWrapper.instance.isConnected) {
-  //     print("No Internet");
-  //     Scaffold.of(context).showSnackBar(
 
-  //     );
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -270,24 +261,7 @@ class MainWidget extends StatelessWidget {
       stacked: true,
       height: 30,
       message: "Connecting...",
-      // offlineWidget: Row(
-      //   mainAxisAlignment: MainAxisAlignment.end,
-      //   children: [
-      //     Padding(
-      //       padding: const EdgeInsets.all(8.0),
-      //       child: CircularProgressIndicator(
-      //         strokeWidth: 5,
-      //         valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
-      //       ),
-      //     ),
-      //     SizedBox(width: 10),
-      //     Text(
-      //       "Connecting",
-      //       style: TextStyle(
-      //           fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
-      //     ),
-      //   ],
-      // ),
+
       child: page,
     );
   }

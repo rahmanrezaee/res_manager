@@ -13,6 +13,7 @@ import 'package:admin/modules/report/widget/buttonResturant.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:provider/provider.dart';
 //packages
@@ -87,8 +88,16 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
       setState(() {
         resturantModel = value;
         _loadUpdate = true;
-        locationPickerController.text =
-            "(${resturantModel.location.lat.toStringAsFixed(2)}, ${resturantModel.location.log.toStringAsFixed(2)})";
+        locationPickerController.text = "loading...";
+        final coordinates = new Coordinates(
+            resturantModel.location.lat, resturantModel.location.log);
+        Geocoder.local.findAddressesFromCoordinates(coordinates).then((value) {
+          List<Address> addresses = value;
+
+          Address first = addresses[0];
+
+          locationPickerController.text = "(${first.addressLine})";
+        });
       });
       print("resturant : ${resturantModel.location.lat}");
     });

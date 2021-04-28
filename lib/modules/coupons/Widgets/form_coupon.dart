@@ -157,8 +157,9 @@ class _FormCoupenState extends State<FormCoupen> {
                               enable: false,
                               hintText: "Valid on Restaurants",
                             ),
-                      _submitted == true && couponModel.resturant == "" ||
-                              couponModel.resturant == null  
+                      _submitted == true &&
+                              (couponModel.resturant == "" ||
+                                  couponModel.resturant == null)
                           ? Container(
                               padding: EdgeInsets.only(left: 10, top: 10),
                               alignment: Alignment.centerLeft,
@@ -220,7 +221,8 @@ class _FormCoupenState extends State<FormCoupen> {
                           : Container(),
                       SizedBox(height: 10),
                       TextFormFieldResturant(
-                        typetext: TextInputType.numberWithOptions(decimal: true),
+                        typetext:
+                            TextInputType.numberWithOptions(decimal: true),
                         initValue: couponModel.mount != null
                             ? "${couponModel.mount}"
                             : null,
@@ -233,7 +235,7 @@ class _FormCoupenState extends State<FormCoupen> {
                         },
                         valide: (String value) {
                           if (value.isEmpty) {
-                            return "Your Coupon  Precentage or Flat is Empty";
+                            return "Precentage or Flat is Empty";
                           }
                         },
                         onSave: (String value) {
