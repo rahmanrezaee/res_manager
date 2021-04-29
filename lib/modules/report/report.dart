@@ -36,6 +36,10 @@ class _ReportPageState extends State<ReportPage> {
       listRest.addAll(snapshot.listResturant.map((e) {
         return {"display": "${e.resturantName}", "value": "${e.id}"};
       }).toList());
+      setState(() {
+        orderResturantId = listRest[0]['value'];
+        earingResturantId = listRest[0]['value'];
+      });
     });
     super.initState();
   }
