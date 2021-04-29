@@ -12,7 +12,7 @@ class ReviewModel {
     try {
       return ReviewModel(
         id: json['_id'],
-        userId: new Customer.fromJson(json['userId']),
+        userId: new Customer.fromDishJson(json['userId']),
         rate: double.parse(json['rate'].toString()),
         message: json['message'],
         date: json['createdAt'],

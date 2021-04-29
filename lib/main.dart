@@ -100,19 +100,19 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
         ChangeNotifierProxyProvider<AuthProvider, ResturantProvider>(
-          update: (context, auth, previousMessages) => ResturantProvider(auth),
+          update: (context, auth, __) => ResturantProvider(auth),
           create: (context) => ResturantProvider(null),
         ),
         ChangeNotifierProxyProvider<AuthProvider, DashboardProvider>(
-          update: (context, auth, previousMessages) => DashboardProvider(auth),
+          update: (context, auth, __) => DashboardProvider(auth),
           create: (context) => DashboardProvider(null),
         ),
         ChangeNotifierProxyProvider<AuthProvider, CustomersProvider>(
-          update: (context, auth, previousMessages) => CustomersProvider(auth),
+          update: (context, auth, __) => CustomersProvider(auth),
           create: (context) => CustomersProvider(null),
         ),
         ChangeNotifierProxyProvider<AuthProvider, CategoryProvider>(
-          update: (context, auth, previousMessages) => CategoryProvider(auth),
+          update: (context, auth, __) => CategoryProvider(auth),
           create: (context) => CategoryProvider(null),
         ),
         ChangeNotifierProxyProvider<AuthProvider, CoupenProvider>(
@@ -120,33 +120,40 @@ class _MyAppState extends State<MyApp> {
           create: (context) => CoupenProvider(null),
         ),
         ChangeNotifierProxyProvider<AuthProvider, ContactProvider>(
-          update: (context, auth, previousMessages) => ContactProvider(auth),
+          update: (context, auth, __) => ContactProvider(auth),
           create: (context) => ContactProvider(null),
         ),
         ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(
-          update: (context, auth, previousMessages) =>
-              NotificationProvider(auth),
+          update: (context, auth, __) => NotificationProvider(auth),
           create: (context) => NotificationProvider(null),
         ),
       ],
       child: Consumer<AuthProvider>(builder: (context, snapshot, b) {
-        return MaterialApp(
-          key: navigatorKey,
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: restaurantTheme,
-          home: snapshot.token != null
-              ? Application()
-              : FutureBuilder(
-                  future: snapshot.autoLogin(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return LoginPage();
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  }),
-          routes: routes,
+        return ConnectivityAppWrapper(
+          app: MaterialApp(
+            key: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            title: 'Admin App',
+            theme: restaurantTheme,
+            routes: routes,
+            home: ConnectivityWidgetWrapper(
+              stacked: true,
+              height: 30,
+              message: "Connecting...",
+              child: snapshot.token != null
+                  ? Application()
+                  : FutureBuilder(
+                      future: snapshot.autoLogin(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return LoginPage();
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+            ),
+          ),
         );
       }),
     );
@@ -163,10 +170,9 @@ class _Application extends State<Application> {
   Future selectNotification(String payload) async {
     print("payload $payload");
     if (payload != null) {
-      debugPrint('notification payload: $payload');
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => OrdersPageNotification()));
     }
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => OrdersPageNotification()));
   }
 
   getPrefs() async {
@@ -184,14 +190,26 @@ class _Application extends State<Application> {
 
     print("firebase message is setuping...");
 
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage message) {
+      log('message recived');
+    });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      log("firebase message is onMessage ${message}");
+      NotificationProvider notificationProvider =
+          Provider.of<NotificationProvider>(context, listen: false);
+      DashboardProvider homeProvider =
+          Provider.of<DashboardProvider>(context, listen: false);
+      await homeProvider.fetchDashData();
+
+      await notificationProvider.fetchNotifications(pageParams: 1);
+
+      print("load Home and notification");
+
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
 
-      // print("found"); /// Create an Android Notification Channel.
-      ///
-      /// We use this channel in the `AndroidManifest.xml` file to override the
-      /// default FCM channel to enable heads up notifications.
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
@@ -202,6 +220,7 @@ class _Application extends State<Application> {
           AndroidInitializationSettings('app_icon');
       final InitializationSettings initializationSettings =
           InitializationSettings(android: initializationSettingsAndroid);
+
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: selectNotification);
 
@@ -219,50 +238,13 @@ class _Application extends State<Application> {
               ),
             ));
       }
-
-      if (notification != null) {
-        NotificationProvider notificationProvider =
-            Provider.of<NotificationProvider>(context, listen: false);
-
-        if (notificationProvider.notificatins == null)
-          await notificationProvider.fetchNotifications();
-
-        notificationProvider
-            .setCountNotification(notificationProvider.maxItems + 1);
-      }
     });
   }
 
-  Widget page = LayoutExample();
-
   @override
   Widget build(BuildContext context) {
-    return ConnectivityAppWrapper(
-      app: Scaffold(body: MainWidget(page: page)),
-    );
-  }
-}
+    print("Load Home page");
 
-class MainWidget extends StatelessWidget {
-  const MainWidget({
-    Key key,
-    @required this.page,
-  }) : super(key: key);
-
-  final Widget page;
-
-
-  @override
-  Widget build(BuildContext context) {
-    // Timer.periodic(Duration(seconds: 1), (timer) {
-    //   checkInternet(context);
-    // });
-    return ConnectivityWidgetWrapper(
-      stacked: true,
-      height: 30,
-      message: "Connecting...",
-
-      child: page,
-    );
+    return LayoutExample();
   }
 }

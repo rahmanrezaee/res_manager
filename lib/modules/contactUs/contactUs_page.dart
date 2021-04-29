@@ -46,34 +46,43 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     builder: (context, snapshot) {
                       return Center(child: CircularProgressIndicator());
                     })
-                : value.contacts.isEmpty ? Center(child:Text("No Contact Request")): IncrementallyLoadingListView(
-                    shrinkWrap: true,
-                    hasMore: () => value.hasMoreItems,
-                    itemCount: () => value.contacts.length,
-                    loadMore: () async {
-                      await value.fetchContacts();
-                    },
-                    onLoadMore: () {
-                      value.showLoadingBottom(true);
-                    },
-                    onLoadMoreFinished: () {
-                      value.showLoadingBottom(false);
-                    },
-                    loadMoreOffsetFromBottom: 0,
-                    itemBuilder: (context, index) {
-                      if ((value.loadingMore ?? false) &&
-                          index == value.contacts.length - 1) {
-                        return Column(
-                          children: <Widget>[
-                            _contactItemBuilder(context, value.contacts[index]),
-                            PlaceholderItemCard()
-                          ],
-                        );
-                      }
-                      return _contactItemBuilder(
-                          context, value.contacts[index]);
-                    },
-                  ),
+                : value.contacts.isEmpty
+                    ? ListView(
+                        children: [
+                          Container(
+                              height: MediaQuery.of(context).size.height - 100,
+                              child: Center(child: Text("No Contact Request"))),
+                        ],
+                      )
+                    : IncrementallyLoadingListView(
+                        shrinkWrap: true,
+                        hasMore: () => value.hasMoreItems,
+                        itemCount: () => value.contacts.length,
+                        loadMore: () async {
+                          await value.fetchContacts();
+                        },
+                        onLoadMore: () {
+                          value.showLoadingBottom(true);
+                        },
+                        onLoadMoreFinished: () {
+                          value.showLoadingBottom(false);
+                        },
+                        loadMoreOffsetFromBottom: 0,
+                        itemBuilder: (context, index) {
+                          if ((value.loadingMore ?? false) &&
+                              index == value.contacts.length - 1) {
+                            return Column(
+                              children: <Widget>[
+                                _contactItemBuilder(
+                                    context, value.contacts[index]),
+                                PlaceholderItemCard()
+                              ],
+                            );
+                          }
+                          return _contactItemBuilder(
+                              context, value.contacts[index]);
+                        },
+                      ),
           );
         },
       ),

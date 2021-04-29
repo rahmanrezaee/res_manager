@@ -47,5 +47,16 @@ class Customer {
     }
   }
 
+  Customer.fromDishJson(json) {
+    log("ID: ${json}");
+    try {
+      id = json['_id'];
+      username = json['username'];
+      avatar = json['avatar'];
+    } catch (e) {
+      log("error $e");
+    }
+  }
+
   Map<String, dynamic> toJson() => _$CustomerToJson(this);
 }

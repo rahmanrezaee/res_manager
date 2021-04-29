@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Resturant/statement/resturant_provider.dart';
@@ -8,6 +9,7 @@ import 'package:admin/modules/report/widget/TextfieldResturant.dart';
 import 'package:admin/modules/report/widget/buttonResturant.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/DropDownFormField.dart';
+import 'package:admin/widgets/MultipleDropDown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +29,8 @@ class _FormCoupenState extends State<FormCoupen> {
   bool _loadUpdate = false;
   List<Map<String, String>> resturnat = [];
 
+  List<MultipleSelectItem> elements = [];
+
   bool _submitted = false;
   var scoffeldKey = GlobalKey<ScaffoldState>();
   AuthProvider auth;
@@ -35,6 +39,14 @@ class _FormCoupenState extends State<FormCoupen> {
     auth = Provider.of<AuthProvider>(context, listen: false);
     ResturantProvider(auth).getResturantListWithoutPro().then((value) {
       resturnat = value;
+      elements = List.generate(
+        value.length,
+        (index) => MultipleSelectItem.build(
+          value: value[index]['value'],
+          display: value[index]['display'],
+          content: value[index]['display'],
+        ),
+      );
       setState(() {
         isLoadResturant = true;
       });
@@ -126,33 +138,39 @@ class _FormCoupenState extends State<FormCoupen> {
                       ),
                       SizedBox(height: 10),
                       isLoadResturant
-                          ? DropDownFormField(
-                              hintText: "Valid on Restaurants",
-                              value: couponModel.resturant,
-                              validator: (value) {
-                                print(value);
-                                if (value == null && value == "") {
-                                  return "Please select an Coupen Type";
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                setState(() {
-                                  couponModel.resturant = value;
-                                });
-                              },
-                              onChanged: (value) {
-                                FocusScope.of(context)
-                                    .requestFocus(new FocusNode());
-
-                                setState(() {
-                                  couponModel.resturant = value;
-                                });
-                              },
-                              dataSource: resturnat,
-                              textField: 'display',
-                              valueField: 'value',
+                          ? MultipleDropDown(
+                              placeholder: 'Valid on Restaurants',
+                              disabled: false,
+                              values: couponModel.resturant,
+                              elements: elements,
                             )
+                          // DropDownFormField(
+                          //     hintText: "Valid on Restaurants",
+                          //     value: couponModel.resturant,
+                          //     validator: (value) {
+                          //       print(value);
+                          //       if (value == null && value == "") {
+                          //         return "Please select an Coupen Type";
+                          //       }
+                          //       return null;
+                          //     },
+                          //     onSaved: (value) {
+                          //       setState(() {
+                          //         couponModel.resturant = value;
+                          //       });
+                          //     },
+                          //     onChanged: (value) {
+                          //       FocusScope.of(context)
+                          //           .requestFocus(new FocusNode());
+
+                          //       setState(() {
+                          //         couponModel.resturant = value;
+                          //       });
+                          //     },
+                          //     dataSource: resturnat,
+                          //     textField: 'display',
+                          //     valueField: 'value',
+                          //   )
                           : TextFormFieldResturant(
                               enable: false,
                               hintText: "Valid on Restaurants",

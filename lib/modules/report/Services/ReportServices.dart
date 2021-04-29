@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:admin/GlobleService/APIRequest.dart';
 import 'package:admin/constants/UrlConstants.dart';
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
@@ -34,29 +36,36 @@ Future getReport(
 }
 
 Future getSendReportEmil(
-    {fromDate, toDate, coupenCode, AuthProvider auth}) async {
+    {fromDate,
+    toDate,
+    resturant,
+    coupenCode,
+    AuthProvider auth,
+    String totalUser,
+    String restaurantId}) async {
   try {
     String url = "$baseUrl/restaurant/report/email-report-orders";
-
+    print("url $url");
     Map data = {};
+    if (coupenCode != null) {
+      data['Coupon Code'] = coupenCode;
+    }
+    if (resturant != null) {
+      data['restaurantId'] = resturant;
+    }
 
     if (fromDate != null) {
-      data = {
-        "fromDate": fromDate,
-      };
+      data['From Date'] = fromDate;
     }
     if (toDate != null) {
-      data = {
-        "toDate": toDate,
-      };
-    }
-    if (coupenCode != null) {
-      data = {
-        "couponCode": coupenCode,
-      };
+      data['To Date'] = toDate;
     }
 
-    print(data);
+    if (totalUser != null) {
+      data['Total Coupon Used'] = totalUser;
+    }
+
+    log("data $data");
     final result = await APIRequest()
         .post(myUrl: url, myHeaders: {"token": auth.token}, myBody: data);
 
@@ -73,24 +82,27 @@ Future getSendReportEmil(
   }
 }
 
-Future getSendReportEmailEarnings({fromDate, toDate, AuthProvider auth}) async {
+Future getSendReportEmailEarnings(
+    {fromDate, toDate, resturant, AuthProvider auth, String earning}) async {
   try {
     String url = "$baseUrl/restaurant/report/email-report-earnings";
-
+    print("url $url");
     Map data = {};
 
     if (fromDate != null) {
-      data = {
-        "fromDate": fromDate,
-      };
+      data['From Date'] = fromDate;
+    }
+    if (resturant != null) {
+      data['restaurantId'] = resturant;
     }
     if (toDate != null) {
-      data = {
-        "toDate": toDate,
-      };
+      data['To Date'] = toDate;
+    }
+    if (earning != null) {
+      data['Total Earning'] = earning;
     }
 
-    print(data);
+    log("data $data");
     final result = await APIRequest()
         .post(myUrl: url, myHeaders: {"token": auth.token}, myBody: data);
 
