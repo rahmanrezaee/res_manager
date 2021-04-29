@@ -21,9 +21,12 @@ class CommentItem extends StatelessWidget {
             children: [
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: FadeInImage.assetNetwork(
-                  image: "$profile",
-                  placeholder: "",
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: FadeInImage.assetNetwork(
+                    image: "$profile",
+                    placeholder: "",
+                  ),
                 ),
                 title: Text(
                   "$name",
@@ -51,9 +54,11 @@ class CommentItem extends StatelessWidget {
               SizedBox(height: 10),
               Row(
                 children: [
-                  Text(
-                    "${review.message}",
-                    style: TextStyle(height: 1.3),
+                  Expanded(
+                    child: Text(
+                      "${review.message}",
+                      style: TextStyle(height: 1.3),
+                    ),
                   ),
                 ],
               ),

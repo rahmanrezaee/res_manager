@@ -16,6 +16,7 @@ class OrderModels {
   String date;
   String timePicker;
 
+  int orderNumber;
   OrderModels.toJson(Map tableData) {
     try {
       print("order model $tableData");
@@ -24,6 +25,7 @@ class OrderModels {
       this.restaurantId = tableData['restaurantId'] ?? "";
       this.totalItems = tableData['totalItems'] ?? 0;
       this.date = tableData['createdAt'] ?? "";
+      this.orderNumber = tableData['orderId'] ?? "";
       this.totalPrice = double.parse("${tableData['totalPrice']}") ?? 0;
       this.user = tableData['userId'] ?? {"_id": "", "username": ""};
       this.restaurantCharges =
@@ -59,6 +61,7 @@ class OrderModels {
       this.cardName = tableData['cardName'] ?? "";
       this.timePicker = tableData['pickUpTime'] ?? "00:00";
 
+      this.orderNumber = tableData['orderId'] ?? "";
       List food = tableData['items'];
       if (food != null && food.isNotEmpty) {
         food.forEach((element) {

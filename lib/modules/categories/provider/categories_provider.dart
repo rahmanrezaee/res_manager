@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/categories/models/categorie_model.dart';
 import 'package:dio/dio.dart';
@@ -57,9 +59,11 @@ class CategoryProvider with ChangeNotifier {
   Future addNewCategory(String resId, String newCategory) async {
     try {
       String url = "$baseUrl/restaurant/category";
+      Map data = {"restaurantId": resId, "categoryName": newCategory};
+      log("category Data $data");
       var res = await APIRequest().post(
         myUrl: url,
-        myBody: {"restaurantId": resId, "categoryName": newCategory},
+        myBody: data,
         myHeaders: {
           "token": auth.token,
         },

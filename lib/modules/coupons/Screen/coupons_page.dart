@@ -117,7 +117,6 @@ class _CouponsPageState extends State<CouponsPage> {
                             return Center(child: CircularProgressIndicator());
                           })
                       : IncrementallyLoadingListView(
-                          shrinkWrap: true,
                           hasMore: () => value.hasMoreItems,
                           itemCount: () => value.list.length,
                           loadMore: () async {

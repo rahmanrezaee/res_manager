@@ -213,7 +213,6 @@ class _ResturantFormState extends State<ResturantForm> {
                                       onSave: (value) {
                                         setState(() {
                                           resturantModel.resturantName = value;
-
                                           print(
                                               "re ${resturantModel.resturantName}");
                                         });
@@ -472,6 +471,7 @@ class _ResturantFormState extends State<ResturantForm> {
                               onPress: _isLoading == true
                                   ? null
                                   : () {
+                                      print("don save restuant");
                                       addResturant();
                                     },
                             ),

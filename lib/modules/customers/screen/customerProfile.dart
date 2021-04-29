@@ -160,7 +160,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                         md: 12,
                                         lg: 12,
                                         xl: 6,
-                                        child: getItem(getOrders[i]));
+                                        child: getItem(getOrders[i],
+                                            getCustomer.username));
                                   }),
                                 ],
                               ),
@@ -215,7 +216,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
         ));
   }
 
-  Widget getItem(OrderModels item) {
+  Widget getItem(OrderModels item, String name) {
     log("status ${item.status}");
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -230,7 +231,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Customer Name: ${item.user}",
+              "Customer Name: ${name}",
               style: TextStyle(color: AppColors.redText),
             ),
             SizedBox(height: 10),
@@ -281,7 +282,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
             Visibility(
               child: Container(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Visibility(
                       visible: item.status == "active",
@@ -329,17 +330,14 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               OrderServices()
                                   .pickup(item.id, "rejected", auth)
                                   .then((value) {
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text("Succecfully Done"),
-                                  duration: Duration(seconds: 4),
-                                ));
-
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          CustomerProfile(widget.id),
-                                    ));
+                                Timer(Duration(seconds: 3), () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CustomerProfile(widget.id),
+                                      ));
+                                });
                               });
                             },
                             color: AppColors.redText,
@@ -350,43 +348,49 @@ class _CustomerProfileState extends State<CustomerProfile> {
                     ),
                     Visibility(
                       visible: item.status == "accepted",
-                      child: Row(children: [
-                        Text(
-                          "Pick Up at: ${item.timePicker ?? "00:00"} ",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                            color: AppColors.green,
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        SizedBox(
-                          width: 35,
-                          height: 35,
-                          child: RaisedButton(
-                            padding: EdgeInsets.all(0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Pick Up at: ${item.timePicker ?? "00:00"} ",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                                color: AppColors.green,
+                              ),
                             ),
-                            elevation: 0,
-                            color: AppColors.green,
-                            child: Icon(Icons.edit, color: Colors.white),
-                            onPressed: () async {
-                              item.timePicker = await _selectTime(context);
+                            SizedBox(width: 15),
+                            SizedBox(
+                              width: 35,
+                              height: 35,
+                              child: RaisedButton(
+                                padding: EdgeInsets.all(0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                elevation: 0,
+                                color: AppColors.green,
+                                child: Icon(Icons.edit, color: Colors.white),
+                                onPressed: () async {
+                                  item.timePicker = await _selectTime(context);
 
-                              OrderServices()
-                                  .updatepickupDate(
-                                      item.id, item.timePicker, auth)
-                                  .then((value) {
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text("Succecfully Done"),
-                                  duration: Duration(seconds: 2),
-                                ));
-                              });
-                            },
-                          ),
-                        ),
-                      ]),
+                                  OrderServices()
+                                      .updatepickupDate(
+                                          item.id, item.timePicker, auth)
+                                      .then((value) {
+                                    _scaffoldKey.currentState
+                                        .showSnackBar(SnackBar(
+                                      content: Text("Succecfully Done"),
+                                      duration: Duration(seconds: 2),
+                                    ));
+                                  });
+                                },
+                              ),
+                            ),
+                          ]),
+                    ),
+                    Expanded(
+                      child: SizedBox(),
                     ),
                     Visibility(
                       visible: item.status == "accepted",
