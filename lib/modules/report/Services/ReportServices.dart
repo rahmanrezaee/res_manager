@@ -47,7 +47,7 @@ Future getSendReportEmil(
     String url = "$baseUrl/restaurant/report/email-report-orders";
     print("url $url");
     Map data = {};
-    if (coupenCode != null) {
+    if (coupenCode != null && coupenCode != "") {
       data['Coupon Code'] = coupenCode;
     }
     if (resturant != null) {
@@ -62,7 +62,7 @@ Future getSendReportEmil(
     }
 
     if (totalUser != null) {
-      data['Total Coupon Used'] = totalUser;
+      data['Total Order Userd Coupon'] = totalUser;
     }
 
     log("data $data");
