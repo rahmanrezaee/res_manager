@@ -60,7 +60,7 @@ class NotificationProvider with ChangeNotifier {
         loadedProducts.add(NotificationModel.fromJson(notify));
       });
 
-      if (notificatins == null) {
+      if (notificatins == null || pageParams != null) {
         notificatins = [];
       }
       notificatins.addAll(loadedProducts);
