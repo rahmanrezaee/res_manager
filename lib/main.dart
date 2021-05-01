@@ -15,6 +15,7 @@ import 'package:admin/routes.dart';
 import 'package:admin/themes/style.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -167,6 +168,7 @@ class Application extends StatefulWidget {
 }
 
 class _Application extends State<Application> {
+  int lastMessageId = 0;
   Future selectNotification(String payload) async {
     print("payload $payload");
     if (payload != null) {
@@ -183,13 +185,38 @@ class _Application extends State<Application> {
     );
   }
 
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
+    // display a dialog with the notification details, tap ok to go to another page
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: Text('Ok'),
+            onPressed: () async {
+              Navigator.of(context, rootNavigator: true).pop();
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationPage(),
+                ),
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     getPrefs();
-
     print("firebase message is setuping...");
-
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage message) {
@@ -197,46 +224,56 @@ class _Application extends State<Application> {
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       log("firebase message is onMessage ${message}");
-      NotificationProvider notificationProvider =
-          Provider.of<NotificationProvider>(context, listen: false);
-      DashboardProvider homeProvider =
-          Provider.of<DashboardProvider>(context, listen: false);
-      await homeProvider.fetchDashData();
 
-      await notificationProvider.fetchNotifications(pageParams: 1);
+    
+      int messageId = int.parse(message.messageId);
 
-      print("load Home and notification");
+      if (lastMessageId != messageId) {
+        lastMessageId = messageId;
 
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+        NotificationProvider notificationProvider =
+            Provider.of<NotificationProvider>(context, listen: false);
+        DashboardProvider homeProvider =
+            Provider.of<DashboardProvider>(context, listen: false);
+        await notificationProvider.fetchNotifications(pageParams: 1);
+        await homeProvider.fetchDashData();
 
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(channel);
+        print("load Home and notification");
+        RemoteNotification notification = message.notification;
+        AndroidNotification android = message.notification?.android;
+        await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>()
+            ?.createNotificationChannel(channel);
 
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-      const AndroidInitializationSettings initializationSettingsAndroid =
-          AndroidInitializationSettings('app_icon');
-      final InitializationSettings initializationSettings =
-          InitializationSettings(android: initializationSettingsAndroid);
+        const AndroidInitializationSettings initializationSettingsAndroid =
+            AndroidInitializationSettings('app_icon');
+        final IOSInitializationSettings initializationSettingsIOS =
+            IOSInitializationSettings(
+                onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+        final InitializationSettings initializationSettings =
+            InitializationSettings(
+                android: initializationSettingsAndroid,
+                iOS: initializationSettingsIOS);
 
-      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-          onSelectNotification: selectNotification);
+        await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+            onSelectNotification: selectNotification);
 
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channel.description,
-                icon: 'launch_background',
-              ),
-            ));
+        if (notification != null && android != null) {
+          flutterLocalNotificationsPlugin.show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channel.description,
+                  icon: 'launch_background',
+                ),
+              ));
+        }
       }
     });
   }
