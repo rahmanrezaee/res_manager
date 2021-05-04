@@ -16,7 +16,5 @@ emailValidator(String v) {
 passwordValidator(String v) {
   if (v == null || v.isEmpty) {
     return "Please Enter a Password";
-  } else if (v.length <= 4) {
-    return "Entered Password is too short";
   }
 }
