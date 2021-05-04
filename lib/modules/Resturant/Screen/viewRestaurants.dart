@@ -184,6 +184,7 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
                                       icon: Icons.location_on_outlined,
                                       hintText: "Restaurant Location",
                                       enable: true,
+                                      controller: locationPickerController,
                                       // enable: false,
                                     ),
                                   ),

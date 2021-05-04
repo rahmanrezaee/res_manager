@@ -4,7 +4,7 @@ class CouponModel {
   String id;
   String name;
   String code;
-  String resturant;
+  List resturant = [];
   String type;
   double mount;
 
@@ -20,7 +20,7 @@ class CouponModel {
       "percentage": this.mount,
       "name": this.name,
       "type": this.type,
-      "validRestaurant": [this.resturant],
+      "validRestaurant": this.resturant,
     };
 
     return data;
@@ -30,9 +30,13 @@ class CouponModel {
     this.id = extractedData['_id'];
     this.name = extractedData['name'];
     this.code = extractedData['code'];
-    this.resturant = extractedData['validRestaurant'][0] == null
-        ? null
-        : extractedData['validRestaurant'][0]['_id'];
+
+    if (extractedData['validRestaurant'] != null) {
+      for (var item in extractedData['validRestaurant']) {
+        this.resturant.add(item['_id']);
+      }
+    }
+
     this.type = extractedData['type'];
     this.mount = double.parse("${extractedData['percentage']}");
   }

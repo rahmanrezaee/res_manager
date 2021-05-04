@@ -1,11 +1,15 @@
 import 'package:admin/modules/notifications/models/notification_model.dart';
 import 'package:admin/modules/notifications/provider/notificaction_provider.dart';
 import 'package:admin/modules/orders/orders_page_notification.dart';
+import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:incrementally_loading_listview/incrementally_loading_listview.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
+
+import 'notification_details.dart';
 
 class NotificationPage extends StatelessWidget {
   static String routeName = "Notification";
@@ -13,49 +17,68 @@ class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Notifications"),
-        centerTitle: true,
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.delete_outline_outlined),
-        //     onPressed: () {},
-        //   ),
-        // ],
-      ),
+      appBar: showAppBarNodepad(context)
+          ? AppBar(
+              title: Text("Notifications"),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                    icon: Icon(Icons.delete_outline_outlined),
+                    onPressed: () {
+                      Provider.of<NotificationProvider>(context, listen: false)
+                          .clearAll();
+                    })
+              ],
+            )
+          : PreferredSize(
+              preferredSize: Size(10, 20),
+              child: SizedBox(
+                height: 60,
+              )),
       body: Consumer<NotificationProvider>(
         builder: (BuildContext context, value, Widget child) {
           return value.notificatins == null
-              ? FutureBuilder(
-                  future: value.fetchNotifications(),
-                  builder: (context, snapshot) {
-                    return Center(child: CircularProgressIndicator());
-                  })
-              : IncrementallyLoadingListView(
-                  hasMore: () => value.hasMoreItems,
-                  itemCount: () => value.notificatins.length,
-                  loadMore: () async {
-                    await value.fetchNotifications();
+              ? FutureBuilder(builder: (context, snapshot) {
+                  return Center(child: CircularProgressIndicator());
+                })
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    return value.fetchNotifications(pageParams: 1);
                   },
-                  onLoadMore: () {
-                    value.showLoadingBottom(true);
-                  },
-                  onLoadMoreFinished: () {
-                    value.showLoadingBottom(false);
-                  },
-                  loadMoreOffsetFromBottom: 0,
-                  itemBuilder: (context, index) {
-                    if ((value.loadingMore ?? false) &&
-                        index == value.notificatins.length - 1) {
-                      return Column(
-                        children: <Widget>[
-                          NotificationItem(value.notificatins[index]),
-                          PlaceholderItemCard()
+                  child: value.notificatins.isEmpty
+                      ? ListView(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height-100,
+                            child: Center(child: Text("No Notification"))),
                         ],
-                      );
-                    }
-                    return NotificationItem(value.notificatins[index]);
-                  },
+                      )
+                      : IncrementallyLoadingListView(
+                          hasMore: () => value.hasMoreItems,
+                          itemCount: () => value.notificatins.length,
+                          loadMore: () async {
+                            await value.fetchNotifications();
+                          },
+                          onLoadMore: () {
+                            value.showLoadingBottom(true);
+                          },
+                          onLoadMoreFinished: () {
+                            value.showLoadingBottom(false);
+                          },
+                          loadMoreOffsetFromBottom: 0,
+                          itemBuilder: (context, index) {
+                            if ((value.loadingMore ?? false) &&
+                                index == value.notificatins.length - 1) {
+                              return Column(
+                                children: <Widget>[
+                                  NotificationItem(value.notificatins[index]),
+                                  PlaceholderItemCard()
+                                ],
+                              );
+                            }
+                            return NotificationItem(value.notificatins[index]);
+                          },
+                        ),
                 );
         },
       ),
@@ -92,12 +115,13 @@ class _NotificationItemState extends State<NotificationItem> {
           : Colors.white,
       child: InkWell(
         onTap: () {
-          setState(() {
-            widget.notification.status = "write";
-          });
-
-          Provider.of<NotificationProvider>(context, listen: false)
-              .notificationChangeState(widget.notification.id);
+          if (widget.notification.status == "onWrite") {
+            setState(() {
+              widget.notification.status = "write";
+            });
+            Provider.of<NotificationProvider>(context, listen: false)
+                .notificationChangeState(widget.notification.id);
+          }
 
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => OrdersPageNotification()));
@@ -110,17 +134,29 @@ class _NotificationItemState extends State<NotificationItem> {
               height: 50,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  "assets/images/desk-bell.png",
-                  fit: BoxFit.cover,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    "assets/images/desk-bell.png",
+                    fit: BoxFit.cover,
+                  ),
                 ),
+
+                //  Image.network(
+                //   widget.notification.image,
+                //   fit: BoxFit.cover,
+                // ),
               ),
             ),
             SizedBox(width: 10),
             Expanded(
               child: Column(
                 children: [
-                  Text("${widget.notification.body}"),
+                  Row(
+                    children: [
+                      Expanded(child: Text("${widget.notification.body}")),
+                    ],
+                  ),
                   SizedBox(height: 10),
                   Align(
                     alignment: Alignment.centerRight,
