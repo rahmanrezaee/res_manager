@@ -1,7 +1,5 @@
 import 'dart:developer';
 
-part 'customer_model.g.dart';
-
 // @JsonSerializable(explicitToJson: true)
 class Customer {
   String id;
@@ -57,6 +55,4 @@ class Customer {
       log("error $e");
     }
   }
-
-  Map<String, dynamic> toJson() => _$CustomerToJson(this);
 }
