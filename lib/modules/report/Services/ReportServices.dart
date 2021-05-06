@@ -64,8 +64,8 @@ Future getSendReportEmil(
     if (totalUser != null) {
       data['Total Order Userd Coupon'] = totalUser;
     }
-
-    log("data $data");
+    print("this is email report");
+    print(data);
     final result = await APIRequest()
         .post(myUrl: url, myHeaders: {"token": auth.token}, myBody: data);
 
