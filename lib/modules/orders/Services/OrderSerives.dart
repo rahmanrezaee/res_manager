@@ -6,11 +6,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class OrderServices {
-  Future<List<OrderModels>> getAllOrder(
-      {state, @required AuthProvider auth}) async {
+  Future<Map> getAllOrder(
+      {state, @required AuthProvider auth, int page}) async {
     List<OrderModels> listOrder;
     try {
-      String url = "$baseUrl/admin/order?status=$state";
+      String url = "$baseUrl/admin/order?status=$state&page=$page";
 
       final result = await APIRequest().get(myUrl: url, token: auth.token);
 
@@ -18,7 +18,7 @@ class OrderServices {
 
       if (extractedData == null) {
         listOrder = [];
-        return listOrder;
+        throw Exception("error in Fetch Data");
       }
 
       final List<OrderModels> loadedOrder = [];
@@ -33,7 +33,7 @@ class OrderServices {
 
       listOrder = loadedOrder;
 
-      return loadedOrder;
+      return {"orders": listOrder, "total": result.data["data"]['totalDocs']};
     } on DioError catch (e) {
       print("error In Response");
       print(e.response);

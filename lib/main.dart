@@ -12,6 +12,7 @@ import 'package:admin/modules/drawer/drawer.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
 import 'package:admin/modules/orders/orders_page_notification.dart';
 import 'package:admin/routes.dart';
+import 'package:admin/testPage.dart';
 import 'package:admin/themes/style.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -137,6 +138,7 @@ class _MyAppState extends State<MyApp> {
             title: 'Admin App',
             theme: restaurantTheme,
             routes: routes,
+         
             home: ConnectivityWidgetWrapper(
               stacked: true,
               height: 30,
