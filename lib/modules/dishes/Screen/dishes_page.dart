@@ -8,6 +8,8 @@ import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/widgets/fancy_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 //packages
@@ -203,7 +205,7 @@ class _DishHomeState extends State<DishPage> {
                     cancelFun: () {},
                     descreption: "Are You Sure To Delete Dish?",
                   ));
-        }),
+        }, _scoffoldKey),
       ));
     });
 
@@ -216,7 +218,9 @@ class DishItem extends StatefulWidget {
   String catId;
   String resturantId;
   Function onDelete;
-  DishItem(this.dishItem, this.catId, this.resturantId, this.onDelete);
+  final keySc;
+  DishItem(
+      this.dishItem, this.catId, this.resturantId, this.onDelete, this.keySc);
 
   @override
   _DishItemState createState() => _DishItemState();
@@ -282,19 +286,26 @@ class _DishItemState extends State<DishItem> {
                             !widget.dishItem.visibility;
                       });
                       changeVisiablity(widget.dishItem.foodId,
-                              !widget.dishItem.visibility, auth)
+                              widget.dishItem.visibility, auth)
                           .then((value) {
+                        print("widget.dishItem.foodId visible");
+
                         if (!value) {
                           setState(() {
                             widget.dishItem.visibility =
                                 !widget.dishItem.visibility;
                           });
+                        } else {
+                          widget.keySc.currentState.showSnackBar(SnackBar(
+                            content: Text(
+                                "The Dish ${widget.dishItem.visibility ? "Visiable" : "Invisiable"} "),
+                          ));
                         }
                       });
                     },
                     child: Icon(
-                      widget.dishItem.visibility
-                          ? Icons.remove_red_eye_outlined
+                      widget.dishItem.visibility == false
+                          ? FontAwesomeIcons.eyeSlash
                           : Icons.remove_red_eye,
                       color: Colors.white,
                     ),
@@ -303,8 +314,26 @@ class _DishItemState extends State<DishItem> {
                 Positioned(
                   right: 10,
                   bottom: 10,
-                  child:
-                      Icon(Icons.star, color: Theme.of(context).primaryColor),
+                  child: RatingBar.builder(
+                    initialRating: widget.dishItem.averageRating != null
+                        ? widget.dishItem.averageRating
+                        : 0,
+                    itemSize: 25,
+                    minRating: 1,
+                    updateOnDrag: false,
+                    ignoreGestures: true,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    glowColor: Colors.white,
+                    unratedColor: Colors.white,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (double value) {},
+                  ),
                 ),
               ],
             ),
@@ -322,7 +351,7 @@ class _DishItemState extends State<DishItem> {
               ),
               SizedBox(height: 5),
               Text(
-                "${widget.dishItem.price}\$",
+                "\$ ${widget.dishItem.price}",
                 style: Theme.of(context)
                     .textTheme
                     .subtitle2

@@ -10,6 +10,7 @@ class TextFormFieldResturant extends StatelessWidget {
   Function onSave;
   Function valide;
   String initValue;
+  String perfixText;
   bool enable;
   IconData icon;
   TextInputType typetext;
@@ -19,6 +20,7 @@ class TextFormFieldResturant extends StatelessWidget {
       this.onChange,
       this.onSave,
       this.initValue,
+      this.perfixText,
       this.onTap,
       this.typetext = TextInputType.text,
       this.enable = false,
@@ -52,6 +54,7 @@ class TextFormFieldResturant extends StatelessWidget {
           contentPadding: EdgeInsets.fromLTRB(15.0, 15, 15.0, 0),
           hintText: hintText,
           suffixIcon: Icon(this.icon),
+          prefixText: perfixText,
           errorStyle: TextStyle(color: Colors.red, height: 1),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),

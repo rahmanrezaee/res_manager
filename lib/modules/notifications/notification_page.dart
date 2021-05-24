@@ -47,12 +47,13 @@ class NotificationPage extends StatelessWidget {
                   },
                   child: value.notificatins.isEmpty
                       ? ListView(
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height-100,
-                            child: Center(child: Text("No Notification"))),
-                        ],
-                      )
+                          children: [
+                            Container(
+                                height:
+                                    MediaQuery.of(context).size.height - 100,
+                                child: Center(child: Text("No Notification"))),
+                          ],
+                        )
                       : IncrementallyLoadingListView(
                           hasMore: () => value.hasMoreItems,
                           itemCount: () => value.notificatins.length,

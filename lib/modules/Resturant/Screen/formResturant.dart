@@ -66,7 +66,7 @@ class _ResturantFormState extends State<ResturantForm> {
               ));
         });
 
-    if (picked_s != null) return "${picked_s.hour}:${picked_s.minute}";
+    return (picked_s != null) ? "${picked_s.hour}:${picked_s.minute}" : null;
   }
 
   AuthProvider auth;
@@ -617,9 +617,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.sunday.startTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -633,9 +637,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.sunday.endTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -654,9 +662,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.monday.startTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -670,9 +682,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.monday.endTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -691,9 +707,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.tuesday.startTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -707,9 +727,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.tuesday.endTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -728,9 +752,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.wednesday.startTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -744,9 +772,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.wednesday.endTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -765,9 +797,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.thursday.startTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -781,9 +817,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.thursday.endTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -802,9 +842,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.friday.startTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -818,9 +862,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.friday.endTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -839,9 +887,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.saturday.startTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -855,9 +907,13 @@ class _ResturantFormState extends State<ResturantForm> {
                     IconButton(
                       icon: Image.asset("assets/images/edit.png"),
                       onPressed: () {
-                        _selectTime(context).then((value) => setState(() {
+                        _selectTime(context).then((value) {
+                          if (value != null) {
+                            setState(() {
                               resturantModel.saturday.endTime = value;
-                            }));
+                            });
+                          }
+                        });
                       },
                     ),
                   ],
@@ -869,4 +925,6 @@ class _ResturantFormState extends State<ResturantForm> {
       ),
     );
   }
+
+
 }
