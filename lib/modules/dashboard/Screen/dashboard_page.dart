@@ -110,7 +110,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 child: LabelDashBoard(
                                   color: Colors.white,
                                   title:
-                                      "Total Restaurants : \$${dashProvider.getDashData['totalRestaurants']}",
+                                      "Total Restaurants : ${dashProvider.getDashData['totalRestaurants']}",
                                 ),
                               ),
                             ),
@@ -122,7 +122,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 child: LabelDashBoard(
                                   color: Colors.white,
                                   title:
-                                      "Total Customers : \$${dashProvider.getDashData['totalCustomers']}",
+                                      "Total Customers : ${dashProvider.getDashData['totalCustomers']}",
                                 ),
                               ),
                             ),
