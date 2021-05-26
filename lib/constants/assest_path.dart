@@ -14,4 +14,5 @@ class AssestPath {
   static String restaurantIcon = "assets/images/resturantIcons.png";
   static String customerIcon = "assets/images/customerIcon.png";
   static String couponIcon = "assets/images/couponIcon.png";
+  static String contentManangementIcon = "assets/images/content_management.png";
 }

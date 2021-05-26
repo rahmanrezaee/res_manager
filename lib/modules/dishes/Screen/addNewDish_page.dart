@@ -118,7 +118,7 @@ class _AddNewDishState extends State<AddNewDish> {
         title: Text("${this.dishId != null ? "Edit Dish" : "Add Dish"}"),
         actions: [
           Container(
-            width: 100,
+            width: 120,
             child: IconButton(
                 icon: Row(
                   children: [
@@ -320,6 +320,7 @@ class _AddNewDishState extends State<AddNewDish> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: TextFormFieldResturant(
                           initValue: "${dishModel.tax ?? ""}",
+                          perfixText: "\$",
                           typetext:
                               TextInputType.numberWithOptions(decimal: true),
                           hintText: "Tax",
@@ -517,7 +518,6 @@ class _AddNewDishState extends State<AddNewDish> {
                                                                 TextFormFieldResturant(
                                                               hintText:
                                                                   "Add On Name",
-                                                                  
                                                               onChange:
                                                                   (value) {
                                                                 setState(() {
@@ -701,44 +701,6 @@ class _AddNewDishState extends State<AddNewDish> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Reviews",
-                                style: Theme.of(context).textTheme.headline3),
-                          ],
-                        ),
-                      ),
-                      getReview.length == 0
-                          ? Card(
-                              child: SizedBox(
-                                height: 100,
-                                child: Center(
-                                  child: Text("No Review"),
-                                ),
-                              ),
-                            )
-                          : ResponsiveGridRow(
-                              children: [
-                                ...List.generate(getReview.length, (i) {
-                                  return ResponsiveGridCol(
-                                    xs: 12,
-                                    sm: 12,
-                                    md: 12,
-                                    lg: 6,
-                                    xl: 6,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CommentItemDish(
-                                        getReview[i],
-                                      ),
-                                    ),
-                                  );
-                                }),
-                              ],
-                            ),
                     ],
                   ),
                 ),
