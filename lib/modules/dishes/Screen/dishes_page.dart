@@ -140,7 +140,7 @@ class _DishHomeState extends State<DishPage> {
                     } else {
                       return dishList.isEmpty
                           ? Center(
-                              child: Text("No Dish"),
+                              child: Text("No Dishes Added"),
                             )
                           : SingleChildScrollView(
                               child: Padding(

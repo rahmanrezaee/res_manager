@@ -109,6 +109,7 @@ flutter:
     - assets/images/desk-bell.png
     - assets/images/no-image.png
     - assets/images/loader.gif
+    - assets/images/content_management.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

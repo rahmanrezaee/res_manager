@@ -2,17 +2,20 @@ import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/contactUs/contactUs_page.dart';
+import 'package:admin/modules/contentManagement/pages/contentManagementPage.dart';
+
 import 'package:admin/modules/coupons/Screen/coupons_page.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
 import 'package:admin/responsive/functionsResponsive.dart';
 import 'package:admin/scaffold/templates/layout/scaffold.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:admin/constants/assest_path.dart';
 import 'package:admin/modules/report/report.dart';
 import 'package:admin/themes/colors.dart';
 //pages
-import '../../main.dart';
+
 import '../dashboard/Screen/dashboard_page.dart';
 import '../orders/orders_page.dart';
 import '../categories/catetories_page.dart';
@@ -45,7 +48,7 @@ class _LayoutExampleState extends State<LayoutExample> {
       page: DashboardPage(),
     ),
     PageModel(
-      title: "customers",
+      title: "Customers",
       icon: SizedBox(
         width: 25,
         height: 25,
@@ -99,6 +102,16 @@ class _LayoutExampleState extends State<LayoutExample> {
       title: "Report",
       icon: Icon(Icons.library_books, color: Colors.yellow),
       page: ReportPage(),
+    ),
+    PageModel(
+      title: "Content Management",
+      icon: SizedBox(
+        width: 25,
+        height: 25,
+        child:
+            Image.asset(AssestPath.contentManangementIcon, fit: BoxFit.cover),
+      ),
+      page: ContentManagementPage(),
     ),
   ];
 

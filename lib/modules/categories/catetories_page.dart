@@ -377,7 +377,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                     : catProvider.getCategories.length < 1
                         ? Expanded(
                             child: Center(
-                              child: Text("No Category"),
+                              child: Text("No Categories Added"),
                             ),
                           )
                         : Expanded(
@@ -440,7 +440,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          title: Text("Add/Edit Category",
+                          title: Text("Edit Category",
                               style: TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center),
@@ -503,8 +503,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                       } else {
                                         keyScaffold.currentState
                                             .showSnackBar(SnackBar(
-                                          content:
-                                              Text("${re['status']}"),
+                                          content: Text("${re['status']}"),
                                         ));
                                       }
                                     });
@@ -525,28 +524,28 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => FancyDialog(
-                              title: "Delete Category!",
-                              okFun: () {
-                                catProvider
-                                    .deleteCategoy(category.id)
-                                    .then((res) {
-                                  if (res['status']) {
-                                    keyScaffold.currentState
-                                        .showSnackBar(SnackBar(
-                                      content: Text(
-                                          "The Category Deleted Successfully"),
-                                    ));
-                                  } else {
-                                    keyScaffold.currentState
-                                        .showSnackBar(SnackBar(
-                                      content: Text(res['message']),
-                                    ));
-                                  }
-                                });
-                              },
-                              cancelFun: () {},
-                              descreption: "Are You Sure To Delete Category?",
-                            ));
+                            title: "Delete Category!",
+                            okFun: () {
+                              catProvider
+                                  .deleteCategoy(category.id)
+                                  .then((res) {
+                                if (res['status']) {
+                                  keyScaffold.currentState
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                        "The Category Deleted Successfully"),
+                                  ));
+                                } else {
+                                  keyScaffold.currentState
+                                      .showSnackBar(SnackBar(
+                                    content: Text(res['message']),
+                                  ));
+                                }
+                              });
+                            },
+                            cancelFun: () {},
+                            descreption:
+                                "Are you sure,you want to delete the category?"));
                   },
                 ),
               ],
