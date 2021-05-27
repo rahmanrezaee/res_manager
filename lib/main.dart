@@ -29,6 +29,7 @@ import 'modules/Authentication/screen/login_page.dart';
 import 'modules/Resturant/statement/resturant_provider.dart';
 import 'modules/categories/provider/categories_provider.dart';
 import 'modules/contactUs/providers/contact_provider.dart';
+import 'modules/contentManagement/provider/contentManagement_provider.dart';
 import 'modules/coupons/statement/couponProvider.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'modules/customers/provider/customers_provider.dart';
@@ -128,6 +129,10 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(
           update: (context, auth, __) => NotificationProvider(auth),
           create: (context) => NotificationProvider(null),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, ContentManagementprovider>(
+          update: (context, auth, __) => ContentManagementprovider(auth),
+          create: (context) => ContentManagementprovider(null),
         ),
       ],
       child: Consumer<AuthProvider>(builder: (context, snapshot, b) {

@@ -1,6 +1,8 @@
 import 'package:admin/modules/Authentication/providers/auth_provider.dart';
 import 'package:admin/modules/contentManagement/provider/contentManagement_provider.dart';
 import 'package:admin/modules/notifications/widget/NotificationAppBarWidget.dart';
+import 'package:admin/modules/policy/service/privacyPolicy_service.dart';
+import 'package:admin/modules/term/services/term&condition_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +17,7 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
   TextEditingController subjectCtrl = new TextEditingController();
   TextEditingController messageCtrl = new TextEditingController();
   bool _isLoading = false;
+  bool isLoadingData = false;
 
   final _keyForm = GlobalKey<FormState>();
 
@@ -42,6 +45,12 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
           actions: [
             NotificationAppBarWidget(),
           ],
+          bottom: isLoadingData
+              ? PreferredSize(
+                  preferredSize: Size(10, 10),
+                  child: LinearProgressIndicator(),
+                )
+              : null,
         ),
         body: SingleChildScrollView(
             child: Padding(
@@ -85,8 +94,33 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
                     ),
-                    onChanged: (value) =>
-                        setState(() => _dropdownController = value),
+                    onChanged: (value) {
+                      if (value == "Privacy and Policy") {
+                        setState(() {
+                          isLoadingData = true;
+                        });
+                        PrivacyPolicyService().getPrivacy().then((value) {
+                          setState(() {
+                            messageCtrl.text = value;
+                            isLoadingData = false;
+                          });
+                        });
+                      } else if (value == "Terms and Conditions") {
+                        setState(() {
+                          isLoadingData = true;
+                        });
+                        TermConditionService().getTerm().then((value) {
+                          setState(() {
+                            messageCtrl.text = value;
+                            isLoadingData = false;
+                          });
+                        });
+                      }
+
+                      setState(() {
+                        _dropdownController = value;
+                      });
+                    },
                     validator: (value) =>
                         value == null ? 'Please Select an Option' : null,
                     items: ["Privacy and Policy", "Terms and Conditions"]
@@ -160,7 +194,8 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                                 _isLoading = true;
                               });
                               print("hello");
-                              ContentManagementprovider()
+                              Provider.of<ContentManagementprovider>(context,
+                                      listen: false)
                                   .submitContentMangement(
                                       _dropdownController,
                                       messageCtrl.text,

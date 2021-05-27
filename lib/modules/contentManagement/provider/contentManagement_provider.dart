@@ -9,9 +9,12 @@ import 'package:flutter/cupertino.dart';
 
 class ContentManagementprovider with ChangeNotifier {
   List<ContentManagementModel> contentManagement;
+
+  AuthProvider auth;
+  ContentManagementprovider(this.auth);
   List<ContentManagementModel> get getContentManagement =>
       this.contentManagement;
-  final auth = new AuthProvider();
+
   Future submitContentMangement(String _dropdownController, String messasge,
       String slug, AuthProvider auth) async {
     try {
@@ -31,7 +34,7 @@ class ContentManagementprovider with ChangeNotifier {
             "token": auth.token,
           },
           myBody: params);
-      print(result.data);
+      log("result ${result.data}");
       return result.data;
     } on DioError catch (e) {
       print("Hello: submitContentManagement: error ${e.response}");
