@@ -8,4 +8,11 @@ class TermConditionService {
     print(res.data);
     return res.data['data']['body'];
   }
+
+  Future getRefound() async {
+    String url = "$baseUrl/public/pages/customer/refound";
+    var res = await APIRequest().get(myUrl: url);
+    print(res.data);
+    return res.data['data']['body'];
+  }
 }

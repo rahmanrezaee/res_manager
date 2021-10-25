@@ -66,7 +66,7 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Text(
-                      "Share your Terms&Conditions/Privacy&Policy to show for Customers",
+                      "Share your Terms&Conditions/Privacy&Policy/Refund&Return to show for Customers",
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -92,7 +92,7 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                     hint: Text(
                       'Select Content Management',
                       style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
+                          color: Colors.grey, fontWeight: FontWeight.bold),
                     ),
                     onChanged: (value) {
                       if (value == "Privacy and Policy") {
@@ -115,6 +115,16 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                             isLoadingData = false;
                           });
                         });
+                      } else if (value == "Refund and Return") {
+                        setState(() {
+                          isLoadingData = true;
+                        });
+                        TermConditionService().getRefound().then((value) {
+                          setState(() {
+                            messageCtrl.text = value;
+                            isLoadingData = false;
+                          });
+                        });
                       }
 
                       setState(() {
@@ -123,7 +133,11 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                     },
                     validator: (value) =>
                         value == null ? 'Please Select an Option' : null,
-                    items: ["Privacy and Policy", "Terms and Conditions"]
+                    items: [
+                      "Privacy and Policy",
+                      "Terms and Conditions",
+                      "Refund and Return"
+                    ]
                         .map((label) => DropdownMenuItem(
                               child: Text(label.toString()),
                               value: label,
@@ -193,17 +207,25 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                               setState(() {
                                 _isLoading = true;
                               });
-                              print("hello");
+
+                              String slug = "";
+
+                              switch (_dropdownController) {
+                                case "Privacy and Policy":
+                                  slug = "pandp";
+                                  break;
+                                case "Terms and Conditions":
+                                  slug = "tandc";
+                                  break;
+                                case "Refund and Return":
+                                  slug = "refound";
+                                  break;
+                              }
+
                               Provider.of<ContentManagementprovider>(context,
                                       listen: false)
-                                  .submitContentMangement(
-                                      _dropdownController,
-                                      messageCtrl.text,
-                                      _dropdownController ==
-                                              "Privacy and Policy"
-                                          ? "pandp"
-                                          : "tandc",
-                                      auth)
+                                  .submitContentMangement(_dropdownController,
+                                      messageCtrl.text, slug, auth)
                                   .then((value) {
                                 setState(() {
                                   //OK now it is showing the right message.
