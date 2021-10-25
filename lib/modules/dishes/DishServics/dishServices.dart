@@ -40,7 +40,7 @@ Future<Map> getSingleDish(id, AuthProvider auth) async {
 
 Future<List<DishModel>> getFootListWithoutPro(catId, AuthProvider auth) async {
   try {
-    String url = "$baseUrl/admin/food/category/$catId";
+    String url = "$baseUrl/admin/food/category/$catId?limit=30";
 
     final result = await APIRequest().get(myUrl: url, token: auth.token);
 
