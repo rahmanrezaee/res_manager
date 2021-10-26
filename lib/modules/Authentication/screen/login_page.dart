@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
     authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      resizeToAvoidBottomPadding: true,
+      // resizeToAvoidBottomPadding: true,
       body: Center(
         child: SingleChildScrollView(
           child: Container(

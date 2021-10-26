@@ -62,7 +62,7 @@ class _DishHomeState extends State<DishPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
+      // resizeToAvoidBottomPadding: false,
       key: _scoffoldKey,
       appBar: AppBar(
         elevation: .2,
