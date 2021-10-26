@@ -68,7 +68,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
     return Scaffold(
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
+        // resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           elevation: .2,
           shape: RoundedRectangleBorder(

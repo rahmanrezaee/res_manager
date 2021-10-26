@@ -108,7 +108,7 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
+        // resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,

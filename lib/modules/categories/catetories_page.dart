@@ -61,7 +61,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
   Widget build(BuildContext context) {
     return Consumer<CategoryProvider>(builder: (context, catProvider, child) {
       return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        // resizeToAvoidBottomPadding: false,
         key: keyScaffold,
         resizeToAvoidBottomInset: false,
         appBar: showAppBarNodepad(context)
