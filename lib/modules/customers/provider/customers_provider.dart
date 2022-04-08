@@ -15,34 +15,34 @@ import '../models/review_model.dart';
 
 class CustomersProvider with ChangeNotifier {
   ///
-  List<Customer> _customers;
+  List<Customer>? _customers;
 
-  AuthProvider auth;
+  AuthProvider ?auth;
 
   CustomersProvider(this.auth);
-  List<Customer> get getCustomers => _customers;
-  bool loadingMore;
-  bool hasMoreItems;
-  int maxItems;
+  List<Customer>? get getCustomers => _customers;
+  bool ?loadingMore;
+  bool? hasMoreItems;
+  int? maxItems;
   int page = 1;
-  int lastPage;
+  int ?lastPage;
 
   ///
-  Customer _customer;
-  Customer get getCustomer => _customer;
+  Customer ?_customer;
+  Customer get getCustomer => _customer!;
 
   ///
-  List<OrderModel> _orders;
-  get getOrders => _orders;
+  List<OrderModel>? _orders;
+  get getOrders => _orders!;
 
   ///
-  List<ReviewModel> _reviews;
-  List<ReviewModel> get getReview => _reviews;
+  List<ReviewModel> ?_reviews;
+  List<ReviewModel> get getReview => _reviews!;
 
   //
   // int page = 1;
   // int limit = 10;
-  Future<bool> fetchCustomers({pageInit}) async {
+  Future<bool?> fetchCustomers({pageInit}) async {
     try {
       int currrentPage = page;
       if (pageInit != null) {
@@ -50,7 +50,7 @@ class CustomersProvider with ChangeNotifier {
         _customers = null;
       }
       String url = "$baseUrl/admin/user/customer?page=$currrentPage";
-      final result = await APIRequest().get(myUrl: url, token: auth.token);
+      final result = await APIRequest().get(myUrl: url, token: auth!.token);
 
       print("result $result");
 
@@ -74,7 +74,7 @@ class CustomersProvider with ChangeNotifier {
       if (this._customers == null) {
         this._customers = [];
       }
-      this._customers.addAll(loadedProducts);
+      this._customers!.addAll(loadedProducts);
       page++;
 
       notifyListeners();
@@ -106,13 +106,13 @@ class CustomersProvider with ChangeNotifier {
     // return _customers;
   }
 
-  Future<Map> fetchCustomer(String customerId) async {
+  Future<Map?> fetchCustomer(String customerId) async {
     try {
       //getting data
       String url = "$baseUrl/admin/user/customer/$customerId";
 
       log("urls $url");
-      var res = await APIRequest().get(myUrl: url, token: auth.token);
+      var res = await APIRequest().get(myUrl: url, token: auth!.token);
       //getting user data
       var userJson = res.data['data'];
 
@@ -153,7 +153,7 @@ class CustomersProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/user/customer/$customerId";
       var res = await APIRequest()
-          .delete(myUrl: url, myBody: null, myHeaders: {'token': auth.token});
+          .delete(myUrl: url, myBody: null, myHeaders: {'token': auth!.token});
 
       print("res $res");
       _customers = null;

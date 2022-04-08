@@ -31,9 +31,9 @@ class CustomerProfile extends StatefulWidget {
 }
 
 class _CustomerProfileState extends State<CustomerProfile> {
-  Future getData;
+  Future ?getData;
 
-  AuthProvider auth;
+  AuthProvider ?auth;
 
   var _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
@@ -45,18 +45,19 @@ class _CustomerProfileState extends State<CustomerProfile> {
 
   TimeOfDay selectedTime = TimeOfDay.now();
 
-  Future<String> _selectTime(BuildContext context) async {
+  Future<String?> _selectTime(BuildContext context) async {
     FocusScope.of(context).requestFocus(new FocusNode());
 
-    final TimeOfDay picked_s = await showTimePicker(
-        context: context,
-        initialTime: selectedTime,
-        builder: (BuildContext context, Widget child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child,
-          );
-        });
+    final TimeOfDay ? picked_s = await showTimePicker(
+       context: context,
+      initialTime: selectedTime,
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+    );
 
     if (picked_s != null) return "${picked_s.hour}:${picked_s.minute}";
   }
@@ -83,10 +84,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
               future: getData,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  Customer getCustomer = snapshot.data['customer'];
-                  List<OrderModels> getOrders = snapshot.data['ordersCustomer'];
+                  Customer getCustomer = (snapshot.data as Map)['customer'] ;
+                  List<OrderModels> getOrders =(snapshot.data as Map)['ordersCustomer'];
                   List<ReviewModel> getReview =
-                      snapshot.data['reviewsCustomer'];
+                      (snapshot.data as Map)['reviewsCustomer'];
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -161,7 +162,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                         lg: 12,
                                         xl: 6,
                                         child: getItem(getOrders[i],
-                                            getCustomer.username));
+                                            getCustomer.username!));
                                   }),
                                 ],
                               ),
@@ -171,7 +172,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                             "Reviews Shared",
                             style: Theme.of(context)
                                 .textTheme
-                                .headline4
+                                .headline4!
                                 .copyWith(fontSize: 20),
                           ),
                         ),
@@ -258,12 +259,12 @@ class _CustomerProfileState extends State<CustomerProfile> {
               child: Column(
                 children: <Widget>[
                   ListView.builder(
-                      itemCount: item.items.length,
+                      itemCount: item.items!.length,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (BuildContext context, int index) {
                         return DishItem(
-                          model: item.items[index],
+                          model: item.items![index],
                         );
                       }),
                 ],
@@ -300,7 +301,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                             child: Icon(Icons.check, color: Colors.white),
                             onPressed: () {
                               OrderServices()
-                                  .pickup(item.id, "accepted", auth)
+                                  .pickup(item.id, "accepted", auth!)
                                   .then((value) {
                                 Navigator.pushReplacement(
                                     context,
@@ -308,7 +309,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                       builder: (context) =>
                                           CustomerProfile(widget.id),
                                     ));
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                _scaffoldKey.currentState!.showSnackBar(SnackBar(
                                   content: Text("Succecfully Done"),
                                   duration: Duration(seconds: 4),
                                 ));
@@ -328,7 +329,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                             elevation: 0,
                             onPressed: () {
                               OrderServices()
-                                  .pickup(item.id, "rejected", auth)
+                                  .pickup(item.id, "rejected", auth!)
                                   .then((value) {
                                 Timer(Duration(seconds: 3), () {
                                   Navigator.pushReplacement(
@@ -376,9 +377,9 @@ class _CustomerProfileState extends State<CustomerProfile> {
 
                                   OrderServices()
                                       .updatepickupDate(
-                                          item.id, item.timePicker, auth)
+                                          item.id, item.timePicker, auth!)
                                       .then((value) {
-                                    _scaffoldKey.currentState
+                                    _scaffoldKey.currentState!
                                         .showSnackBar(SnackBar(
                                       content: Text("Succecfully Done"),
                                       duration: Duration(seconds: 2),
@@ -412,10 +413,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
                         ),
                         onPressed: () {
                           OrderServices()
-                              .pickup(item.id, "pickedUp", auth)
+                              .pickup(item.id, "pickedUp", auth!)
                               .then((value) {
                             // getOrderData();
-                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            _scaffoldKey.currentState!.showSnackBar(SnackBar(
                               content: Text("Succecfully Done"),
                               duration: Duration(seconds: 4),
                             ));

@@ -14,12 +14,12 @@ import '../models/restaurant_model.dart';
 class CategoryProvider with ChangeNotifier {
   ///cat List
 
-  AuthProvider auth;
-  List<CategoryModel> _categories;
+late  AuthProvider auth;
+  List<CategoryModel> ? _categories;
 
   CategoryProvider(this.auth);
   get getCategories => _categories;
-  String resturantId;
+   String ? resturantId;
 
   setCategoryToNull() {
     _categories = null;
@@ -32,9 +32,9 @@ class CategoryProvider with ChangeNotifier {
   }
 
   ///res List
-  List<RestaurantModel> _restaurants;
-  List<RestaurantModel> get getRestaurant => _restaurants;
-  String get getRestaurantId => resturantId;
+  List<RestaurantModel> ? _restaurants;
+  List<RestaurantModel>? get getRestaurant => _restaurants;
+  String? get  getRestaurantId => resturantId;
 
   fetchCategories() async {
     try {
@@ -46,7 +46,7 @@ class CategoryProvider with ChangeNotifier {
       this._categories = [];
       (res.data['data'] as List).forEach((category) {
         print("thsi is the single cat: $category");
-        this._categories.add(new CategoryModel.fromJson(category));
+        this._categories!.add(new CategoryModel.fromJson(category));
       });
       notifyListeners();
     } catch (e, s) {
@@ -104,7 +104,7 @@ class CategoryProvider with ChangeNotifier {
     );
     this._restaurants = [];
     (res.data['data'] as List).forEach((res) {
-      this._restaurants.add(new RestaurantModel.fromJson(res));
+      this._restaurants!.add(new RestaurantModel.fromJson(res));
     });
     notifyListeners();
     return true;

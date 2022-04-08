@@ -4,7 +4,7 @@ import 'package:admin/modules/Authentication/screen/forgotPasswordWithKey.dart';
 import 'package:flutter/material.dart';
 import 'package:uni_links/uni_links.dart';
 
-StreamSubscription _sub;
+StreamSubscription ?_sub;
 bool first = true;
 Future<Null> initUniLinks(context) async {
   // Uri parsing may fail, so we use a try/catch FormatException.
@@ -44,5 +44,5 @@ Future<Null> initUniLinks(context) async {
 }
 
 onDisposPage() {
-  _sub.cancel();
+  _sub!.cancel();
 }

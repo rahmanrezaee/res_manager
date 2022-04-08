@@ -6,8 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class OrderServices {
-  Future<Map> getAllOrder(
-      {state, @required AuthProvider auth, int page}) async {
+  Future<Map?> getAllOrder(
+      {String ? state, required AuthProvider auth, int? page}) async {
     List<OrderModels> listOrder;
     try {
       String url = "$baseUrl/admin/order?status=$state&page=$page";
@@ -43,8 +43,8 @@ class OrderServices {
     }
   }
 
-  Future<List<OrderModels>> getSingleOrder(
-      {state, resturantId, @required AuthProvider auth}) async {
+  Future<List<OrderModels>?> getSingleOrder(
+      {state, resturantId, required AuthProvider auth}) async {
     List<OrderModels> listOrder;
     try {
       String url = "$baseUrl/admin/order/${resturantId}?status=$state";
@@ -78,7 +78,7 @@ class OrderServices {
     }
   }
 
-  Future<bool> pickup(orderId, statue, @required AuthProvider auth) async {
+  Future<bool?> pickup(orderId, statue,  AuthProvider auth) async {
     try {
       String url = "$baseUrl/admin/order/$orderId";
 
@@ -98,8 +98,8 @@ class OrderServices {
     }
   }
 
-  Future<bool> updatepickupDate(
-      orderId, pickUpTime, @required AuthProvider auth) async {
+  Future<bool?> updatepickupDate(
+      orderId, pickUpTime,  AuthProvider auth) async {
     try {
       String url = "$baseUrl/admin/order/pickuptime/$orderId";
 

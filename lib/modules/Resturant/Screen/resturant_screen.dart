@@ -26,10 +26,10 @@ class _ResturantScreenState extends State<ResturantScreen> {
         debugShowCheckedModeBanner: false,
         routes: {
           ResturantForm.routeName: (context) => ResturantForm(
-                resId: ModalRoute.of(context).settings.arguments,
+                resId: ModalRoute.of(context)!.settings.arguments as String,
               ),
           ViewRestaurant.routeName: (context) => ViewRestaurant(
-                resId: ModalRoute.of(context).settings.arguments,
+                resId: ModalRoute.of(context)!.settings.arguments as String,
               ),
           OrdersPageNotification.routeName: (context) =>
               OrdersPageNotification(),

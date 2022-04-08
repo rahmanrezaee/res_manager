@@ -14,7 +14,7 @@ class TermCondition extends StatefulWidget {
 class _TermConditionState extends State<TermCondition> {
   TermConditionService termConditionService = new TermConditionService();
 
-  Future getData;
+  Future ?getData;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _TermConditionState extends State<TermCondition> {
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Text(
-                    snapshot.data,
+                    snapshot.data as String,
                     style: TextStyle(
                         fontWeight: FontWeight.w400, fontSize: 14, height: 1.5),
                   ),

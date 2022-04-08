@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ButtonRaiseResturant extends StatelessWidget {
-  Function onPress;
-  Widget label;
-  Color color;
+  Function()? onPress;
+  Widget? label;
+  Color ?color;
 
-  ButtonRaiseResturant({this.color, this.label, this.onPress});
+  ButtonRaiseResturant({this.color, this.label, required this.onPress});
 
   @override
   Widget build(BuildContext context) {

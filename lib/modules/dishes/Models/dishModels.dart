@@ -5,23 +5,23 @@ import 'package:admin/modules/dishes/Models/AddonModel.dart';
 import 'ImageModel.dart';
 
 class DishModel {
-  String foodId;
-  String foodName;
-  int quantity;
-  int averageRating;
-  String restaurantId;
-  String categoryId;
-  double price;
-  double tax;
+  String? foodId;
+  String? foodName;
+  int? quantity;
+  double? averageRating;
+  String? restaurantId;
+  String? categoryId;
+  double? price;
+  double? tax;
   List<List<AddonItems>> addOn = [];
 
   List<AddonItems> addOnDishAdmin = [];
   List orderNote = [];
-  String description;
+  String? description;
   List<ImageModel> images = [];
 
-  bool visibility;
-  String preparationTime;
+  bool? visibility;
+  String? preparationTime;
 
   DishModel();
 
@@ -94,7 +94,8 @@ class DishModel {
       this.foodId = extractedData['food']['_id'];
       this.foodName = extractedData['food']['name'];
       this.visibility = extractedData['food']['visibility'];
-      this.averageRating = extractedData['food']['averageRating'];
+      this.averageRating =
+          double.tryParse("${extractedData['food']['averageRating']}");
       this.restaurantId = extractedData['food']['restaurantId'];
       this.categoryId = extractedData['food']['categoryId'];
       this.description = extractedData['food']['description'];
@@ -116,8 +117,6 @@ class DishModel {
           addOnDishAdmin.add(AddonItems.toJson(element));
         });
       }
-
-      
     } catch (e) {
       print("Error In dish thrie $e");
     }

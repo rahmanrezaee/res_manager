@@ -13,7 +13,7 @@ class PrivacyPolicy extends StatefulWidget {
 
 class _PrivacyPolicyState extends State<PrivacyPolicy> {
   PrivacyPolicyService privacyPolicyService = new PrivacyPolicyService();
-  Future getData;
+  Future ?getData;
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Text(
-                    snapshot.data,
+                    snapshot.data as String,
                     style: TextStyle(
                         fontWeight: FontWeight.w400, fontSize: 14, height: 1.5),
                   ),

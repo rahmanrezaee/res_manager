@@ -3,6 +3,7 @@ import 'package:admin/modules/Authentication/screen/forgotPasswordWithKey.dart';
 import 'package:admin/modules/Authentication/screen/login_page.dart';
 import 'package:admin/modules/Resturant/Screen/resturant_screen.dart';
 import 'package:admin/modules/customers/screen/Customers_page.dart';
+import 'package:admin/modules/customers/screen/customerProfile.dart';
 import 'package:admin/modules/drawer/drawer.dart';
 import 'package:admin/modules/notifications/notification_page.dart';
 import 'package:admin/modules/orders/orders_page_notification.dart';
@@ -26,6 +27,8 @@ var routes = <String, WidgetBuilder>{
   NotificationPage.routeName: (context) => NotificationPage(),
   OrdersPageNotification.routeName: (context) => OrdersPageNotification(),
   ForgotPasswordWithKey.routeName: (context) =>
-      ForgotPasswordWithKey(ModalRoute.of(context).settings.arguments),
+      ForgotPasswordWithKey(ModalRoute.of(context)!.settings.arguments as String),
+  CustomerProfile.routeName: (context) =>
+      CustomerProfile(ModalRoute.of(context)!.settings.arguments as String),
   // AddNewDish.routeName: (context) => AddNewDish(),
 };

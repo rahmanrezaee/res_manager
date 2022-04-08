@@ -118,7 +118,7 @@ class _CouponsPageState extends State<CouponsPage> {
                           })
                       : IncrementallyLoadingListView(
                           hasMore: () => value.hasMoreItems,
-                          itemCount: () => value.list.length,
+                          itemCount: () => value.list!.length,
                           loadMore: () async {
                             await value.getCoupenList();
                           },
@@ -131,12 +131,12 @@ class _CouponsPageState extends State<CouponsPage> {
                           loadMoreOffsetFromBottom: 0,
                           itemBuilder: (context, index) {
                             if ((value.loadingMore ?? false) &&
-                                index == value.list.length - 1) {
+                                index == value.list!.length - 1) {
                               return Column(
                                 children: <Widget>[
                                   _couponsItemBuilder(
                                       context,
-                                      value.list[index],
+                                      value.list![index],
                                       _formKey,
                                       _scaffoldKey),
                                   PlaceholderItemCard()
@@ -144,7 +144,7 @@ class _CouponsPageState extends State<CouponsPage> {
                               );
                             }
                             return _couponsItemBuilder(context,
-                                value.list[index], _formKey, _scaffoldKey);
+                                value.list![index], _formKey, _scaffoldKey);
                           },
                         ),
                 );
@@ -222,7 +222,7 @@ class _CouponsPageState extends State<CouponsPage> {
                           },
                           child: FormCoupen(
                             formKey: _formKey,
-                            coupenId: coupen.id,
+                            coupenId: coupen.id!,
                           ),
                         );
                       },

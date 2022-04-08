@@ -40,7 +40,7 @@ class CommentItem extends StatelessWidget {
                     SmoothStarRating(
                       allowHalfRating: false,
                       onRated: (v) {},
-                      starCount: review.rate.toInt(),
+                      starCount: review.rate!.toInt(),
                       rating: 4,
                       size: 20.0,
                       isReadOnly: true,

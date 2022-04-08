@@ -8,19 +8,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 class NotificationProvider with ChangeNotifier {
-  bool loadingMore;
-  bool hasMoreItems;
-  int maxItems;
+  bool? loadingMore;
+  bool? hasMoreItems;
+  int? maxItems;
   int page = 1;
-  int lastPage;
-  int onWriteNotification;
+  int? lastPage;
+  int ?onWriteNotification;
 
   int countNotification = 0;
   AuthProvider auth;
 
   NotificationProvider(this.auth);
 
-  List<NotificationModel> notificatins;
+  List<NotificationModel>? notificatins;
 
   void setPage(int t) {
     this.page = t;
@@ -63,7 +63,7 @@ class NotificationProvider with ChangeNotifier {
       if (notificatins == null || pageParams != null) {
         notificatins = [];
       }
-      notificatins.addAll(loadedProducts);
+      notificatins!.addAll(loadedProducts);
       page++;
 
       notifyListeners();
@@ -90,8 +90,8 @@ class NotificationProvider with ChangeNotifier {
         myUrl: url.toString(),
       );
 
-      if (onWriteNotification > 0) {
-        onWriteNotification--;
+      if (onWriteNotification! > 0) {
+        onWriteNotification = onWriteNotification!-1;
       }
       // fetchNotifications(pageParams: 1);
       notifyListeners();

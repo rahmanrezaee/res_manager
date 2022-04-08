@@ -18,7 +18,7 @@ class OrdersPageNotification extends StatefulWidget {
 
 class _OrderPageState extends State<OrdersPageNotification>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
   @override
   void initState() {
     super.initState();
@@ -31,7 +31,7 @@ class _OrderPageState extends State<OrdersPageNotification>
         controller: _tabController,
         onTap: (v) {
           setState(() {
-            print(_tabController.index);
+            print(_tabController!.index);
           });
         },
         indicatorPadding: EdgeInsets.zero,
@@ -45,7 +45,7 @@ class _OrderPageState extends State<OrdersPageNotification>
           Tab(
             child: Container(
               decoration: BoxDecoration(
-                  color: _tabController.index == 0
+                  color: _tabController!.index == 0
                       ? AppColors.green
                       : Colors.transparent,
                   borderRadius: BorderRadius.only(
@@ -64,7 +64,7 @@ class _OrderPageState extends State<OrdersPageNotification>
             iconMargin: EdgeInsets.zero,
             child: Container(
               decoration: BoxDecoration(
-                  color: _tabController.index == 1
+                  color: _tabController!.index == 1
                       ? AppColors.green
                       : Colors.transparent,
                   borderRadius: BorderRadius.only(

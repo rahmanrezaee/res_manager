@@ -45,7 +45,7 @@ class NotificationPage extends StatelessWidget {
                   onRefresh: () async {
                     return value.fetchNotifications(pageParams: 1);
                   },
-                  child: value.notificatins.isEmpty
+                  child: value.notificatins!.isEmpty
                       ? ListView(
                           children: [
                             Container(
@@ -56,7 +56,7 @@ class NotificationPage extends StatelessWidget {
                         )
                       : IncrementallyLoadingListView(
                           hasMore: () => value.hasMoreItems,
-                          itemCount: () => value.notificatins.length,
+                          itemCount: () => value.notificatins!.length,
                           loadMore: () async {
                             await value.fetchNotifications();
                           },
@@ -69,15 +69,15 @@ class NotificationPage extends StatelessWidget {
                           loadMoreOffsetFromBottom: 0,
                           itemBuilder: (context, index) {
                             if ((value.loadingMore ?? false) &&
-                                index == value.notificatins.length - 1) {
+                                index == value.notificatins!.length - 1) {
                               return Column(
                                 children: <Widget>[
-                                  NotificationItem(value.notificatins[index]),
+                                  NotificationItem(value.notificatins![index]),
                                   PlaceholderItemCard()
                                 ],
                               );
                             }
-                            return NotificationItem(value.notificatins[index]);
+                            return NotificationItem(value.notificatins![index]);
                           },
                         ),
                 );

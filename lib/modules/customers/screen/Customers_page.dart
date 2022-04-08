@@ -15,8 +15,6 @@ import 'package:admin/themes/colors.dart';
 import 'package:admin/themes/style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:pagination_view/pagination_view.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 //models
 import '../models/customer_model.dart';
 
@@ -42,7 +40,7 @@ class _CustomersPageState extends State<CustomersPage> {
     super.initState();
   }
 
-  CustomersProvider customersProvider;
+  CustomersProvider? customersProvider;
 
   @override
   void dispose() {
@@ -55,7 +53,7 @@ class _CustomersPageState extends State<CustomersPage> {
     return MaterialApp(
       routes: {
         CustomerProfile.routeName: (context) =>
-            CustomerProfile(ModalRoute.of(context).settings.arguments),
+            CustomerProfile(ModalRoute.of(context)!.settings.arguments! as String),
         OrdersPageNotification.routeName: (context) => OrdersPageNotification(),
         NotificationPage.routeName: (context) => NotificationPage(),
       },
@@ -108,7 +106,7 @@ class _CustomersPageState extends State<CustomersPage> {
                         builder: (context, snapshot) {
                           return Center(child: CircularProgressIndicator());
                         })
-                    : value.getCustomers.isEmpty
+                    : value.getCustomers!.isEmpty
                         ? ListView(
                             children: [
                               Container(
@@ -124,7 +122,7 @@ class _CustomersPageState extends State<CustomersPage> {
                             shrinkWrap: true,
                             // physics: NeverScrollableScrollPhysics(),
                             hasMore: () => value.hasMoreItems,
-                            itemCount: () => value.getCustomers.length,
+                            itemCount: () => value.getCustomers!.length,
                             loadMore: () async {
                               await value.fetchCustomers();
                             },
@@ -137,23 +135,23 @@ class _CustomersPageState extends State<CustomersPage> {
                             loadMoreOffsetFromBottom: 0,
                             itemBuilder: (context, index) {
                               if ((value.loadingMore ?? false) &&
-                                  index == value.getCustomers.length - 1) {
-                                log(value.getCustomers[index].username);
+                                  index == value.getCustomers!.length - 1) {
+                              
                                 return Column(
                                   children: <Widget>[
                                     _customerItemBuilder(
-                                      context,
-                                      value.getCustomers[index],
-                                      customersProvider,
+                                     
+                                      value.getCustomers![index],
+                                      
                                     ),
                                     PlaceholderItemCard()
                                   ],
                                 );
                               }
                               return _customerItemBuilder(
-                                context,
-                                value.getCustomers[index],
-                                customersProvider,
+                              
+                                value.getCustomers![index],
+                            
                               );
                             },
                           ),
@@ -166,7 +164,7 @@ class _CustomersPageState extends State<CustomersPage> {
   }
 
   _customerItemBuilder(
-      context, Customer customer, CustomersProvider customersProvider) {
+      Customer customer,) {
     return InkWell(
       onTap: () {
         print("this is the customer: ${customer.username}");

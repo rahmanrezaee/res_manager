@@ -21,19 +21,19 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
-  ResturantProvider snapshot;
-  Future getResturantList;
+  ResturantProvider ?snapshot;
+  Future? getResturantList;
   List<Map> listRest = [
     {"display": "All Resturant", "value": "none"}
   ];
-  AuthProvider auth;
+  AuthProvider ?auth;
   @override
   void initState() {
     auth = Provider.of<AuthProvider>(context, listen: false);
     snapshot = Provider.of<ResturantProvider>(context, listen: false);
 
-    getResturantList = snapshot.getResturantList().then((value) {
-      listRest.addAll(snapshot.listResturant.map((e) {
+    getResturantList = snapshot!.getResturantList().then((value) {
+      listRest.addAll(snapshot!.listResturant!.map((e) {
         return {"display": "${e.resturantName}", "value": "${e.id}"};
       }).toList());
       setState(() {
@@ -46,12 +46,12 @@ class _ReportPageState extends State<ReportPage> {
 
   DateTime selectedDate = DateTime.now();
 
-  String orderResturantId;
-  String earingResturantId;
-  String startDateEarn;
-  String endDateEarn;
-  String startDateOrder;
-  String endDateOrder;
+  String? orderResturantId;
+  String? earingResturantId;
+  String? startDateEarn;
+  String ?endDateEarn;
+  String? startDateOrder;
+  String? endDateOrder;
   String income = "";
   String earning = "";
   bool enabletoOrdersReport = false;
@@ -267,7 +267,7 @@ class _ReportPageState extends State<ReportPage> {
                                                           isLoading = false;
                                                         });
                                                         _scaffoldKey
-                                                            .currentState
+                                                            .currentState!
                                                             .showSnackBar(
                                                                 SnackBar(
                                                           backgroundColor:
@@ -491,7 +491,7 @@ class _ReportPageState extends State<ReportPage> {
                                                           isLoading = false;
                                                         });
                                                         _scaffoldKey
-                                                            .currentState
+                                                            .currentState!
                                                             .showSnackBar(
                                                                 SnackBar(
                                                           backgroundColor:
@@ -562,14 +562,14 @@ class _ReportPageState extends State<ReportPage> {
             }));
   }
 
-  Future<String> _selectDate(BuildContext context) async {
+  Future<String?> _selectDate(BuildContext context) async {
     final dateResult = await showDatePicker(
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
       initialEntryMode: DatePickerEntryMode.input,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: Theme.of(context).primaryColor,
@@ -577,7 +577,7 @@ class _ReportPageState extends State<ReportPage> {
             colorScheme: ColorScheme.light(primary: const Color(0xFF000000)),
             buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
-          child: child,
+          child: child!,
         );
       },
     );

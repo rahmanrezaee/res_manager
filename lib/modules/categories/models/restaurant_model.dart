@@ -1,12 +1,11 @@
 class RestaurantModel {
   int activeOrder;
   Map restaurant = {
-    "_id": '603f313fd0c6141040de8c89',
-    "username": "Resraurant name"
+  
   };
   RestaurantModel({
-    this.activeOrder,
-    this.restaurant,
+  required  this.activeOrder,
+  required  this.restaurant,
   });
 
   factory RestaurantModel.fromJson(json) {

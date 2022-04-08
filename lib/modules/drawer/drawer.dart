@@ -23,9 +23,9 @@ import '../policy/Privacy&Policy.dart';
 import '../term/term&condition_page.dart';
 
 class PageModel {
-  String title;
-  Widget icon;
-  Widget page;
+  String? title;
+  Widget? icon;
+  Widget? page;
   PageModel({this.title, this.icon, this.page});
 }
 
@@ -130,7 +130,7 @@ class _LayoutExampleState extends State<LayoutExample> {
 
     return ResponsiveScaffold(
       kDesktopBreakpoint: 768,
-      body: pages[pageIndex].page,
+      body: pages[pageIndex].page!,
       drawer: SizedBox(
         width: 281,
         child: Padding(
@@ -145,8 +145,8 @@ class _LayoutExampleState extends State<LayoutExample> {
                     ...pages.map((page) {
                       int index = pages.indexOf(page);
                       return drawerListItemBuilder(
-                        icon: page.icon,
-                        title: page.title,
+                        icon: page.icon!,
+                        title: page.title!,
                         isActive: pageIndex == index,
                         onClick: () {
                           if (page.title == 'LogOut') {
@@ -200,10 +200,10 @@ class _LayoutExampleState extends State<LayoutExample> {
 }
 
 drawerListItemBuilder({
-  @required Widget icon,
-  @required String title,
-  bool isActive,
-  @required Function onClick,
+  required Widget icon,
+  required String title,
+  bool? isActive,
+  required Function onClick,
 }) {
   return InkWell(
     onTap: () {

@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class ResturantProvider with ChangeNotifier {
-  List<ResturantModel> listResturant;
-  AuthProvider auth;
+  List<ResturantModel>? listResturant;
+  AuthProvider ?auth;
 
   ResturantProvider(this.auth);
 
@@ -17,7 +17,7 @@ class ResturantProvider with ChangeNotifier {
     try {
       //getting token
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = json.decode(prefs.getString("user"))['token'];
+      String token = json.decode(prefs.getString("user")!)['token'];
       //getting data
       String url = "$baseUrl/admin/restaurant/$resturantId";
       var res = await APIRequest()
@@ -36,11 +36,11 @@ class ResturantProvider with ChangeNotifier {
     }
   }
 
-  Future<ResturantModel> getSingleResturant(id) async {
+  Future<ResturantModel?> getSingleResturant(id) async {
     try {
       String url = "$baseUrl/admin/restaurant/profile/$id";
 
-      final result = await APIRequest().get(myUrl: url, token: auth.token);
+      final result = await APIRequest().get(myUrl: url, token: auth!.token);
 
       print("result $result");
 
@@ -60,11 +60,11 @@ class ResturantProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> getResturantList() async {
+  Future<bool?> getResturantList() async {
     try {
       String url = "$baseUrl/admin/restaurant";
 
-      final result = await APIRequest().get(myUrl: url, token: auth.token);
+      final result = await APIRequest().get(myUrl: url, token: auth!.token);
 
       print("result $result");
 
@@ -97,11 +97,11 @@ class ResturantProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, String>>> getResturantListWithoutPro() async {
+  Future<List<Map<String, String>>?> getResturantListWithoutPro() async {
     try {
       String url = "$baseUrl/admin/restaurant";
 
-      final result = await APIRequest().get(myUrl: url, token: auth.token);
+      final result = await APIRequest().get(myUrl: url, token: auth!.token);
 
       print("result $result");
 
@@ -137,7 +137,7 @@ class ResturantProvider with ChangeNotifier {
       final response = await APIRequest().post(
         myBody: data,
         myHeaders: {
-          "token": auth.token,
+          "token": auth!.token,
         },
         myUrl: url.toString(),
       );
@@ -170,7 +170,7 @@ class ResturantProvider with ChangeNotifier {
       final response = await APIRequest().put(
         myBody: data,
         myHeaders: {
-          "token": auth.token,
+          "token": auth!.token,
         },
         myUrl: url.toString(),
       );

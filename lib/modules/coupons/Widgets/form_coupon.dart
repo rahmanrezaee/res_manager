@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 
 class FormCoupen extends StatefulWidget {
   var formKey;
-  String coupenId;
+  String? coupenId;
   FormCoupen({this.formKey, this.coupenId});
   @override
   _FormCoupenState createState() => _FormCoupenState();
@@ -33,12 +33,12 @@ class _FormCoupenState extends State<FormCoupen> {
 
   bool _submitted = false;
   var scoffeldKey = GlobalKey<ScaffoldState>();
-  AuthProvider auth;
+  AuthProvider? auth;
   @override
   void initState() {
     auth = Provider.of<AuthProvider>(context, listen: false);
-    ResturantProvider(auth).getResturantListWithoutPro().then((value) {
-      resturnat = value;
+    ResturantProvider(auth!).getResturantListWithoutPro().then((value) {
+      resturnat = value!;
       elements = List.generate(
         value.length,
         (index) => MultipleSelectItem.build(
@@ -61,7 +61,7 @@ class _FormCoupenState extends State<FormCoupen> {
           .then((value) {
         setState(() {
           _loadUpdate = false;
-          couponModel = value;
+          couponModel = value!;
         });
       });
     }
@@ -75,7 +75,6 @@ class _FormCoupenState extends State<FormCoupen> {
       key: scoffeldKey,
       backgroundColor: Colors.transparent,
       body: Form(
-        autovalidate: _autoValidate,
         key: widget.formKey,
         child: Container(
           alignment: Alignment.center,
@@ -102,8 +101,8 @@ class _FormCoupenState extends State<FormCoupen> {
                             couponModel.name = value;
                           });
                         },
-                        valide: (String value) {
-                          if (value.isEmpty) {
+                        valide: (String? value) {
+                          if (value!.isEmpty) {
                             return "Your Coupon  Name is Empty";
                           }
                         },
@@ -122,8 +121,8 @@ class _FormCoupenState extends State<FormCoupen> {
                             couponModel.code = value;
                           });
                         },
-                        valide: (String value) {
-                          if (value.isEmpty) {
+                        valide: (String? value) {
+                          if (value!.isEmpty) {
                             return "Your Coupon  Code is Empty";
                           }
                           if (value.length < 8 || value.length > 20) {
@@ -242,8 +241,8 @@ class _FormCoupenState extends State<FormCoupen> {
                         typetext:
                             TextInputType.numberWithOptions(decimal: true),
                         initValue: couponModel.mount != null
-                            ? "${couponModel.mount}"
-                            : null,
+                            ? couponModel.mount.toString()
+                            : "",
                         hintText: "Precentage or Flat",
                         onChange: (String value) {
                           print("moun $value");
@@ -251,14 +250,14 @@ class _FormCoupenState extends State<FormCoupen> {
                             couponModel.mount = double.parse(value);
                           });
                         },
-                        valide: (String value) {
-                          if (value.isEmpty) {
+                        valide: (String? value) {
+                          if (value!.isEmpty) {
                             return "Precentage or Flat is Empty";
                           }
                         },
-                        onSave: (String value) {
+                        onSave: (String? value) {
                           setState(() {
-                            couponModel.mount = double.parse(value);
+                            couponModel.mount = double.parse(value!);
                           });
                         },
                       ),
@@ -312,7 +311,7 @@ class _FormCoupenState extends State<FormCoupen> {
 
           if (result['status'] == true) {
             print("Mahdi: Executed 2");
-            scoffeldKey.currentState.showSnackBar(SnackBar(
+            scoffeldKey.currentState!.showSnackBar(SnackBar(
               content: Text("Successfuly Updated."),
               duration: Duration(seconds: 3),
             ));
@@ -320,7 +319,7 @@ class _FormCoupenState extends State<FormCoupen> {
               Navigator.of(context).pop();
             });
           } else {
-            scoffeldKey.currentState.showSnackBar(SnackBar(
+            scoffeldKey.currentState!.showSnackBar(SnackBar(
               content: Text("${result['massage']}"),
               duration: Duration(seconds: 1),
             ));
@@ -331,7 +330,7 @@ class _FormCoupenState extends State<FormCoupen> {
           setState(() {
             _isLoading = false;
           });
-          scoffeldKey.currentState.showSnackBar(SnackBar(
+          scoffeldKey.currentState!.showSnackBar(SnackBar(
             content: Text("Something went wrong!! Please try again later."),
             duration: Duration(seconds: 4),
           ));
@@ -344,7 +343,7 @@ class _FormCoupenState extends State<FormCoupen> {
 
           if (result['status'] == true) {
             print("Mahdi: Executed 2");
-            scoffeldKey.currentState.showSnackBar(SnackBar(
+            scoffeldKey.currentState!.showSnackBar(SnackBar(
               content: Text("Successfuly added."),
               duration: Duration(seconds: 3),
             ));
@@ -352,7 +351,7 @@ class _FormCoupenState extends State<FormCoupen> {
               Navigator.of(context).pop();
             });
           } else {
-            scoffeldKey.currentState.showSnackBar(SnackBar(
+            scoffeldKey.currentState!.showSnackBar(SnackBar(
               content: Text("${result['massage']}"),
               duration: Duration(seconds: 1),
             ));
@@ -364,7 +363,7 @@ class _FormCoupenState extends State<FormCoupen> {
           setState(() {
             _isLoading = false;
           });
-          scoffeldKey.currentState.showSnackBar(SnackBar(
+          scoffeldKey.currentState!.showSnackBar(SnackBar(
             content: Text("Something went wrong!! Please try again later."),
             duration: Duration(seconds: 4),
           ));

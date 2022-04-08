@@ -6,23 +6,23 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 class ContactProvider with ChangeNotifier {
-  List<ContactModel> contacts;
+  List<ContactModel> ? contacts;
   AuthProvider auth;
 
   ContactProvider(this.auth);
-  List<ContactModel> get getContacts => this.contacts;
-  bool loadingMore;
-  bool hasMoreItems;
-  int maxItems;
+  List<ContactModel> get getContacts => this.contacts!;
+  bool ? loadingMore;
+  bool ? hasMoreItems;
+  int ? maxItems;
   int page = 1;
-  int lastPage;
+  int ? lastPage;
 
   showLoadingBottom(bool state) {
     loadingMore = state;
     notifyListeners();
   }
 
-  Future<bool> fetchContacts() async {
+  Future<bool?> fetchContacts() async {
     try {
       String url = "$baseUrl/admin/contact?page=$page";
       print(url);
@@ -49,7 +49,7 @@ class ContactProvider with ChangeNotifier {
       if (contacts == null) {
         contacts = [];
       }
-      contacts.addAll(loadedProducts);
+      contacts!.addAll(loadedProducts);
       page++;
 
       notifyListeners();

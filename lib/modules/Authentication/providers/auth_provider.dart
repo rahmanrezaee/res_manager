@@ -16,16 +16,16 @@ import 'package:provider/provider.dart';
 import '../validators/formFieldsValidators.dart';
 
 class AuthProvider with ChangeNotifier {
-  String _token;
+  String? _token;
 
-  DateTime _expiryDate;
+  DateTime? _expiryDate;
 
   Future<String> get userId async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user') == null) {
       return '';
     } else {
-      return json.decode(prefs.getString('user'))['userId'];
+      return json.decode(prefs.getString('user')!)['userId'];
     }
   }
 
@@ -34,7 +34,7 @@ class AuthProvider with ChangeNotifier {
     if (prefs.getString('user') == null) {
       return '';
     } else {
-      return json.decode(prefs.getString('user'))['fcmToken'];
+      return json.decode(prefs.getString('user')!)['fcmToken'];
     }
   }
 
@@ -119,7 +119,7 @@ class AuthProvider with ChangeNotifier {
 
   get token {
     if (_expiryDate != null &&
-        _expiryDate.isAfter(DateTime.now()) &&
+        _expiryDate!.isAfter(DateTime.now()) &&
         _token != null) {
       return _token;
     }
@@ -136,11 +136,11 @@ class AuthProvider with ChangeNotifier {
         _token = null;
       } else {
         DateTime expireDate =
-            DateTime.parse(json.decode(prefs.getString('user'))['expierDate']);
+            DateTime.parse(json.decode(prefs.getString('user')!)['expierDate']);
 
         if (expireDate != null && expireDate.isAfter(DateTime.now())) {
-          log("data user: User Valided} ${json.decode(prefs.getString('user'))['token']}");
-          _token = json.decode(prefs.getString('user'))['token'];
+          log("data user: User Valided} ${json.decode(prefs.getString('user')!)['token']}");
+          _token = json.decode(prefs.getString('user')!)['token'];
           _expiryDate = expireDate;
 
           log("data user: User Valided}$_token $_expiryDate");

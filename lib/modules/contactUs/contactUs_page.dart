@@ -16,7 +16,7 @@ class ContactUsPage extends StatefulWidget {
 }
 
 class _ContactUsPageState extends State<ContactUsPage> {
-  ContactProvider contactProvider;
+  ContactProvider ? contactProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     builder: (context, snapshot) {
                       return Center(child: CircularProgressIndicator());
                     })
-                : value.contacts.isEmpty
+                : value.contacts!.isEmpty
                     ? ListView(
                         children: [
                           Container(
@@ -57,7 +57,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     : IncrementallyLoadingListView(
                         shrinkWrap: true,
                         hasMore: () => value.hasMoreItems,
-                        itemCount: () => value.contacts.length,
+                        itemCount: () => value.contacts!.length,
                         loadMore: () async {
                           await value.fetchContacts();
                         },
@@ -70,17 +70,17 @@ class _ContactUsPageState extends State<ContactUsPage> {
                         loadMoreOffsetFromBottom: 0,
                         itemBuilder: (context, index) {
                           if ((value.loadingMore ?? false) &&
-                              index == value.contacts.length - 1) {
+                              index == value.contacts!.length - 1) {
                             return Column(
                               children: <Widget>[
                                 _contactItemBuilder(
-                                    context, value.contacts[index]),
+                                    context, value.contacts![index]),
                                 PlaceholderItemCard()
                               ],
                             );
                           }
                           return _contactItemBuilder(
-                              context, value.contacts[index]);
+                              context, value.contacts![index]);
                         },
                       ),
           );
@@ -112,8 +112,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
   }
 }
 
-_contactItemBuilder(context, ContactModel contact) {
-  return contact.email != null
+_contactItemBuilder(context, ContactModel ? contact) {
+  return contact!.email != null
       ? Card(
           child: Padding(
             padding: EdgeInsets.all(20),

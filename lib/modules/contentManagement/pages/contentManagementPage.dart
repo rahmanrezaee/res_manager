@@ -21,8 +21,8 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
 
   final _keyForm = GlobalKey<FormState>();
 
-  String _dropdownController;
-  AuthProvider auth;
+  String? _dropdownController;
+  AuthProvider? auth;
 
   @override
   void initState() {
@@ -151,8 +151,8 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                   controller: messageCtrl,
                   minLines: 8,
                   maxLines: 10,
-                  validator: (String value) {
-                    if (value.isEmpty) {
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
                       return "Your Message is Empty";
                     } else {
                       return null;
@@ -203,7 +203,7 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                     onPressed: _isLoading
                         ? null
                         : () {
-                            if (_keyForm.currentState.validate()) {
+                            if (_keyForm.currentState!.validate()) {
                               setState(() {
                                 _isLoading = true;
                               });
@@ -224,8 +224,8 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
 
                               Provider.of<ContentManagementprovider>(context,
                                       listen: false)
-                                  .submitContentMangement(_dropdownController,
-                                      messageCtrl.text, slug, auth)
+                                  .submitContentMangement(_dropdownController!,
+                                      messageCtrl.text, slug, auth!)
                                   .then((value) {
                                 setState(() {
                                   //OK now it is showing the right message.
@@ -241,7 +241,7 @@ class _ContentManagementPageState extends State<ContentManagementPage> {
                                     duration: new Duration(seconds: 3),
                                   ));
                                   setState(() {
-                                    _keyForm.currentState.reset();
+                                    _keyForm.currentState!.reset();
 
                                     FocusScope.of(context).unfocus();
                                     _dropdownController = null;

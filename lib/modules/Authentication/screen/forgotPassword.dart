@@ -21,9 +21,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   TextEditingController _passwordController = new TextEditingController();
 
-  AuthProvider authProvider;
+  AuthProvider? authProvider;
 
-  Function get autovalidate => null;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +96,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   return "Please Enter Your Correct Email";
                                 }
                               },
-                              autovalidate,
                             ),
                           ),
                           SizedBox(height: 15),
@@ -117,7 +115,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                       style: Theme.of(context).textTheme.button,
                                     ),
                               onPressed: () {
-                                if (_formKey.currentState.validate()) {
+                                if (_formKey.currentState!.validate()) {
                                   forgotPassword();
                                 }
                               },
@@ -128,7 +126,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     ),
                     error != null
                         ? Text(
-                            error,
+                            error!,
                             style: TextStyle(color: AppColors.redText),
                           )
                         : Container(),
@@ -144,14 +142,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   bool loading = false;
-  String error;
+  String ? error;
   forgotPassword() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         loading = true;
       });
       String email = _emailController.text;
-      authProvider.forgotPassword(email).then((res) {
+      authProvider!.forgotPassword(email).then((res) {
         setState(() {
           loading = false;
         });
@@ -218,7 +216,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 }
 
 _loginFieldBuilder(String hintText, TextEditingController controller,
-    Function validator, Function autovalidate) {
+    Function validator,) {
   return TextFormField(
     controller: controller,
     validator: (e) {

@@ -6,13 +6,13 @@ typedef OnConfirm(List selectedValues);
 class MultipleDropDown extends StatefulWidget {
   final List values;
   final List<MultipleSelectItem> elements;
-  final String placeholder;
+  final String ?placeholder;
   final bool disabled;
 
   MultipleDropDown({
-    Key key,
-    @required this.values,
-    @required this.elements,
+    Key ?key,
+    required this.values,
+    required this.elements,
     this.placeholder,
     this.disabled = false,
   })  : assert(values != null),
@@ -59,7 +59,7 @@ class MultipleDropDownState extends State<MultipleDropDown> {
             context,
             elements: this.widget.elements,
             values: this.widget.values,
-            title: this.widget.placeholder,
+            title: this.widget.placeholder!,
           ).then((values) {
             this.setState(() {});
           });
@@ -71,7 +71,7 @@ class MultipleDropDownState extends State<MultipleDropDown> {
     if (this.widget.values.length <= 0 && this.widget.placeholder != null) {
       return Padding(
         child: Text(
-          this.widget.placeholder,
+          this.widget.placeholder!,
           style: TextStyle(
             fontSize: 16,
             color: Colors.black54,
@@ -113,9 +113,9 @@ class MultipleDropDownState extends State<MultipleDropDown> {
 class MultipleSelect {
   static Future showMultipleSelector(
     BuildContext context, {
-    @required List<MultipleSelectItem> elements,
-    @required values,
-    @required String title,
+    required List<MultipleSelectItem> elements,
+    required values,
+    required String title,
   }) {
     return Navigator.push(
       context,
@@ -131,16 +131,16 @@ class MultipleSelect {
 }
 
 class MultipleSelectRoute<T> extends PopupRoute<T> {
-  final String barrierLabel;
+  final String ?barrierLabel;
   final List<MultipleSelectItem> elements;
   final List values;
   final String title;
 
   MultipleSelectRoute({
     this.barrierLabel,
-    @required this.elements,
-    @required this.values,
-    @required this.title,
+    required this.elements,
+    required this.values,
+    required this.title,
   });
 
   @override
@@ -152,14 +152,14 @@ class MultipleSelectRoute<T> extends PopupRoute<T> {
   @override
   bool get barrierDismissible => true;
 
-  AnimationController _animationController;
+  AnimationController? _animationController;
 
   @override
   AnimationController createAnimationController() {
     assert(_animationController == null);
     _animationController =
-        BottomSheet.createAnimationController(navigator.overlay);
-    return _animationController;
+        BottomSheet.createAnimationController(navigator!.overlay!);
+    return _animationController!;
   }
 
   @override
@@ -189,10 +189,10 @@ class SelectorList<T> extends StatefulWidget {
   final String title;
 
   SelectorList({
-    @required this.elements,
+    required this.elements,
     this.height = 200,
-    @required this.values,
-    @required this.title,
+    required this.values,
+    required this.title,
   });
 
   @override
@@ -200,7 +200,7 @@ class SelectorList<T> extends StatefulWidget {
 }
 
 class SelectorListState extends State<SelectorList> {
-  List<MultipleSelectItem> _elements;
+  List<MultipleSelectItem>? _elements;
 
   @override
   initState() {
@@ -235,9 +235,9 @@ class SelectorListState extends State<SelectorList> {
                 child: ListView.separated(
                   separatorBuilder: (BuildContext context, int index) =>
                       Divider(height: 1.0, color: Colors.black54),
-                  itemCount: this._elements.length,
+                  itemCount: this._elements!.length,
                   itemBuilder: (context, index) {
-                    MultipleSelectItem item = this._elements[index];
+                    MultipleSelectItem item = this._elements![index];
                     return GestureDetector(
                       onTap: () {
                         this.widget.values.contains(item.value)
@@ -312,7 +312,7 @@ class SelectorListState extends State<SelectorList> {
           child: Container(
             decoration: BoxDecoration(
               border:
-                  Border(top: BorderSide(width: 2, color: Colors.grey[350])),
+                  Border(top: BorderSide(width: 2, color: Colors.grey)),
               color: Colors.grey[200],
             ),
             child: Container(
@@ -337,9 +337,9 @@ class MultipleSelectItem<V, D, C> {
   C content;
 
   MultipleSelectItem.build({
-    @required this.value,
-    @required this.display,
-    @required this.content,
+    required this.value,
+    required this.display,
+    required this.content,
   });
 
   MultipleSelectItem.fromJson(

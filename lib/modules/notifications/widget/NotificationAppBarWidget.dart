@@ -1,6 +1,8 @@
 import 'package:admin/modules/notifications/notification_page.dart';
 import 'package:admin/modules/notifications/provider/notificaction_provider.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class NotificationAppBarWidget extends StatelessWidget {
@@ -9,43 +11,30 @@ class NotificationAppBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<NotificationProvider>(builder: (context, data, snapshot) {
       print(" data.countNotification ${data.countNotification}");
-      return new Stack(
-        children: <Widget>[
-          new IconButton(
-              icon: Image.asset("assets/images/notification.png"),
-              onPressed: () {
-                Navigator.pushNamed(context, NotificationPage.routeName);
-              }),
-          data.notificatins == null
-              ? FutureBuilder(
-                  future: data.fetchNotifications(),
-                  builder: (context, snapshot) {
-                    return Container();
-                  })
-              : new Positioned(
-                  right: 11,
-                  top: 11,
-                  child: new Container(
-                    padding: EdgeInsets.all(2),
-                    decoration: new BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    constraints: BoxConstraints(
-                      minWidth: 14,
-                      minHeight: 14,
-                    ),
-                    child: Text(
-                      '${data.onWriteNotification}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
+      return Container(
+        margin: EdgeInsets.only(right: 10, left: 10),
+        child: IconButton(
+            icon: Badge(
+                animationType: BadgeAnimationType.scale,
+                badgeContent: data.notificatins == null
+                    ? FutureBuilder(
+                        future: data.fetchNotifications(),
+                        builder: (context, snapshot) {
+                          return Text(
+                            '0',
+                            style: TextStyle(color: Colors.white),
+                          );
+                        })
+                    : Text(
+                        '${data.onWriteNotification}',
+                        style: TextStyle(color: Colors.white),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-        ],
+                child: Icon(
+                  FontAwesomeIcons.bell,
+                )),
+            onPressed: () {
+              Navigator.pushNamed(context, NotificationPage.routeName);
+            }),
       );
     });
   }

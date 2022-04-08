@@ -32,18 +32,17 @@ class LoginPage extends StatefulWidget {
 bool first = true;
 
 class _LoginPageState extends State<LoginPage> {
-  StreamSubscription _sub;
+  StreamSubscription ?_sub;
   String _latestLink = 'Unknown';
-  Uri _latestUri;
+  Uri ?_latestUri;
 
-  Function get autovalidate => null;
 
   /// An implementation using a [String] link
   initPlatformStateForStringUniLinks() async {
     // Attach a listener to the links stream
     _sub = getLinksStream().listen((String link) {
       if (!mounted) return;
-      _latestLink = link ?? 'Unknown';
+      _latestLink = link;
       _latestUri = null;
       try {
         if (link != null) {
@@ -95,13 +94,13 @@ class _LoginPageState extends State<LoginPage> {
 
   TextEditingController _passwordController = new TextEditingController();
 
-  AuthProvider authProvider;
-  StreamSubscription iosSubscription;
+  AuthProvider? authProvider;
+  StreamSubscription ?iosSubscription;
 
   @override
   void dispose() {
-    if (_sub != null) _sub.cancel();
-    if (iosSubscription != null) iosSubscription.cancel();
+    if (_sub != null) _sub!.cancel();
+    if (iosSubscription != null) iosSubscription!.cancel();
     super.dispose();
   }
 
@@ -116,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
     print('get Fcm Token');
 
     FirebaseMessaging.instance.getToken().then((valu) {
-      this.fcmToken = valu;
+      this.fcmToken = valu!;
       log("firebase token $fcmToken");
     });
   }
@@ -140,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 50),
                 Text(
                   "Login",
-                  style: Theme.of(context).textTheme.headline5.copyWith(
+                  style: Theme.of(context).textTheme.headline5!.copyWith(
                       fontWeight: FontWeight.bold, color: Colors.black),
                 ),
                 SizedBox(height: 20),
@@ -163,7 +162,6 @@ class _LoginPageState extends State<LoginPage> {
                           "Email Address",
                           emailValidator,
                           _emailController,
-                          autovalidate,
                         ),
                       ),
                       SizedBox(height: 15),
@@ -174,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                           obscureText: obscureText,
                           controller: _passwordController,
                           validator: (v) {
-                            return passwordValidator(v);
+                            return passwordValidator(v!);
                           },
                           decoration: InputDecoration(
                             hintText: "Password",
@@ -254,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 20),
                 error == null
                     ? Container()
-                    : Text(error, style: TextStyle(color: AppColors.redText)),
+                    : Text(error!, style: TextStyle(color: AppColors.redText)),
                 SizedBox(height: 10),
                 Container(
                   width: getHelfIpadAndFullMobWidth(context),
@@ -295,16 +293,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   bool loading = false;
-  String error;
+  String ?error;
   login() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         loading = true;
       });
       String email = _emailController.text;
       String password = _passwordController.text;
       try {
-        authProvider.login(email, password, this.fcmToken).then((res) {
+        authProvider!.login(email, password, this.fcmToken).then((res) {
           setState(() {
             loading = false;
           });
@@ -330,7 +328,7 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 _loginFieldBuilder(String hintText, Function validator,
-    TextEditingController controller, Function autovalidate) {
+    TextEditingController controller, ) {
   return TextFormField(
     controller: controller,
     validator: (v) {

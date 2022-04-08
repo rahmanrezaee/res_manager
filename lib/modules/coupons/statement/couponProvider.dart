@@ -11,13 +11,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class CoupenProvider with ChangeNotifier {
-  List<CouponModel> list;
-  AuthProvider auth;
-  bool loadingMore;
-  bool hasMoreItems;
-  int maxItems;
+  List<CouponModel> ?list;
+  AuthProvider ?auth;
+  bool? loadingMore;
+  bool? hasMoreItems;
+  int? maxItems;
   int page = 1;
-  int lastPage;
+  int ?lastPage;
 
   CoupenProvider(this.auth);
 
@@ -32,11 +32,11 @@ class CoupenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<CouponModel> getSingleCoupen(id) async {
+  Future<CouponModel?> getSingleCoupen(id) async {
     try {
       String url = "$baseUrl/admin/coupon/$id";
 
-      final result = await APIRequest().get(myUrl: url, token: auth.token);
+      final result = await APIRequest().get(myUrl: url, token: auth!.token);
 
       print("result $result");
 
@@ -56,11 +56,11 @@ class CoupenProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> getCoupenList() async {
+  Future<bool?> getCoupenList() async {
     try {
       String url = "$baseUrl/admin/coupon?page=$page";
 
-      final result = await APIRequest().get(myUrl: url, token: auth.token);
+      final result = await APIRequest().get(myUrl: url, token: auth!.token);
 
       maxItems = result.data['data']['totalDocs'];
       page = result.data['data']['page'];
@@ -82,7 +82,7 @@ class CoupenProvider with ChangeNotifier {
       if (list == null) {
         list = [];
       }
-      list.addAll(loadedProducts);
+      list!.addAll(loadedProducts);
       page++;
 
       notifyListeners();
@@ -106,7 +106,7 @@ class CoupenProvider with ChangeNotifier {
       final response = await APIRequest().post(
         myBody: data,
         myHeaders: {
-          "token": auth.token,
+          "token": auth!.token,
         },
         myUrl: url.toString(),
       );
@@ -136,7 +136,7 @@ class CoupenProvider with ChangeNotifier {
 
       final response = await APIRequest().put(
         myBody: data,
-        myHeaders: {"token": auth.token},
+        myHeaders: {"token": auth!.token},
         myUrl: url.toString(),
       );
 
@@ -161,7 +161,7 @@ class CoupenProvider with ChangeNotifier {
     try {
       String url = "$baseUrl/admin/coupon/$id";
       var res = await APIRequest()
-          .delete(myUrl: url, myBody: null, myHeaders: {'token': auth.token});
+          .delete(myUrl: url, myBody: null, myHeaders: {'token': auth!.token});
 
       setPage(1);
       notifyListeners();

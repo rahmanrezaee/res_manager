@@ -3,9 +3,9 @@ class CategoryModel {
   String categoryName;
   int foodNumber;
   CategoryModel({
-    this.id,
-    this.categoryName,
-    this.foodNumber,
+    required this.id,
+   required this.categoryName,
+   required this.foodNumber,
   });
 
   factory CategoryModel.fromJson(json) {

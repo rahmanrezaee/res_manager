@@ -8,12 +8,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 class ContentManagementprovider with ChangeNotifier {
-  List<ContentManagementModel> contentManagement;
+  List<ContentManagementModel>? contentManagement;
 
-  AuthProvider auth;
+  AuthProvider ?auth;
   ContentManagementprovider(this.auth);
   List<ContentManagementModel> get getContentManagement =>
-      this.contentManagement;
+      this.contentManagement!;
 
   Future submitContentMangement(String _dropdownController, String messasge,
       String slug, AuthProvider auth) async {
@@ -46,11 +46,11 @@ class ContentManagementprovider with ChangeNotifier {
   }
 
   // ignore: missing_return
-  Future<bool> fetchContentManagement() async {
+  Future<bool?> fetchContentManagement() async {
     try {
       String url = "$baseUrl/public/pages/customer/pandp";
       print(url);
-      final result = await APIRequest().get(myUrl: url, token: auth.token);
+      final result = await APIRequest().get(myUrl: url, token: auth!.token);
       print("result $result");
 
       String title = result.data['data']['title'];
@@ -62,7 +62,7 @@ class ContentManagementprovider with ChangeNotifier {
       (result.data['data'] as List).forEach((notify) {
         loadContentManagement.add(ContentManagementModel.fromJson(notify));
       });
-      contentManagement.addAll(loadContentManagement);
+      contentManagement!.addAll(loadContentManagement);
 
       notifyListeners();
       return true;

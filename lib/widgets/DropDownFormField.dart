@@ -4,20 +4,20 @@ class DropDownFormField extends FormField<dynamic> {
   final String titleText;
   final String hintText;
   final bool required;
-  final String errorText;
+  final String ?errorText;
   final dynamic value;
   final padding;
-  final List dataSource;
-  final String textField;
-  final String valueField;
+  final List ?dataSource;
+  final String? textField;
+  final String ?valueField;
 
-  final Function onChanged;
+  final Function? onChanged;
   final bool filled;
   final bool enable;
 
   DropDownFormField(
-      {FormFieldSetter<dynamic> onSaved,
-      FormFieldValidator<dynamic> validator,
+      {FormFieldSetter<dynamic> ?onSaved,
+      FormFieldValidator<dynamic>? validator,
       bool autovalidate = false,
       this.titleText = 'Title',
       this.hintText = 'Select one option',
@@ -34,7 +34,6 @@ class DropDownFormField extends FormField<dynamic> {
       : super(
           onSaved: onSaved,
           validator: validator,
-          autovalidate: autovalidate,
           initialValue: value == '' ? null : value,
           builder: (FormFieldState<dynamic> state) {
             return Container(
@@ -79,10 +78,10 @@ class DropDownFormField extends FormField<dynamic> {
                             ? (dynamic newValue) {
                                 state.didChange(newValue);
 
-                                onChanged(newValue);
+                                onChanged!(newValue);
                               }
                             : null,
-                        items: dataSource.map((item) {
+                        items: dataSource!.map((item) {
                           return DropdownMenuItem<dynamic>(
                             value: item[valueField],
                             child: Text(

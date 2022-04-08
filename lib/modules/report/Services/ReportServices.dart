@@ -11,14 +11,14 @@ Future getReport(
     type,
     coupenCode,
     restaurantId,
-    AuthProvider auth}) async {
+    AuthProvider? auth}) async {
   try {
     print(
         "params fromDate $fromDate toDate $toDate coupenCode $coupenCode restaurantId $restaurantId");
     String url =
         "$baseUrl/admin/report/orders?type=$type${coupenCode != null && coupenCode != "" ? "&couponCode=" + coupenCode : ""}${restaurantId == null || restaurantId == "" || restaurantId == "none" ? "" : "&restaurantId=" + restaurantId}${fromDate != null ? "&fromDate=" + fromDate : ""}${toDate != null ? "&toDate=" + toDate : ""}";
 
-    final result = await APIRequest().get(myUrl: url, token: auth.token);
+    final result = await APIRequest().get(myUrl: url, token: auth!.token);
 
     print("result $result");
     if (type == "earnings") {
@@ -40,9 +40,9 @@ Future getSendReportEmil(
     toDate,
     resturant,
     coupenCode,
-    AuthProvider auth,
-    String totalUser,
-    String restaurantId}) async {
+    AuthProvider ?auth,
+    String ?totalUser,
+    String ?restaurantId}) async {
   try {
     String url = "$baseUrl/restaurant/report/email-report-orders";
     print("url $url");
@@ -67,7 +67,7 @@ Future getSendReportEmil(
     print("this is email report");
     print(data);
     final result = await APIRequest()
-        .post(myUrl: url, myHeaders: {"token": auth.token}, myBody: data);
+        .post(myUrl: url, myHeaders: {"token": auth!.token}, myBody: data);
 
     print("result $result");
 
@@ -83,7 +83,7 @@ Future getSendReportEmil(
 }
 
 Future getSendReportEmailEarnings(
-    {fromDate, toDate, resturant, AuthProvider auth, String earning}) async {
+    {fromDate, toDate, resturant, AuthProvider? auth, String? earning}) async {
   try {
     String url = "$baseUrl/restaurant/report/email-report-earnings";
     print("url $url");
@@ -104,7 +104,7 @@ Future getSendReportEmailEarnings(
 
     log("data $data");
     final result = await APIRequest()
-        .post(myUrl: url, myHeaders: {"token": auth.token}, myBody: data);
+        .post(myUrl: url, myHeaders: {"token": auth!.token}, myBody: data);
 
     print("result $result");
 

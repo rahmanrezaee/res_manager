@@ -39,18 +39,18 @@ class DishPage extends StatefulWidget {
 class _DishHomeState extends State<DishPage> {
   bool isLoadDish = true;
 
-  List<DishModel> dishList;
-  String catId;
-  String resturantId;
+  List<DishModel>? dishList;
+  String? catId;
+  String? resturantId;
   final _scoffoldKey = GlobalKey<ScaffoldState>();
-  Future getDish;
-  AuthProvider auth;
+  Future? getDish;
+  AuthProvider? auth;
   @override
   void initState() {
     auth = Provider.of<AuthProvider>(context, listen: false);
     catId = widget.params['catId'];
     resturantId = widget.params['resturantId'];
-    getDish = getFootListWithoutPro(catId, auth).then((value) {
+    getDish = getFootListWithoutPro(catId, auth!).then((value) {
       dishList = value;
     });
 
@@ -110,7 +110,7 @@ class _DishHomeState extends State<DishPage> {
                             "resturantId": resturantId,
                           }).then((value) {
                             print("Done Adding");
-                            getFootListWithoutPro(catId, auth).then((value) {
+                            getFootListWithoutPro(catId, auth!).then((value) {
                               setState(() {
                                 dishList = value;
                               });
@@ -138,7 +138,7 @@ class _DishHomeState extends State<DishPage> {
                         child: Text("error in Fetch orders"),
                       );
                     } else {
-                      return dishList.isEmpty
+                      return dishList!.isEmpty
                           ? Center(
                               child: Text("No Dishes Added"),
                             )
@@ -146,7 +146,7 @@ class _DishHomeState extends State<DishPage> {
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: ResponsiveGridRow(
-                                  children: getColumnDish(dishList),
+                                  children: getColumnDish(dishList!),
                                 ),
                               ),
                             );
@@ -172,7 +172,7 @@ class _DishHomeState extends State<DishPage> {
         sm: 6,
         md: 4,
         lg: 3,
-        child: DishItem(element, this.catId, this.resturantId, () {
+        child: DishItem(element, this.catId!, this.resturantId!, () {
           showDialog(
               context: context,
               builder: (BuildContext context) => FancyDialog(
@@ -181,22 +181,22 @@ class _DishHomeState extends State<DishPage> {
                       setState(() {
                         isLoading = true;
                       });
-                      deleteDish(element.foodId, auth).then((res) {
+                      deleteDish(element.foodId, auth!).then((res) {
                         setState(() {
                           isLoading = false;
                         });
                         if (res["status"]) {
-                          _scoffoldKey.currentState.showSnackBar(SnackBar(
+                          _scoffoldKey.currentState!.showSnackBar(SnackBar(
                             content: Text("The Dish Deleted Successfully"),
                           ));
 
-                          getFootListWithoutPro(catId, auth).then((value) {
+                          getFootListWithoutPro(catId, auth!).then((value) {
                             setState(() {
                               dishList = value;
                             });
                           });
                         } else {
-                          _scoffoldKey.currentState.showSnackBar(SnackBar(
+                          _scoffoldKey.currentState!.showSnackBar(SnackBar(
                             content: Text("${res["message"]}"),
                           ));
                         }
@@ -229,7 +229,7 @@ class DishItem extends StatefulWidget {
 class _DishItemState extends State<DishItem> {
   int visible = 0;
   int quantity = 0;
-  AuthProvider auth;
+  AuthProvider? auth;
   @override
   void initState() {
     auth = Provider.of<AuthProvider>(context, listen: false);
@@ -269,7 +269,7 @@ class _DishItemState extends State<DishItem> {
                     child: Image.network(
                       "${widget.dishItem.images[0].url}",
                       fit: BoxFit.cover,
-                      color: widget.dishItem.visibility
+                      color: widget.dishItem.visibility!
                           ? Colors.transparent
                           : Colors.white54,
                       colorBlendMode: BlendMode.lighten,
@@ -283,22 +283,22 @@ class _DishItemState extends State<DishItem> {
                     onTap: () {
                       setState(() {
                         widget.dishItem.visibility =
-                            !widget.dishItem.visibility;
+                            !widget.dishItem.visibility!;
                       });
                       changeVisiablity(widget.dishItem.foodId,
-                              widget.dishItem.visibility, auth)
+                              widget.dishItem.visibility, auth!)
                           .then((value) {
                         print("widget.dishItem.foodId visible");
 
-                        if (!value) {
+                        if (!value!) {
                           setState(() {
                             widget.dishItem.visibility =
-                                !widget.dishItem.visibility;
+                                !widget.dishItem.visibility!;
                           });
                         } else {
                           widget.keySc.currentState.showSnackBar(SnackBar(
                             content: Text(
-                                "The Dish ${widget.dishItem.visibility ? "Visiable" : "Invisiable"} "),
+                                "The Dish ${widget.dishItem.visibility! ? "Visiable" : "Invisiable"} "),
                           ));
                         }
                       });
@@ -315,9 +315,7 @@ class _DishItemState extends State<DishItem> {
                   right: 10,
                   bottom: 10,
                   child: RatingBar.builder(
-                    initialRating: widget.dishItem.averageRating != null
-                        ? widget.dishItem.averageRating
-                        : 0,
+                    initialRating: widget.dishItem.averageRating ?? 0,
                     itemSize: 25,
                     minRating: 1,
                     updateOnDrag: false,
@@ -354,7 +352,7 @@ class _DishItemState extends State<DishItem> {
                 "\$ ${widget.dishItem.price}",
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle2
+                    .subtitle2!
                     .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),

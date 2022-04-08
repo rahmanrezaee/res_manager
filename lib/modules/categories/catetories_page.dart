@@ -33,10 +33,10 @@ class _CatetoriesPageState extends State<CatetoriesPage> {
           NotificationPage.routeName: (context) => NotificationPage(),
           CatetoriesListPage.routeName: (context) => CatetoriesListPage(),
           DishPage.routeName: (context) => DishPage(
-                ModalRoute.of(context).settings.arguments,
+                ModalRoute.of(context)!.settings.arguments as Map,
               ),
           AddNewDish.routeName: (context) => AddNewDish(
-                ModalRoute.of(context).settings.arguments,
+                ModalRoute.of(context)!.settings.arguments as Map,
               ),
         },
         theme: restaurantTheme,
@@ -54,7 +54,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
   TextEditingController newCategoryController = new TextEditingController();
 
   final categoryForm = GlobalKey<FormState>();
-  String error;
+  String ? error;
   bool first = true;
   final keyScaffold = GlobalKey<ScaffoldState>();
   @override
@@ -142,7 +142,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                   // });
                                 },
                                 dataSource: [
-                                  ...catProvider.getRestaurant.map((e) {
+                                  ...catProvider.getRestaurant!.map((e) {
                                     return {
                                       "display": e.restaurant['username'],
                                       "value": e.restaurant['_id'],
@@ -180,7 +180,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 catProvider.setResturantId(catProvider
-                                    .getRestaurant[0].restaurant['_id']);
+                                    .getRestaurant![0].restaurant['_id']);
 
                                 catProvider.setCategoryToNull();
                               }
@@ -194,7 +194,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                               catProvider.setCategoryToNull();
                             },
                             dataSource: [
-                              ...catProvider.getRestaurant.map((e) {
+                              ...catProvider.getRestaurant!.map((e) {
                                 return {
                                   "display": e.restaurant['username'],
                                   "value": e.restaurant['_id'],
@@ -307,14 +307,14 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                                     .textTheme
                                                     .button),
                                             onPressed: () async {
-                                              if (categoryForm.currentState
+                                              if (categoryForm.currentState!
                                                   .validate()) {
                                                 setState(() {
                                                   addingCat = true;
                                                 });
                                                 catProvider
                                                     .addNewCategory(
-                                                  catProvider.resturantId,
+                                                  catProvider.resturantId!,
                                                   newCategoryController.text,
                                                 )
                                                     .then((value) {
@@ -388,7 +388,7 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                   context,
                                   catProvider.getCategories[index],
                                   catProvider,
-                                  catProvider.resturantId,
+                                  catProvider.resturantId!,
                                 );
                               },
                             ),
@@ -495,13 +495,13 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                         .then((re) {
                                       Navigator.of(context).pop();
                                       if (re['status'] == true) {
-                                        keyScaffold.currentState
+                                        keyScaffold.currentState!
                                             .showSnackBar(SnackBar(
                                           content: Text(
                                               "The Category Edited Successfully"),
                                         ));
                                       } else {
-                                        keyScaffold.currentState
+                                        keyScaffold.currentState!
                                             .showSnackBar(SnackBar(
                                           content: Text("${re['status']}"),
                                         ));
@@ -530,13 +530,13 @@ class _CatetoriesListPageState extends State<CatetoriesListPage> {
                                   .deleteCategoy(category.id)
                                   .then((res) {
                                 if (res['status']) {
-                                  keyScaffold.currentState
+                                  keyScaffold.currentState!
                                       .showSnackBar(SnackBar(
                                     content: Text(
                                         "The Category Deleted Successfully"),
                                   ));
                                 } else {
-                                  keyScaffold.currentState
+                                  keyScaffold.currentState!
                                       .showSnackBar(SnackBar(
                                     content: Text(res['message']),
                                   ));

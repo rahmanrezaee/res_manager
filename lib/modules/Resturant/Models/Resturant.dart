@@ -4,10 +4,10 @@ import 'package:admin/modules/Resturant/Models/TimeModel.dart';
 import 'package:admin/modules/Resturant/Models/location.dart';
 
 class ResturantModel {
-  String resturantName;
-  String avatar;
-  String id;
-  LocationModel location;
+  String? resturantName;
+  String ?avatar;
+  String ?id;
+  LocationModel? location;
   TimeModel sunday = TimeModel();
   TimeModel monday = TimeModel();
   TimeModel tuesday = TimeModel();
@@ -15,11 +15,11 @@ class ResturantModel {
   TimeModel thursday = TimeModel();
   TimeModel friday = TimeModel();
   TimeModel saturday = TimeModel();
-  String email;
-  String password;
-  int activeOrder;
-  int totalOrder;
-  int totalDishies;
+  String? email;
+  String ?password;
+  int? activeOrder;
+  int? totalOrder;
+  int? totalDishies;
 
 
   ResturantModel();
@@ -36,7 +36,7 @@ class ResturantModel {
       "avatar": this.avatar,
       "location": {
         "type": "Point",
-        "coordinates": [this.location.lat, this.location.log]
+        "coordinates": [this.location!.lat, this.location!.log]
       },
       "Sunday": {
         "time": [this.sunday.startTime, this.sunday.endTime]

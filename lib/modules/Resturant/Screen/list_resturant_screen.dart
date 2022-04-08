@@ -109,16 +109,16 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                   onRefresh: () async {
                     await Provider.of<ResturantProvider>(context, listen: false)
                         .getResturantList();
-                    return true;
+        
                   },
                   child: value.listResturant != null
-                      ? value.listResturant.isEmpty
+                      ? value.listResturant!.isEmpty
                           ? Text("No Restaurants")
                           : ListView.builder(
-                              itemCount: value.listResturant.length,
+                              itemCount: value.listResturant!.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return resturantItem(
-                                    value.listResturant[index]);
+                                    value.listResturant![index]);
                               },
                             )
                       : FutureBuilder(
@@ -131,11 +131,10 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                                 child: CircularProgressIndicator(),
                               );
                             } else {
-                              if (snapshot.hasData) {
+                        
                                 return Center(
                                   child: Text("Error In Fetch Data"),
                                 );
-                              }
                             }
                           },
                         ),
@@ -200,13 +199,13 @@ class _ListResturantScreenState extends State<ListResturantScreen> {
                                     });
 
                                     if (res == true) {
-                                      keyScoffold.currentState
+                                      keyScoffold.currentState!
                                           .showSnackBar(new SnackBar(
                                         content: Text(
                                             "The Restaurant deleted Successfuly."),
                                       ));
                                     } else {
-                                      keyScoffold.currentState
+                                      keyScoffold.currentState!
                                           .showSnackBar(new SnackBar(
                                         content: Text(
                                           "Something went wrong while deleting customer.",

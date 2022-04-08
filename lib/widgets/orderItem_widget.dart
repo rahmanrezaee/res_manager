@@ -13,21 +13,20 @@ import 'package:incrementally_loading_listview/incrementally_loading_listview.da
 import 'package:jiffy/jiffy.dart';
 import 'package:num_to_txt/num_to_txt.dart';
 import 'package:provider/provider.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 import '../themes/colors.dart';
 import 'package:admin/widgets/capitalize.dart';
 
 class OrderItem extends StatefulWidget {
   String status;
-  String resturantId;
+  String? resturantId;
   var scaffoldKey;
-  OrderItem({@required this.status, this.resturantId, this.scaffoldKey});
+  OrderItem({required this.status, this.resturantId, this.scaffoldKey});
   @override
   _OrderItemState createState() => _OrderItemState();
 }
 
 class _OrderItemState extends State<OrderItem> {
-  AuthProvider auth;
+  late AuthProvider auth;
   @override
   void initState() {
     auth = Provider.of<AuthProvider>(context, listen: false);
@@ -36,25 +35,26 @@ class _OrderItemState extends State<OrderItem> {
 
   TimeOfDay selectedTime = TimeOfDay.now();
 
-  List<OrderModels> orderList;
-  bool _loadingMore;
-  bool _hasMoreItems;
-  int _maxItems;
-  Future _initialLoad;
+  late List<OrderModels> orderList;
+  late bool _loadingMore;
+  late bool _hasMoreItems;
+  late int _maxItems;
+  late Future _initialLoad;
   int page = 1;
 
-  Future<String> _selectTime(BuildContext context) async {
+  Future<String?> _selectTime(BuildContext context) async {
     FocusScope.of(context).requestFocus(new FocusNode());
 
-    final TimeOfDay picked_s = await showTimePicker(
-        context: context,
-        initialTime: selectedTime,
-        builder: (BuildContext context, Widget child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child,
-          );
-        });
+    final TimeOfDay? picked_s = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+    );
 
     if (picked_s != null) return "${picked_s.hour}:${picked_s.minute}";
   }
@@ -65,7 +65,7 @@ class _OrderItemState extends State<OrderItem> {
         .getAllOrder(auth: auth, state: widget.status, page: page)
         .then((data) {
       setState(() {
-        orderList = data["orders"];
+        orderList = data!["orders"];
         _maxItems = data["total"];
         _hasMoreItems = true;
       });
@@ -78,7 +78,7 @@ class _OrderItemState extends State<OrderItem> {
     await OrderServices()
         .getAllOrder(auth: auth, state: widget.status, page: page)
         .then((data) {
-      List<OrderModels> temp = data["orders"];
+      List<OrderModels> temp = data!["orders"];
       orderList.addAll(temp);
     });
     _hasMoreItems = orderList.length < _maxItems;
@@ -122,7 +122,7 @@ class _OrderItemState extends State<OrderItem> {
                     },
                     loadMoreOffsetFromBottom: 2,
                     itemBuilder: (context, index) {
-                      if ((_loadingMore ?? false) &&
+                      if ((_loadingMore) &&
                           index == orderList.length - 1) {
                         return Column(
                           children: <Widget>[
@@ -165,7 +165,7 @@ class _OrderItemState extends State<OrderItem> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Customer Name: ${item.user['username']}",
+              "Customer Name: ${item.user!['username']}",
               style: TextStyle(color: AppColors.redText),
             ),
             SizedBox(height: 10),
@@ -192,12 +192,12 @@ class _OrderItemState extends State<OrderItem> {
               child: Column(
                 children: <Widget>[
                   ListView.builder(
-                      itemCount: item.items.length,
+                      itemCount: item.items!.length,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (BuildContext context, int index) {
                         return DishItem(
-                          model: item.items[index],
+                          model: item.items![index],
                         );
                       }),
                 ],
@@ -280,7 +280,7 @@ class _OrderItemState extends State<OrderItem> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Pick Up at: ${item.timePicker ?? "00:00"} ",
+                              "Pick Up at: ${item.timePicker} ",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
@@ -300,7 +300,7 @@ class _OrderItemState extends State<OrderItem> {
                                 color: AppColors.green,
                                 child: Icon(Icons.edit, color: Colors.white),
                                 onPressed: () async {
-                                  item.timePicker = await _selectTime(context);
+                                  item.timePicker = await _selectTime(context) ?? "";
 
                                   OrderServices()
                                       .updatepickupDate(
@@ -381,7 +381,7 @@ class _OrderItemState extends State<OrderItem> {
 class DishItem extends StatelessWidget {
   DishModel model;
 
-  DishItem({Key key, this.model}) : super(key: key);
+  DishItem({required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -514,7 +514,7 @@ class DishItem extends StatelessWidget {
                                                 bottom: 5,
                                               ),
                                               child: new Text(
-                                                "${NumToTxt.numToOrdinal(i + 1).capitalize()} Dish",
+                                                "${NumToTxt().numToOrdinal(i + 1).capitalize()} Dish",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline6,
@@ -573,7 +573,7 @@ class DishItem extends StatelessWidget {
               itemBuilder: (context, i) {
                 return new ExpansionTile(
                   title: new Text(
-                      "${NumToTxt.numToOrdinal(i + 1).capitalize()} Dish",
+                      "${NumToTxt().numToOrdinal(i + 1).capitalize()} Dish",
                       style: Theme.of(context).textTheme.headline6),
                   children: <Widget>[
                     addOn[i].length > 0
@@ -609,7 +609,7 @@ class DishItem extends StatelessWidget {
       columnContent.add(
         new ListTile(
           title: new Text(
-            content.name,
+            content.name!,
             style: new TextStyle(fontSize: 14.0),
           ),
           trailing: Text("\$ ${content.price}"),

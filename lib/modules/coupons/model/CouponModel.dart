@@ -1,12 +1,12 @@
 import 'dart:async';
 
 class CouponModel {
-  String id;
-  String name;
-  String code;
+  String ?id;
+  String ?name;
+  String ?code;
   List resturant = [];
-  String type;
-  double mount;
+  String ?type;
+  double ? mount;
 
   CouponModel();
   CouponModel.toJson(tableData) {

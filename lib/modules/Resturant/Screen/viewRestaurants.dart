@@ -22,7 +22,7 @@ import 'package:string_validator/string_validator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ViewRestaurant extends StatefulWidget {
-  String resId;
+  String? resId;
   ViewRestaurant({this.resId});
   static final routeName = "ViewResturant";
   @override
@@ -43,13 +43,13 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
   LocationModel locationMo = new LocationModel();
   bool _loadUpdate = true;
 
-  Future<String> _selectTime(BuildContext context) async {
+  Future<String?> _selectTime(BuildContext context) async {
     FocusScope.of(context).requestFocus(new FocusNode());
 
-    final TimeOfDay picked_s = await showTimePicker(
+    final TimeOfDay ?picked_s = await showTimePicker(
         context: context,
         initialTime: selectedTime,
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           return Theme(
               data: ThemeData.light().copyWith(
                 primaryColor: const Color(0xFF504d4d),
@@ -62,7 +62,7 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
               child: MediaQuery(
                 data: MediaQuery.of(context)
                     .copyWith(alwaysUse24HourFormat: true),
-                child: child,
+                child: child!,
               ));
         });
 
@@ -86,11 +86,11 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
         .getSingleResturant(id)
         .then((value) {
       setState(() {
-        resturantModel = value;
+        resturantModel = value!;
         _loadUpdate = true;
         locationPickerController.text = "loading...";
         final coordinates = new Coordinates(
-            resturantModel.location.lat, resturantModel.location.log);
+            resturantModel.location!.lat, resturantModel.location!.log);
         Geocoder.local.findAddressesFromCoordinates(coordinates).then((value) {
           List<Address> addresses = value;
 
@@ -99,7 +99,7 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
           locationPickerController.text = "(${first.addressLine})";
         });
       });
-      print("resturant : ${resturantModel.location.lat}");
+      print("resturant : ${resturantModel.location!.lat}");
     });
   }
 
@@ -119,7 +119,6 @@ class _ViewRestaurantState extends State<ViewRestaurant> {
         body: _loadUpdate
             ? SingleChildScrollView(
                 child: Form(
-                  autovalidate: _autoValidate,
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
